@@ -1,4 +1,5 @@
 {% extends "base.html" %}
+{% load crispy_forms_tags %}
 
 {% block content %}
 <div class="container mt-4">
@@ -26,7 +27,7 @@
                     <small>
                         Created: {{ api_key.created_at|date:"M d, Y H:i" }}<br>
                         {% if api_key.expired_at %}
-                            Expires: {{ api_key.expired_at|date:"M d, Y" }}
+                            Expires: {{ api_key.expired_at|date:"M d, Y H:i" }}
                         {% endif %}
                     </small>
                 </p>
@@ -39,19 +40,9 @@
                 <h5 class="card-title">Add New API Key</h5>
                 <form method="post" action="{% url 'api2d:api-key' %}">
                     {% csrf_token %}
-                    <div class="mb-3">
-                        {{ form.key.label_tag }}
-                        {{ form.key }}
-                        {% if form.key.errors %}
-                            <div class="text-danger">
-                                {% for error in form.key.errors %}
-                                    {{ error }}
-                                {% endfor %}
-                            </div>
-                        {% endif %}
-                        <div class="form-text">
-                            Enter your API key to link it to your account.
-                        </div>
+                    {{ form|crispy }}
+                    <div class="form-text mb-3">
+                        Enter your API key to link it to your account.
                     </div>
                     <button type="submit" class="btn btn-primary">Save API Key</button>
                 </form>

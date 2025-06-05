@@ -1,4 +1,5 @@
 {% extends "base.html" %}
+{% load crispy_forms_tags %}
 
 {% block title %}Sign Up{% endblock %}
 
@@ -18,64 +19,13 @@
 
                 <form class="signup" id="signup_form" method="post" action="{% url 'account_signup' %}">
                     {% csrf_token %}
-                    
-                    <div class="row">
-                        <div class="col-md-6 mb-3">
-                            <label for="id_username" class="form-label">Username</label>
-                            <input type="text" name="username" id="id_username" 
-                                   class="form-control {% if form.username.errors %}is-invalid{% endif %}" 
-                                   placeholder="Username" required>
-                            {% if form.username.errors %}
-                                <div class="invalid-feedback">
-                                    {{ form.username.errors.0 }}
-                                </div>
-                            {% endif %}
-                        </div>
-                        
-                        <div class="col-md-6 mb-3">
-                            <label for="id_email" class="form-label">Email</label>
-                            <input type="email" name="email" id="id_email" 
-                                   class="form-control {% if form.email.errors %}is-invalid{% endif %}" 
-                                   placeholder="Email address" required>
-                            {% if form.email.errors %}
-                                <div class="invalid-feedback">
-                                    {{ form.email.errors.0 }}
-                                </div>
-                            {% endif %}
-                        </div>
-                    </div>
-                    
-                    <div class="row">
-                        <div class="col-md-6 mb-3">
-                            <label for="id_password1" class="form-label">Password</label>
-                            <input type="password" name="password1" id="id_password1" 
-                                   class="form-control {% if form.password1.errors %}is-invalid{% endif %}" 
-                                   placeholder="Password" required>
-                            {% if form.password1.errors %}
-                                <div class="invalid-feedback">
-                                    {{ form.password1.errors.0 }}
-                                </div>
-                            {% endif %}
-                        </div>
-                        
-                        <div class="col-md-6 mb-3">
-                            <label for="id_password2" class="form-label">Confirm Password</label>
-                            <input type="password" name="password2" id="id_password2" 
-                                   class="form-control {% if form.password2.errors %}is-invalid{% endif %}" 
-                                   placeholder="Confirm password" required>
-                            {% if form.password2.errors %}
-                                <div class="invalid-feedback">
-                                    {{ form.password2.errors.0 }}
-                                </div>
-                            {% endif %}
-                        </div>
-                    </div>
+                    {{ form|crispy }}
                     
                     {% if redirect_field_value %}
                         <input type="hidden" name="{{ redirect_field_name }}" value="{{ redirect_field_value }}" />
                     {% endif %}
                     
-                    <div class="mb-3 form-check">
+                    <div class="form-check mb-3">
                         <input type="checkbox" class="form-check-input" id="terms" required>
                         <label class="form-check-label" for="terms">
                             I agree to the <a href="#" class="text-decoration-none">Terms of Service</a> and 
