@@ -1,0 +1,165 @@
+import os
+from django.shortcuts import render, redirect, get_object_or_404
+from django.http import JsonResponse, HttpResponseRedirect
+from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth.decorators import login_required
+from django.contrib import messages
+from django.views.generic import View, DeleteView, FormView
+from django.urls import reverse_lazy
+from django import forms
+from django.conf import settings
+from django.core.files.storage import default_storage
+from django.core.files.base import ContentFile
+from .models import Api2dKey
+
+
+class MP3UploadForm(forms.Form):
+    """Form for uploading MP3 files"""
+    mp3_file = forms.FileField(
+        label='MP3 File',
+        widget=forms.FileInput(attrs={
+            'accept': '.mp3',
+            'class': 'form-control',
+        })
+    )
+    
+    def clean_mp3_file(self):
+        mp3_file = self.cleaned_data.get('mp3_file')
+        if not mp3_file:
+            raise forms.ValidationError("No file was uploaded.")
+        
+        # Check file extension
+        if not mp3_file.name.lower().endswith('.mp3'):
+            raise forms.ValidationError("Only MP3 files are allowed.")
+        
+        # Check file size (max 10MB)
+        max_size = 10 * 1024 * 1024  # 10MB
+        if mp3_file.size > max_size:
+            raise forms.ValidationError(f"File too large. Maximum size is {max_size/1024/1024}MB.")
+        
+        return mp3_file
+
+
+class ApiKeyForm(forms.ModelForm):
+    """Form for adding a new API key"""
+    class Meta:
+        model = Api2dKey
+        fields = ['key']
+        widgets = {
+            'key': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Enter your API key'})
+        }
+        labels = {
+            'key': 'API Key'
+        }
+
+class ApiKeyView(LoginRequiredMixin, View):
+    """View to display and manage the user's API key"""
+    
+    def get(self, request, *args, **kwargs):
+        try:
+            # Get the API key for the current user
+            api_key = Api2dKey.objects.get(user=request.user)
+            form = ApiKeyForm()
+            context = {
+                'has_api_key': True,
+                'api_key': api_key,
+                'form': form
+            }
+        except Api2dKey.DoesNotExist:
+            form = ApiKeyForm()
+            context = {
+                'has_api_key': False,
+                'api_key': None,
+                'form': form
+            }
+        
+        return render(request, 'api2d/api_key_list.html', context)
+    
+    def post(self, request, *args, **kwargs):
+        form = ApiKeyForm(request.POST)
+        if form.is_valid():
+            # Check if user already has an API key
+            if Api2dKey.objects.filter(user=request.user).exists():
+                messages.error(request, 'You already have an API key. Please delete it before adding a new one.')
+                return redirect('api2d:api-key')
+            
+            # Save the new API key
+            api_key = form.save(commit=False)
+            api_key.user = request.user
+            api_key.save()
+            
+            messages.success(request, 'API key added successfully!')
+            return redirect('api2d:api-key')
+        
+        # If form is not valid, show errors
+        context = {
+            'has_api_key': Api2dKey.objects.filter(user=request.user).exists(),
+            'api_key': Api2dKey.objects.filter(user=request.user).first(),
+            'form': form
+        }
+        return render(request, 'api2d/api_key_list.html', context)
+
+class ApiKeyDeleteView(LoginRequiredMixin, DeleteView):
+    """View to delete the user's API key"""
+    model = Api2dKey
+    success_url = reverse_lazy('api2d:api-key')
+    template_name = 'api2d/api_key_confirm_delete.html'
+    
+    def get_object(self, queryset=None):
+        """Get the API key for the current user"""
+        obj = get_object_or_404(Api2dKey, user=self.request.user)
+        return obj
+    
+    def delete(self, request, *args, **kwargs):
+        """Handle successful deletion"""
+        response = super().delete(request, *args, **kwargs)
+        messages.success(self.request, 'Your API key has been deleted successfully.')
+        return response
+
+
+@login_required
+def upload_mp3(request):
+    """Handle MP3 file uploads"""
+    if request.method == 'POST':
+        form = MP3UploadForm(request.POST, request.FILES)
+        if form.is_valid():
+            mp3_file = form.cleaned_data['mp3_file']
+            
+            try:
+                # Save the file temporarily
+                temp_path = default_storage.save(f'tmp/{mp3_file.name}', ContentFile(mp3_file.read()))
+                temp_file = default_storage.path(temp_path)
+                
+                # Get file size in bytes
+                file_size = os.path.getsize(temp_file)
+                
+                # Delete the temporary file
+                default_storage.delete(temp_path)
+                
+                # Return success response with file info
+                return JsonResponse({
+                    'success': True,
+                    'filename': mp3_file.name,
+                    'size': file_size,
+                    'message': 'File processed successfully.'
+                })
+                
+            except Exception as e:
+                return JsonResponse({
+                    'success': False,
+                    'message': f'Error processing file: {str(e)}'
+                }, status=500)
+        else:
+            # Return form errors
+            return JsonResponse({
+                'success': False,
+                'errors': form.errors
+            }, status=400)
+    
+    # If not POST, show the upload form
+    form = MP3UploadForm()
+    return render(request, 'api2d/upload_mp3.html', {'form': form})
+
+
+def home_page_view(request):
+    return render(request, 'api2d/home.html')

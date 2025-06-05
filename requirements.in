@@ -1,0 +1,15 @@
+django==5.1.6
+djangorestframework
+psycopg2
+pytest
+pytest-django
+django-allauth
+django-cors-headers
+dotenv
+pre-commit
+whitenoise
+black
+playwright
+pytest-playwright
+dynaconf
+drf-spectacular

@@ -1,0 +1,100 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card">
+                <div class="card-header">
+                    <h4>Upload MP3 File</h4>
+                </div>
+                <div class="card-body">
+                    <form id="mp3UploadForm" method="post" enctype="multipart/form-data">
+                        {% csrf_token %}
+                        <div class="mb-3">
+                            {{ form.mp3_file.label_tag }}
+                            {{ form.mp3_file }}
+                            {% if form.mp3_file.errors %}
+                                <div class="invalid-feedback d-block">
+                                    {{ form.mp3_file.errors.0 }}
+                                </div>
+                            {% endif %}
+                            <div class="form-text">
+                                Maximum file size: 10MB. Only .mp3 files are accepted.
+                            </div>
+                        </div>
+                        <button type="submit" class="btn btn-primary">Upload</button>
+                    </form>
+                    
+                    <div id="uploadResult" class="mt-4" style="display: none;">
+                        <div class="alert alert-success">
+                            <h5>File Uploaded Successfully!</h5>
+                            <p>File: <span id="fileName"></span></p>
+                            <p>Size: <span id="fileSize"></span> bytes</p>
+                        </div>
+                    </div>
+                    
+                    <div id="uploadError" class="alert alert-danger mt-3" style="display: none;">
+                        <span id="errorMessage"></span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const form = document.getElementById('mp3UploadForm');
+    const resultDiv = document.getElementById('uploadResult');
+    const errorDiv = document.getElementById('uploadError');
+    
+    form.addEventListener('submit', function(e) {
+        e.preventDefault();
+        
+        const formData = new FormData(form);
+        const submitBtn = form.querySelector('button[type="submit"]');
+        const originalBtnText = submitBtn.innerHTML;
+        
+        // Show loading state
+        submitBtn.disabled = true;
+        submitBtn.innerHTML = '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Uploading...';
+        
+        // Hide any previous messages
+        resultDiv.style.display = 'none';
+        errorDiv.style.display = 'none';
+        
+        fetch('{% url "api2d:upload-mp3" %}', {
+            method: 'POST',
+            body: formData,
+            headers: {
+                'X-Requested-With': 'XMLHttpRequest',
+            },
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                // Show success message
+                document.getElementById('fileName').textContent = data.filename;
+                document.getElementById('fileSize').textContent = data.size.toLocaleString();
+                resultDiv.style.display = 'block';
+                form.reset();
+            } else {
+                // Show error message
+                document.getElementById('errorMessage').textContent = data.message || 'An error occurred during upload.';
+                errorDiv.style.display = 'block';
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            document.getElementById('errorMessage').textContent = 'An error occurred during upload. Please try again.';
+            errorDiv.style.display = 'block';
+        })
+        .finally(() => {
+            submitBtn.disabled = false;
+            submitBtn.innerHTML = originalBtnText;
+        });
+    });
+});
+</script>
+{% endblock %}
