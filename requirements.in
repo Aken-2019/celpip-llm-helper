@@ -13,3 +13,5 @@ playwright
 pytest-playwright
 dynaconf
 drf-spectacular
+django-crispy-forms
+crispy-bootstrap5
