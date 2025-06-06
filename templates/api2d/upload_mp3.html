@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-{% load crispy_forms_tags %}
+{% load static %}
 
 {% block content %}
 <div class="container mt-5">
@@ -7,87 +7,85 @@
         <div class="col-md-8">
             <div class="card">
                 <div class="card-header">
-                    <h4>Upload MP3 File</h4>
+                    <h4>Process Audio File</h4>
                 </div>
                 <div class="card-body">
-                    <form id="mp3UploadForm" method="post" enctype="multipart/form-data">
-                        {% csrf_token %}
-                        {{ form|crispy }}
-                        <div class="form-text mb-3">
-                            Maximum file size: 10MB. Only .mp3 files are accepted.
+                    <form id="audioUploadForm" enctype="multipart/form-data">
+                        <div class="mb-3">
+                            <label for="audioFile" class="form-label">Audio File</label>
+                            <input class="form-control" type="file" id="audioFile" accept=".mp3,.mp4,.mpeg,.mpga,.m4a,.wav,.webm" required>
+                            <div class="form-text">
+                                Maximum file size: 10MB. Supported formats: MP3, MP4, M4A, WAV, WebM, and other audio formats.
+                            </div>
                         </div>
-                        <button type="submit" class="btn btn-primary">Upload</button>
+                        <button type="submit" class="btn btn-primary">Process File</button>
                     </form>
                         
                     <div id="uploadResult" class="mt-4" style="display: none;">
                         <div class="alert alert-success">
-                            <h5>File Uploaded Successfully!</h5>
+                            <h5>File Processed Successfully!</h5>
                             <p>File: <span id="fileName"></span></p>
-                            <p>Size: <span id="fileSize"></span> bytes</p>
+                            <p>Size: <span id="fileSize"></span></p>
                         </div>
                     </div>
                     
                     <div id="uploadError" class="alert alert-danger mt-3" style="display: none;">
                         <span id="errorMessage"></span>
                     </div>
+                    
+                    <div id="fileInfo" class="mt-3" style="display: none;">
+                        <h5>File Information</h5>
+                        <pre id="fileDetails" class="bg-light p-3 rounded"></pre>
+                    </div>
+
+                    <div id="audioPlayer" class="mt-3" style="display: none;">
+                        <h5>Audio Preview</h5>
+                        <div class="card">
+                            <div class="card-body">
+                                <audio id="audioPlayerElement" class="w-100" controls>
+                                    Your browser does not support the audio element.
+                                </audio>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div id="transcriptionSection" class="mt-3" style="display: none;">
+                        <div class="alert alert-info">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <div>
+                                    <i class="bi bi-mic me-2"></i>
+                                    <span id="transcriptionStatus">Transcribing audio...</span>
+                                </div>
+                                <div id="transcriptionSpinner" class="spinner-border spinner-border-sm text-primary" role="status">
+                                    <span class="visually-hidden">Loading...</span>
+                                </div>
+                            </div>
+                            <div id="transcriptionResult" class="mt-2" style="display: none;">
+                                <h5>Transcription:</h5>
+                                <div class="bg-light p-3 rounded">
+                                    <pre id="transcriptionText"></pre>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
 </div>
+{% endblock %}
 
+{% block extra_js %}
 <script>
-document.addEventListener('DOMContentLoaded', function() {
-    const form = document.getElementById('mp3UploadForm');
-    const resultDiv = document.getElementById('uploadResult');
-    const errorDiv = document.getElementById('uploadError');
-    
-    form.addEventListener('submit', function(e) {
-        e.preventDefault();
+    // Configuration variables from Django
+    window.api2dConfig = {
+        endpoint: '{{ api2d_openai_endpoint }}',
+        apiKey: '{{ api_key }}',
+        model: '{{ api2d_openai_stt_model }}',
+        language: '{{ api2d_openai_language }}',
         
-        const formData = new FormData(form);
-        const submitBtn = form.querySelector('button[type="submit"]');
-        const originalBtnText = submitBtn.innerHTML;
-        
-        // Show loading state
-        submitBtn.disabled = true;
-        submitBtn.innerHTML = '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Uploading...';
-        
-        // Hide any previous messages
-        resultDiv.style.display = 'none';
-        errorDiv.style.display = 'none';
-        
-        fetch('{% url "api2d:upload-mp3" %}', {
-            method: 'POST',
-            body: formData,
-            headers: {
-                'X-Requested-With': 'XMLHttpRequest',
-            },
-        })
-        .then(response => response.json())
-        .then(data => {
-            if (data.success) {
-                // Show success message
-                document.getElementById('fileName').textContent = data.filename;
-                document.getElementById('fileSize').textContent = data.size.toLocaleString();
-                resultDiv.style.display = 'block';
-                form.reset();
-            } else {
-                // Show error message
-                document.getElementById('errorMessage').textContent = data.message || 'An error occurred during upload.';
-                errorDiv.style.display = 'block';
-            }
-        })
-        .catch(error => {
-            console.error('Error:', error);
-            document.getElementById('errorMessage').textContent = 'An error occurred during upload. Please try again.';
-            errorDiv.style.display = 'block';
-        })
-        .finally(() => {
-            submitBtn.disabled = false;
-            submitBtn.innerHTML = originalBtnText;
-        });
-    });
-});
+    };
 </script>
+<script src="{% static 'api2d/js/apiClient.js' %}"></script>
+<script src="{% static 'api2d/js/upload_mp3.js' %}"></script>
 {% endblock %}

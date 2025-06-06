@@ -1,15 +1,11 @@
 import os
 from django.shortcuts import render, redirect, get_object_or_404
-from django.http import JsonResponse, HttpResponseRedirect
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
-from django.views.generic import View, DeleteView, FormView
+from django.views.generic import View, DeleteView
 from django.urls import reverse_lazy
 from django import forms
-from django.conf import settings
-from django.core.files.storage import default_storage
-from django.core.files.base import ContentFile
 from .models import Api2dKey, Api2dGroup2ExpirationMapping
 
 
@@ -31,11 +27,6 @@ class MP3UploadForm(forms.Form):
         # Check file extension
         if not mp3_file.name.lower().endswith('.mp3'):
             raise forms.ValidationError("Only MP3 files are allowed.")
-        
-        # Check file size (max 10MB)
-        max_size = 10 * 1024 * 1024  # 10MB
-        if mp3_file.size > max_size:
-            raise forms.ValidationError(f"File too large. Maximum size is {max_size/1024/1024}MB.")
         
         return mp3_file
 
@@ -60,10 +51,14 @@ class ApiKeyView(LoginRequiredMixin, View):
             # Get the API key for the current user
             api_key = Api2dKey.objects.get(user=request.user)
             form = ApiKeyForm()
+            
+            # Get the API endpoint from environment variable
+            api2d_openai_endpoint = os.getenv("DYNACONF_API2D_OPENAI_ENDPOINT")
             context = {
                 'has_api_key': True,
                 'api_key': api_key,
-                'form': form
+                'form': form,
+                'api2d_openai_endpoint': api2d_openai_endpoint
             }
         except Api2dKey.DoesNotExist:
             form = ApiKeyForm()
@@ -132,46 +127,19 @@ class ApiKeyDeleteView(LoginRequiredMixin, DeleteView):
 
 @login_required
 def upload_mp3(request):
-    """Handle MP3 file uploads"""
-    if request.method == 'POST':
-        form = MP3UploadForm(request.POST, request.FILES)
-        if form.is_valid():
-            mp3_file = form.cleaned_data['mp3_file']
-            
-            try:
-                # Save the file temporarily
-                temp_path = default_storage.save(f'tmp/{mp3_file.name}', ContentFile(mp3_file.read()))
-                temp_file = default_storage.path(temp_path)
-                
-                # Get file size in bytes
-                file_size = os.path.getsize(temp_file)
-                
-                # Delete the temporary file
-                default_storage.delete(temp_path)
-                
-                # Return success response with file info
-                return JsonResponse({
-                    'success': True,
-                    'filename': mp3_file.name,
-                    'size': file_size,
-                    'message': 'File processed successfully.'
-                })
-                
-            except Exception as e:
-                return JsonResponse({
-                    'success': False,
-                    'message': f'Error processing file: {str(e)}'
-                }, status=500)
-        else:
-            # Return form errors
-            return JsonResponse({
-                'success': False,
-                'errors': form.errors
-            }, status=400)
-    
-    # If not POST, show the upload form
-    form = MP3UploadForm()
-    return render(request, 'api2d/upload_mp3.html', {'form': form})
+    """Serve the MP3 processing page"""
+    try:
+        # Get the user's API key
+        api_key = Api2dKey.objects.get(user=request.user)
+        context = {
+            'api_key': api_key.key,
+            'api2d_openai_endpoint': os.getenv("DYNACONF_API2D_OPENAI_ENDPOINT"),
+            'api2d_openai_stt_model': os.getenv("DYNACONF_API2D_OPENAI_STT_MODEL")
+        }
+        return render(request, 'api2d/upload_mp3.html', context)
+    except Api2dKey.DoesNotExist:
+        messages.error(request, 'Please add your API key first.')
+        return redirect('api2d:api-key')
 
 
 def home_page_view(request):

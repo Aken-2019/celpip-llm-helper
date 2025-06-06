@@ -7,5 +7,5 @@ urlpatterns = [
     path("", home_page_view, name='home'),
     path("api-key/", ApiKeyView.as_view(), name='api-key'),
     path("api-key/delete/", ApiKeyDeleteView.as_view(), name='api-key-delete'),
-    path("celpip/upload-mp3/", upload_mp3, name='upload-mp3'),
+    path("celpip/speaking/", upload_mp3, name='celpip-speaking'),
 ]
