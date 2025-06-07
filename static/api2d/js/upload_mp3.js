@@ -189,15 +189,15 @@ document.addEventListener('DOMContentLoaded', async function() {
             document.getElementById('transcriptionSection').style.display = 'block';
             
             // Initialize status messages and show spinners
-            document.getElementById('transcriptionStatus').textContent = 'Transcribing audio...';
+            document.getElementById('transcriptionStatus').textContent = '正在转文字...';
             document.getElementById('transcriptionSpinner').style.display = 'inline-block';
             
             // Initialize word count section
-            document.getElementById('wordCountStatus').textContent = 'Waiting for transcription...';
+            document.getElementById('wordCountStatus').textContent = '等待中...';
             document.getElementById('wordCountSpinner').style.display = 'none';
             
             // Initialize detailed analysis section
-            document.getElementById('elaborateTextStatus').textContent = 'Waiting for transcription...';
+            document.getElementById('elaborateTextStatus').textContent = '等待中...';
             document.getElementById('elaborateTextSpinner').style.display = 'none';
 
             let transcription;
@@ -211,13 +211,12 @@ document.addEventListener('DOMContentLoaded', async function() {
                 document.getElementById('transcriptionStatus').textContent = 'Using test transcription';
             } else {
                 // Call the actual API
-                document.getElementById('transcriptionStatus').textContent = 'Transcribing audio...';
                 try {
                     transcription = await apiClient.transcribeAudio(file, apiKey, sttModel, language);
                     const afterTranscriptionResponse = await apiClient.fetchCredits(apiKey);
                     const afterTranscriptionUserCredit = afterTranscriptionResponse.total_available;
                     let nUserCredit = initUserCredit - afterTranscriptionUserCredit;
-                    document.getElementById('transcriptionStatus').textContent = `Transcription takes ${nUserCredit} credits!`;
+                    document.getElementById('transcriptionStatus').textContent = `任务完成 (消耗了 ${nUserCredit} 点数)`;
                 } catch (error) {
                     document.getElementById('transcriptionStatus').textContent = 'Error in transcription';
                     throw error;
@@ -238,7 +237,7 @@ document.addEventListener('DOMContentLoaded', async function() {
 
     async function improveTranscription(text) {
         // Show spinner and update status
-        document.getElementById('wordCountStatus').textContent = 'Improving text...';
+        document.getElementById('wordCountStatus').textContent = '进行中...';
         document.getElementById('wordCountSpinner').style.display = 'inline-block';
         document.getElementById('wordCountResult').style.display = 'block';
         
@@ -270,7 +269,7 @@ document.addEventListener('DOMContentLoaded', async function() {
             const afterImproveUserCredit = afterImproveResponse.total_available;
             const nUserCredit = initUserCredit - afterImproveUserCredit;
             
-            document.getElementById('wordCountStatus').textContent = `Improvement completed (used ${nUserCredit} credits)`;
+            document.getElementById('wordCountStatus').textContent = `任务完成 (消耗了 ${nUserCredit} 点数)`;
             document.getElementById('wordCountAdvice').textContent = response.choices[0]?.message?.content;
         } catch (error) {
             console.error('Error improving text:', error);
@@ -283,7 +282,7 @@ document.addEventListener('DOMContentLoaded', async function() {
 
     async function elaborateTextAnalysis(text) {
         // Show spinner and update status
-        document.getElementById('elaborateTextStatus').textContent = 'Analyzing text in detail...';
+        document.getElementById('elaborateTextStatus').textContent = '进行中...';
         document.getElementById('elaborateTextSpinner').style.display = 'inline-block';
         document.getElementById('elaborateTextResult').style.display = 'block';
         
@@ -318,7 +317,7 @@ document.addEventListener('DOMContentLoaded', async function() {
             const creditsUsed = initUserCredit - afterAnalysisCredit;
             
             // Update the UI with the elaborate analysis
-            document.getElementById('elaborateTextStatus').textContent = `Detailed analysis completed (used ${creditsUsed} credits)`;
+            document.getElementById('elaborateTextStatus').textContent = `任务完成 (消耗了 ${creditsUsed} 点数)`;
             document.getElementById('elaborateTextContent').innerHTML = response.choices[0]?.message?.content.replace(/\n/g, '<br>');
         } catch (error) {
             console.error('Error in elaborate text analysis:', error);

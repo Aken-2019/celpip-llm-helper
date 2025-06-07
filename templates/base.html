@@ -15,20 +15,14 @@
     <header class="bg-dark text-white p-3">
         <div class="container">
             <div class="d-flex justify-content-between align-items-center">
-                <h1 class="h3 mb-0">My Django Project</h1>
+                <h1 class="h3 mb-0"><a href="{% url 'api2d:home' %}" class="text-white text-decoration-none">提分网</a></h1>
                 <nav>
                     <ul class="nav align-items-center">
                         <li class="nav-item">
                             <a class="nav-link text-white" href="{% url 'api2d:celpip-speaking' %}">思培口语</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link text-white" href="{% url 'api2d:home' %}">Home</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-white" href="#">About</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-white" href="#">Contact</a>
+                            <a class="nav-link text-white" href="#">联系客服</a>
                         </li>
                         {% if user.is_authenticated %}
                         <li class="nav-item dropdown ms-3">
