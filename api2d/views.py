@@ -3,12 +3,13 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
+from django.utils import timezone
 from django.views.generic import View, DeleteView
 from django.urls import reverse_lazy
 from django import forms
+from django.http import JsonResponse
 from .models import Api2dKey, Api2dGroup2ExpirationMapping
 from django.conf import settings
-from django.utils.safestring import mark_safe
 
 
 
@@ -125,7 +126,7 @@ class ApiKeyDeleteView(LoginRequiredMixin, DeleteView):
         """Handle successful deletion"""
         response = super().delete(request, *args, **kwargs)
         messages.success(self.request, 'Your API key has been deleted successfully.')
-        return response
+        return response 
 
 
 @login_required
@@ -134,6 +135,9 @@ def upload_mp3(request):
     try:
         # Get the user's API key
         api_key = Api2dKey.objects.get(user=request.user)
+        if api_key.expired_at < timezone.now():
+            messages.error(request, 'Your API key has expired. Please renew it.')
+            return redirect('api2d:api-key')
         context = {
             'api_key': api_key.key,
             'api2d_openai_endpoint': os.getenv("DYNACONF_API2D_OPENAI_ENDPOINT"),

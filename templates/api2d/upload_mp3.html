@@ -6,21 +6,21 @@
     <div class="row justify-content-center">
         <div class="col-md-8">
             <div class="card">
+                {% if is_admin %}
+                <div class="mb-3 form-check form-switch">
+                    <input class="form-check-input" type="checkbox" id="testModeToggle" data-bs-toggle="tooltip" data-bs-placement="top" title="Enable test mode with custom text">
+                    <label class="form-check-label" for="testModeToggle">Test Mode</label>
+                </div>
+                <div id="testModeContent" class="mb-3" style="display: none;">
+                    <label for="testTranscription" class="form-label">Test Transcription Text</label>
+                    <textarea class="form-control font-monospace" id="testTranscription" rows="5" placeholder="Enter test transcription text here...">Harry is a nice boy and he likes his cat.</textarea>
+                    <div class="form-text">This text will be used when test mode is enabled.</div>
+                </div>
+                {% endif %}
                 <div class="card-header">
                     <h4>思培口语 - 提分工具</h4>
                 </div>
                 <div class="card-body">
-                    {% if is_admin %}
-                    <div class="mb-3 form-check form-switch">
-                        <input class="form-check-input" type="checkbox" id="testModeToggle" data-bs-toggle="tooltip" data-bs-placement="top" title="Enable test mode with custom text">
-                        <label class="form-check-label" for="testModeToggle">Test Mode</label>
-                    </div>
-                    <div id="testModeContent" class="mb-3" style="display: none;">
-                        <label for="testTranscription" class="form-label">Test Transcription Text</label>
-                        <textarea class="form-control font-monospace" id="testTranscription" rows="5" placeholder="Enter test transcription text here...">Harry is a nice boy and he likes his cat.</textarea>
-                        <div class="form-text">This text will be used when test mode is enabled.</div>
-                    </div>
-                    {% endif %}
                     <form id="audioUploadForm" enctype="multipart/form-data">
                         <div class="mb-3">
                             <label for="audioFile" class="form-label">上传口语录音文件</label>
@@ -41,6 +41,9 @@
                         </div>
                         <div class="text-center mt-3">
                             <button type="submit" class="btn btn-primary">AI分析润色</button>
+                            <div class="mt-2 text-muted small">
+                                <span id="creditInfo">正在加载积分信息...</span>
+                            </div>
                         </div>
                     </form>
                         

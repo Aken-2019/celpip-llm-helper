@@ -41,9 +41,9 @@ document.addEventListener('DOMContentLoaded', async function() {
         useCsrf: false,
     });
 
-    // Store the API key from configuration
+    // Store the API key and configuration from window
     const apiKey = window.api2dConfig.apiKey;
-    const sttModel   = window.api2dConfig.sttModel;
+    const sttModel = window.api2dConfig.sttModel;
     const language = window.api2dConfig.language;
     const txtModel = window.api2dConfig.txtModel;
     const celpip_improve_sys_prompt = window.api2dConfig.celpip_improve_sys_prompt;
@@ -54,6 +54,30 @@ document.addEventListener('DOMContentLoaded', async function() {
     const resultDiv = document.getElementById('uploadResult');
     const errorMessage = document.getElementById('errorMessage');
 
+    
+    // Function to update credit information
+    // @param {Object} [creditsData] - Optional credits data object with total_available and total_granted
+    async function updateCreditInfo(creditsData) {
+        const creditInfoElement = document.getElementById('creditInfo');
+        if (!creditInfoElement) return;
+
+        try {
+            let creditsResponse = creditsData;
+            if (!creditsData) {
+                creditsResponse = await apiClient.fetchCredits(apiKey);
+            }
+            
+            const available = creditsResponse?.total_available ?? 'N/A';
+            creditInfoElement.textContent = `当前剩余积分: ${available}`;
+        } catch (error) {
+            console.error('Error updating credit info:', error);
+            creditInfoElement.textContent = '无法加载积分信息';
+        }
+    }
+
+    // Initial credit info update
+    updateCreditInfo();
+    
     // Helper functions
     function showError(message) {
         errorMessage.textContent = message;
@@ -215,8 +239,9 @@ document.addEventListener('DOMContentLoaded', async function() {
                     transcription = await apiClient.transcribeAudio(file, apiKey, sttModel, language);
                     const afterTranscriptionResponse = await apiClient.fetchCredits(apiKey);
                     const afterTranscriptionUserCredit = afterTranscriptionResponse.total_available;
+                    updateCreditInfo(afterTranscriptionResponse)
                     let nUserCredit = initUserCredit - afterTranscriptionUserCredit;
-                    document.getElementById('transcriptionStatus').textContent = `任务完成 (消耗了 ${nUserCredit} 点数)`;
+                    document.getElementById('transcriptionStatus').textContent = `任务完成 (消耗了 ${nUserCredit} 点积分)`;
                 } catch (error) {
                     document.getElementById('transcriptionStatus').textContent = 'Error in transcription';
                     throw error;
@@ -268,8 +293,9 @@ document.addEventListener('DOMContentLoaded', async function() {
             const afterImproveResponse = await apiClient.fetchCredits(apiKey);
             const afterImproveUserCredit = afterImproveResponse.total_available;
             const nUserCredit = initUserCredit - afterImproveUserCredit;
+            updateCreditInfo(afterImproveResponse)
             
-            document.getElementById('wordCountStatus').textContent = `任务完成 (消耗了 ${nUserCredit} 点数)`;
+            document.getElementById('wordCountStatus').textContent = `任务完成 (消耗了 ${nUserCredit} 点积分)`;
             document.getElementById('wordCountAdvice').textContent = response.choices[0]?.message?.content;
         } catch (error) {
             console.error('Error improving text:', error);
@@ -315,9 +341,10 @@ document.addEventListener('DOMContentLoaded', async function() {
             const afterAnalysisResponse = await apiClient.fetchCredits(apiKey);
             const afterAnalysisCredit = afterAnalysisResponse.total_available;
             const creditsUsed = initUserCredit - afterAnalysisCredit;
+            updateCreditInfo(afterAnalysisResponse)
             
             // Update the UI with the elaborate analysis
-            document.getElementById('elaborateTextStatus').textContent = `任务完成 (消耗了 ${creditsUsed} 点数)`;
+            document.getElementById('elaborateTextStatus').textContent = `任务完成 (消耗了 ${creditsUsed} 点积分)`;
             document.getElementById('elaborateTextContent').innerHTML = response.choices[0]?.message?.content.replace(/\n/g, '<br>');
         } catch (error) {
             console.error('Error in elaborate text analysis:', error);

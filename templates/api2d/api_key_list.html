@@ -4,14 +4,14 @@
 
 {% block content %}
 <div class="container mt-4">
-    <h2>Your API Key</h2>
+    <h2>绑定AI点卡</h2>
 
 
 
     <div class="card mt-4">
         <div class="card-body">
             {% if has_api_key %}
-                <h5 class="card-title">Your API Key</h5>
+                <h5 class="card-title">点卡信息</h5>
                 <div class="input-group mb-3">
                     <input type="text" 
                            class="form-control" 
@@ -26,9 +26,9 @@
                 </div>
                 <p class="text-muted">
                     <small>
-                        Created: {{ api_key.created_at|date:"M d, Y H:i" }}<br>
+                        创建日期: {{ api_key.created_at|date:"M d, Y H:i" }}<br>
                         {% if api_key.expired_at %}
-                            Expires: {{ api_key.expired_at|date:"M d, Y H:i" }}
+                            到期日期: {{ api_key.expired_at|date:"M d, Y H:i" }}
                         {% endif %}
                     </small>
                 </p>
@@ -38,7 +38,7 @@
                         <span id="creditsAmount">Checking credits...</span>
                     </div>
                     <a href="{% url 'api2d:api-key-delete' %}" class="btn btn-outline-danger">
-                        <i class="bi bi-trash me-1"></i> Delete API Key
+                        <i class="bi bi-trash me-1"></i> 删除 API Key
                     </a>
                 </div>
             {% else %}
@@ -75,7 +75,7 @@
                     const creditsSection = document.getElementById('creditsSection');
                     const creditsAmount = document.getElementById('creditsAmount');
                     creditsSection.style.display = 'block';
-                    creditsAmount.textContent = `$${response.total_available}`;
+                    creditsAmount.textContent = `可用积分: ${response.total_available}`;
                 })
                 .catch(error => {
                     console.error('Error fetching credits:', error);

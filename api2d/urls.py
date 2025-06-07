@@ -1,5 +1,5 @@
 from django.urls import path
-from .views import ApiKeyView, home_page_view, ApiKeyDeleteView, upload_mp3
+from .views import ApiKeyView, home_page_view, ApiKeyDeleteView, upload_mp3, get_credit_info
 
 app_name = 'api2d'
 
