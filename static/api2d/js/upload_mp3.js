@@ -1,18 +1,40 @@
 /**
  * Handles MP3 file processing entirely in the browser
  * 
- * To use the ApiClient in this file, ensure apiClient.js is loaded before this script.
- * 
  * Features:
  * - Audio file processing
  * - File size validation
  * - Progress tracking
  * - Error handling
- *     }
- * });
  */
 
-document.addEventListener('DOMContentLoaded', function() {
+document.addEventListener('DOMContentLoaded', async function() {
+    // Initialize tooltips
+    const tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+    tooltipTriggerList.map(function (tooltipTriggerEl) {
+        return new bootstrap.Tooltip(tooltipTriggerEl);
+    });
+
+    // Check if test mode toggle exists (admin only)
+    const testModeToggle = document.getElementById('testModeToggle');
+    const testModeContent = document.getElementById('testModeContent');
+    const testTranscriptionTextarea = document.getElementById('testTranscription');
+    
+    let isTestMode = false;
+
+    if (testModeToggle && testModeContent) {
+        // Toggle test mode content visibility
+        const toggleTestMode = () => {
+            isTestMode = testModeToggle.checked;
+            testModeContent.style.display = isTestMode ? 'block' : 'none';
+            console.log('Test mode:', isTestMode ? 'enabled' : 'disabled');
+        };
+        
+        // Initialize and set up event listener
+        testModeToggle.addEventListener('change', toggleTestMode);
+        toggleTestMode(); // Initialize the state
+    }
+
     // Initialize the API client using configuration from template
     const apiClient = new ApiClient({
         baseUrl: window.api2dConfig.endpoint,
@@ -21,17 +43,16 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Store the API key from configuration
     const apiKey = window.api2dConfig.apiKey;
-    const model = window.api2dConfig.sttModel;
+    const sttModel   = window.api2dConfig.sttModel;
     const language = window.api2dConfig.language;
+    const txtModel = window.api2dConfig.txtModel;
+    const celpip_improve_sys_prompt = window.api2dConfig.celpip_improve_sys_prompt;
+    const celpip_extend_sys_prompt = window.api2dConfig.celpip_extend_sys_prompt;
 
     // Get elements
     const form = document.getElementById('audioUploadForm');
     const resultDiv = document.getElementById('uploadResult');
     const errorMessage = document.getElementById('errorMessage');
-    const fileInfo = document.getElementById('fileInfo');
-    const fileDetails = document.getElementById('fileDetails');
-    const transcriptionStatus = document.getElementById('transcriptionStatus');
-    const transcriptionSpinner = document.getElementById('transcriptionSpinner');
 
     // Helper functions
     function showError(message) {
@@ -42,8 +63,6 @@ document.addEventListener('DOMContentLoaded', function() {
     function hideError() {
         errorMessage.parentElement.style.display = 'none';
     }
-    const transcriptionResult = document.getElementById('transcriptionResult');
-    const transcriptionText = document.getElementById('transcriptionText');
     const fileInput = document.querySelector('input[type="file"]');
     
     // Maximum file size in bytes (10MB)
@@ -117,13 +136,13 @@ document.addEventListener('DOMContentLoaded', function() {
         });
 
         // Show file info
-        document.getElementById('fileInfo').style.display = 'block';
+        // document.getElementById('fileInfo').style.display = 'block';
         // document.getElementById('transcriptionSection').style.display = 'block';
-        document.getElementById('fileDetails').textContent = `
-            File name: ${file.name}
-            Size: ${(file.size / 1024 / 1024).toFixed(2)} MB
-            Type: ${file.type}
-        `;
+        // document.getElementById('fileDetails').textContent = `
+        //     File name: ${file.name}
+        //     Size: ${(file.size / 1024 / 1024).toFixed(2)} MB
+        //     Type: ${file.type}
+        // `;
         
         // Check file type
         const supportedExtensions = ['.mp3', '.mp4', '.mpeg', '.mpga', '.m4a', '.wav', '.webm'];
@@ -162,13 +181,7 @@ document.addEventListener('DOMContentLoaded', function() {
         try {
             // Show loading state
             document.getElementById('uploadError').style.display = 'none';
-            document.getElementById('fileInfo').style.display = 'block';
             document.getElementById('transcriptionSection').style.display = 'block';
-            document.getElementById('fileDetails').textContent = `
-                File name: ${file.name}
-                Size: ${(file.size / 1024 / 1024).toFixed(2)} MB
-                Type: ${file.type}
-            `;
 
 
 
@@ -177,14 +190,32 @@ document.addEventListener('DOMContentLoaded', function() {
             document.getElementById('transcriptionSpinner').style.display = 'inline-block';
             document.getElementById('transcriptionResult').style.display = 'none';
 
-            // Transcribe the audio
-            const transcription = await apiClient.transcribeAudio(file, apiKey, model);
-
-            // Show transcription result
-            document.getElementById('transcriptionStatus').textContent = 'Transcription complete!';
+            let transcription;
+            
+            if (isTestMode && testTranscriptionTextarea) {
+                // Use text from the test transcription textarea
+                transcription = {
+                    text: testTranscriptionTextarea.value.trim() || 'No test text provided.'
+                };
+                document.getElementById('transcriptionStatus').textContent = 'Using test transcription';
+            } else {
+                // Call the actual API
+                document.getElementById('transcriptionStatus').textContent = 'Transcribing audio...';
+                try {
+                    transcription = await apiClient.transcribeAudio(file, apiKey, sttModel, language);
+                    document.getElementById('transcriptionStatus').textContent = 'Transcription complete!';
+                } catch (error) {
+                    document.getElementById('transcriptionStatus').textContent = 'Error in transcription';
+                    throw error;
+                }
+            }
             document.getElementById('transcriptionSpinner').style.display = 'none';
             document.getElementById('transcriptionResult').style.display = 'block';
             document.getElementById('transcriptionText').textContent = transcription.text;
+            
+            // Start analysis processes
+            await improveTranscription(transcription.text);
+            await elaborateTextAnalysis(transcription.text);
 
         } catch (error) {
             console.error('Error:', error);
@@ -197,6 +228,87 @@ document.addEventListener('DOMContentLoaded', function() {
     function showError(message) {
         document.getElementById('errorMessage').textContent = message;
     }
-    
 
+    async function improveTranscription(text) {
+        const wordCount = text.trim().split(/\s+/).filter(word => word.length > 0).length;
+        const charCount = text.length;
+        
+        // Update the word count display
+        // document.getElementById('wordCountText').innerHTML = `
+        //     <strong>${wordCount}</strong> words • 
+        //     <strong>${charCount}</strong> characters
+        // `;
+
+        // Show the word count result
+        document.getElementById('wordCountResult').style.display = 'block';
+        
+        try {
+            // Call the chat completion API for analysis
+            const response = await apiClient.chatCompletion(
+                apiKey,
+                txtModel,
+                [
+                    {
+                        role: 'system',
+                        content: celpip_improve_sys_prompt
+                    },
+                    {
+                        role: 'user',
+                        content: "Below is my transcript, please revise:\n\n" + text
+                    }
+                ],
+                {
+                    temperature: 0.5,
+                    max_tokens: 500
+                }
+            );
+
+            // Update the UI with the analysis
+            document.getElementById('wordCountAdvice').textContent = response.choices[0]?.message?.content;
+        } catch (error) {
+            console.error('Error analyzing word count:', error);
+            document.getElementById('wordCountAdvice').textContent = 'Could not generate analysis. Word count available above.';
+        } finally {
+            // Hide the spinner and update status
+            document.getElementById('wordCountSpinner').style.display = 'none';
+            document.getElementById('wordCountStatus').textContent = 'Analysis complete';
+        }
+    }
+
+    async function elaborateTextAnalysis(text) {
+        // Show the elaborate text result
+        document.getElementById('elaborateTextResult').style.display = 'block';
+        
+        try {
+            // Call the chat completion API for elaborate analysis
+            const response = await apiClient.chatCompletion(
+                apiKey,
+                txtModel,
+                [
+                    {
+                        role: 'system',
+                        content: celpip_extend_sys_prompt
+                    },
+                    {
+                        role: 'user',
+                        content: "Please elaborate on the following text:\n\n" + text
+                    }
+                ],
+                {
+                    temperature: 0.7,
+                    max_tokens: 1000
+                }
+            );
+
+            // Update the UI with the elaborate analysis
+            document.getElementById('elaborateTextContent').innerHTML = response.choices[0]?.message?.content.replace(/\n/g, '<br>');
+        } catch (error) {
+            console.error('Error in elaborate text analysis:', error);
+            document.getElementById('elaborateTextContent').textContent = 'Could not generate detailed analysis.';
+        } finally {
+            // Hide the spinner and update status
+            document.getElementById('elaborateTextSpinner').style.display = 'none';
+            document.getElementById('elaborateTextStatus').textContent = 'Analysis complete';
+        }
+    }
 });

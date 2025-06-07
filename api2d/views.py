@@ -7,6 +7,9 @@ from django.views.generic import View, DeleteView
 from django.urls import reverse_lazy
 from django import forms
 from .models import Api2dKey, Api2dGroup2ExpirationMapping
+from django.conf import settings
+from django.utils.safestring import mark_safe
+
 
 
 class MP3UploadForm(forms.Form):
@@ -134,7 +137,11 @@ def upload_mp3(request):
         context = {
             'api_key': api_key.key,
             'api2d_openai_endpoint': os.getenv("DYNACONF_API2D_OPENAI_ENDPOINT"),
-            'api2d_openai_stt_model': os.getenv("DYNACONF_API2D_OPENAI_STT_MODEL")
+            'api2d_openai_stt_model': os.getenv("DYNACONF_API2D_OPENAI_STT_MODEL"),
+            'api2d_openai_txt_model': os.getenv("DYNACONF_API2D_OPENAI_TXT_MODEL"),
+            'celpip_improve_sys_prompt': settings.CELPIP_IMPROVE_SYS_PROMPT,
+            'celpip_extend_sys_prompt': settings.CELPIP_EXTEND_SYS_PROMPT,
+            'is_admin': request.user.is_superuser,  # Add admin status
         }
         return render(request, 'api2d/upload_mp3.html', context)
     except Api2dKey.DoesNotExist:

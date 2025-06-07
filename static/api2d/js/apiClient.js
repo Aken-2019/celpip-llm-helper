@@ -248,6 +248,50 @@ class ApiClient {
         }
     }
 
+    /**
+     * Call OpenAI's Chat Completions API
+     * @param {string} apiKey - OpenAI API key
+     * @param {string} model - Model to use (e.g., 'gpt-3.5-turbo')
+     * @param {Array<Object>} messages - Array of message objects with 'role' and 'content' properties
+     * @param {Object} [options={}] - Additional options for the API call
+     * @returns {Promise<Object>} Response from the API
+     */
+    async chatCompletion(apiKey, model, messages, options = {}) {
+        const {
+            ...otherOptions
+        } = options;
+
+        try {
+            // Prepare headers with authorization
+            const headers = {
+                'Authorization': `Bearer ${apiKey}`,
+                'Content-Type': 'application/json',
+                ...this.headers
+            };
+
+            // Make the request using the instance's _request method
+            return await this._request('POST', '/v1/chat/completions', {
+                data: {
+                    model,
+                    messages,
+                    ...otherOptions
+                },
+                headers,
+                includeAuth: false  // We're handling auth in the headers
+            });
+        } catch (error) {
+            console.error('Error in chat completion:', error);
+            if (this.onError) {
+                this.onError(error, {
+                    method: 'POST',
+                    endpoint: '/v1/chat/completions',
+                    context: 'Chat completion request'
+                });
+            }
+            throw error;
+        }
+    }
 }
 
-
+// Attach to window for global access
+window.ApiClient = ApiClient;

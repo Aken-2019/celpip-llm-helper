@@ -25,9 +25,3 @@ urlpatterns = [
     path('accounts/', include('allauth.urls')),
     path("", include("api2d.urls")),
 ]
-
-# Serve static files in development
-if settings.DEBUG:
-    urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
-    # Also serve media files if needed
-    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

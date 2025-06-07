@@ -10,12 +10,33 @@
                     <h4>Process Audio File</h4>
                 </div>
                 <div class="card-body">
+                    {% if is_admin %}
+                    <div class="mb-3 form-check form-switch">
+                        <input class="form-check-input" type="checkbox" id="testModeToggle" data-bs-toggle="tooltip" data-bs-placement="top" title="Enable test mode with custom text">
+                        <label class="form-check-label" for="testModeToggle">Test Mode</label>
+                    </div>
+                    <div id="testModeContent" class="mb-3" style="display: none;">
+                        <label for="testTranscription" class="form-label">Test Transcription Text</label>
+                        <textarea class="form-control font-monospace" id="testTranscription" rows="5" placeholder="Enter test transcription text here...">Harry is a nice boy and he likes his cat.</textarea>
+                        <div class="form-text">This text will be used when test mode is enabled.</div>
+                    </div>
+                    {% endif %}
                     <form id="audioUploadForm" enctype="multipart/form-data">
                         <div class="mb-3">
                             <label for="audioFile" class="form-label">Audio File</label>
                             <input class="form-control" type="file" id="audioFile" accept=".mp3,.mp4,.mpeg,.mpga,.m4a,.wav,.webm" required>
                             <div class="form-text">
                                 Maximum file size: 10MB. Supported formats: MP3, MP4, M4A, WAV, WebM, and other audio formats.
+                            </div>
+                        </div>
+                        <div id="audioPlayer" class="mt-3" style="display: none;">
+                            <h5>Audio Preview</h5>
+                            <div class="card">
+                                <div class="card-body">
+                                    <audio id="audioPlayerElement" class="w-100" controls>
+                                        Your browser does not support the audio element.
+                                    </audio>
+                                </div>
                             </div>
                         </div>
                         <button type="submit" class="btn btn-primary">Process File</button>
@@ -33,21 +54,12 @@
                         <span id="errorMessage"></span>
                     </div>
                     
-                    <div id="fileInfo" class="mt-3" style="display: none;">
+                    <!-- <div id="fileInfo" class="mt-3" style="display: none;">
                         <h5>File Information</h5>
                         <pre id="fileDetails" class="bg-light p-3 rounded"></pre>
-                    </div>
+                    </div> -->
 
-                    <div id="audioPlayer" class="mt-3" style="display: none;">
-                        <h5>Audio Preview</h5>
-                        <div class="card">
-                            <div class="card-body">
-                                <audio id="audioPlayerElement" class="w-100" controls>
-                                    Your browser does not support the audio element.
-                                </audio>
-                            </div>
-                        </div>
-                    </div>
+
 
                     <div id="transcriptionSection" class="mt-3" style="display: none;">
                         <div class="alert alert-info">
@@ -62,8 +74,40 @@
                             </div>
                             <div id="transcriptionResult" class="mt-2" style="display: none;">
                                 <h5>Transcription:</h5>
-                                <div class="bg-light p-3 rounded">
+                                <div class="bg-light p-3 rounded mb-3">
                                     <pre id="transcriptionText"></pre>
+                                </div>
+                                <div id="wordCountAnalysis" class="mt-4">
+                                    <h5>文本润色:</h5>
+                                    <div class="d-flex justify-content-between align-items-center mb-2">
+                                        <div>
+                                            <i class="bi bi-graph-up me-2"></i>
+                                            <span id="wordCountStatus">Analyzing text...</span>
+                                        </div>
+                                        <div id="wordCountSpinner" class="spinner-border spinner-border-sm text-primary" role="status">
+                                            <span class="visually-hidden">Loading...</span>
+                                        </div>
+                                    </div>
+                                    <div id="wordCountResult" class="bg-light p-3 rounded" style="display: none;">
+                                        <div id="wordCountText" class="mb-2"></div>
+                                        <div id="wordCountAdvice" class="small text-muted"></div>
+                                    </div>
+                                </div>
+
+                                <div id="elaborateTextAnalysis" class="mt-4">
+                                    <h5>详细分析:</h5>
+                                    <div class="d-flex justify-content-between align-items-center mb-2">
+                                        <div>
+                                            <i class="bi bi-chat-square-text me-2"></i>
+                                            <span id="elaborateTextStatus">Analyzing text in detail...</span>
+                                        </div>
+                                        <div id="elaborateTextSpinner" class="spinner-border spinner-border-sm text-primary" role="status">
+                                            <span class="visually-hidden">Loading...</span>
+                                        </div>
+                                    </div>
+                                    <div id="elaborateTextResult" class="bg-light p-3 rounded" style="display: none;">
+                                        <div id="elaborateTextContent" class="small"></div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -79,13 +123,31 @@
 <script>
     // Configuration variables from Django
     window.api2dConfig = {
-        endpoint: '{{ api2d_openai_endpoint }}',
-        apiKey: '{{ api_key }}',
-        model: '{{ api2d_openai_stt_model }}',
-        language: '{{ api2d_openai_language }}',
-        
+        endpoint: '{{ api2d_openai_endpoint|escapejs }}',
+        apiKey: '{{ api_key|escapejs }}',
+        sttModel: '{{ api2d_openai_stt_model|escapejs }}',
+        language: '{{ api2d_openai_language|escapejs }}',
+        txtModel: '{{ api2d_openai_txt_model|escapejs }}'
     };
 </script>
+
+<!-- Safely pass multiline prompts using json_script -->
+{{ celpip_improve_sys_prompt|json_script:"celpip_improve_sys_prompt" }}
+{{ celpip_extend_sys_prompt|json_script:"celpip_extend_sys_prompt" }}
+
+<script>
+    // Parse the JSON data and add to config
+    const improvePromptElement = document.getElementById('celpip_improve_sys_prompt');
+    const extendPromptElement = document.getElementById('celpip_extend_sys_prompt');
+    
+    if (improvePromptElement) {
+        window.api2dConfig.celpip_improve_sys_prompt = JSON.parse(improvePromptElement.textContent);
+    }
+    if (extendPromptElement) {
+        window.api2dConfig.celpip_extend_sys_prompt = JSON.parse(extendPromptElement.textContent);
+    }
+</script>
+
 <script src="{% static 'api2d/js/apiClient.js' %}"></script>
 <script src="{% static 'api2d/js/upload_mp3.js' %}"></script>
 {% endblock %}
