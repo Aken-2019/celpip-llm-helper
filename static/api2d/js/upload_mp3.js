@@ -185,13 +185,24 @@ document.addEventListener('DOMContentLoaded', async function() {
 
 
 
-            // Show transcription status
+            // Show all sections
+            document.getElementById('transcriptionSection').style.display = 'block';
+            
+            // Initialize status messages and show spinners
             document.getElementById('transcriptionStatus').textContent = 'Transcribing audio...';
             document.getElementById('transcriptionSpinner').style.display = 'inline-block';
-            document.getElementById('transcriptionResult').style.display = 'none';
+            
+            // Initialize word count section
+            document.getElementById('wordCountStatus').textContent = 'Waiting for transcription...';
+            document.getElementById('wordCountSpinner').style.display = 'none';
+            
+            // Initialize detailed analysis section
+            document.getElementById('elaborateTextStatus').textContent = 'Waiting for transcription...';
+            document.getElementById('elaborateTextSpinner').style.display = 'none';
 
             let transcription;
-            
+            const initCreditsResponse = await apiClient.fetchCredits(apiKey);
+            const initUserCredit = initCreditsResponse.total_available
             if (isTestMode && testTranscriptionTextarea) {
                 // Use text from the test transcription textarea
                 transcription = {
@@ -203,47 +214,39 @@ document.addEventListener('DOMContentLoaded', async function() {
                 document.getElementById('transcriptionStatus').textContent = 'Transcribing audio...';
                 try {
                     transcription = await apiClient.transcribeAudio(file, apiKey, sttModel, language);
-                    document.getElementById('transcriptionStatus').textContent = 'Transcription complete!';
+                    const afterTranscriptionResponse = await apiClient.fetchCredits(apiKey);
+                    const afterTranscriptionUserCredit = afterTranscriptionResponse.total_available;
+                    let nUserCredit = initUserCredit - afterTranscriptionUserCredit;
+                    document.getElementById('transcriptionStatus').textContent = `Transcription takes ${nUserCredit} credits!`;
                 } catch (error) {
                     document.getElementById('transcriptionStatus').textContent = 'Error in transcription';
                     throw error;
                 }
             }
+            // Update transcription result
             document.getElementById('transcriptionSpinner').style.display = 'none';
-            document.getElementById('transcriptionResult').style.display = 'block';
             document.getElementById('transcriptionText').textContent = transcription.text;
             
-            // Start analysis processes
-            await improveTranscription(transcription.text);
-            await elaborateTextAnalysis(transcription.text);
+            await improveTranscription(transcription.text)
+            await elaborateTextAnalysis(transcription.text)
 
         } catch (error) {
             console.error('Error:', error);
-            showError(error.message || 'Failed to transcribe audio. Please try again.');
-            document.getElementById('transcriptionStatus').textContent = 'Failed to transcribe';
-            document.getElementById('transcriptionSpinner').style.display = 'none';
+            showError(error.message || 'An error occurred during processing');
         }
     });
-    
-    function showError(message) {
-        document.getElementById('errorMessage').textContent = message;
-    }
 
     async function improveTranscription(text) {
-        const wordCount = text.trim().split(/\s+/).filter(word => word.length > 0).length;
-        const charCount = text.length;
-        
-        // Update the word count display
-        // document.getElementById('wordCountText').innerHTML = `
-        //     <strong>${wordCount}</strong> words • 
-        //     <strong>${charCount}</strong> characters
-        // `;
-
-        // Show the word count result
+        // Show spinner and update status
+        document.getElementById('wordCountStatus').textContent = 'Improving text...';
+        document.getElementById('wordCountSpinner').style.display = 'inline-block';
         document.getElementById('wordCountResult').style.display = 'block';
         
         try {
-            // Call the chat completion API for analysis
+            // Get initial credits before improvement
+            const creditsResponse = await apiClient.fetchCredits(apiKey);
+            const initUserCredit = creditsResponse.total_available;
+            
             const response = await apiClient.chatCompletion(
                 apiKey,
                 txtModel,
@@ -262,24 +265,33 @@ document.addEventListener('DOMContentLoaded', async function() {
                     max_tokens: 500
                 }
             );
-
-            // Update the UI with the analysis
+            
+            const afterImproveResponse = await apiClient.fetchCredits(apiKey);
+            const afterImproveUserCredit = afterImproveResponse.total_available;
+            const nUserCredit = initUserCredit - afterImproveUserCredit;
+            
+            document.getElementById('wordCountStatus').textContent = `Improvement completed (used ${nUserCredit} credits)`;
             document.getElementById('wordCountAdvice').textContent = response.choices[0]?.message?.content;
         } catch (error) {
-            console.error('Error analyzing word count:', error);
-            document.getElementById('wordCountAdvice').textContent = 'Could not generate analysis. Word count available above.';
+            console.error('Error improving text:', error);
+            document.getElementById('wordCountStatus').textContent = 'Error improving text';
+            document.getElementById('wordCountAdvice').textContent = 'Could not generate improvement. Please try again.';
         } finally {
-            // Hide the spinner and update status
             document.getElementById('wordCountSpinner').style.display = 'none';
-            document.getElementById('wordCountStatus').textContent = 'Analysis complete';
         }
     }
 
     async function elaborateTextAnalysis(text) {
-        // Show the elaborate text result
+        // Show spinner and update status
+        document.getElementById('elaborateTextStatus').textContent = 'Analyzing text in detail...';
+        document.getElementById('elaborateTextSpinner').style.display = 'inline-block';
         document.getElementById('elaborateTextResult').style.display = 'block';
         
         try {
+            // Get initial credits before analysis
+            const initCreditsResponse = await apiClient.fetchCredits(apiKey);
+            const initUserCredit = initCreditsResponse.total_available;
+            
             // Call the chat completion API for elaborate analysis
             const response = await apiClient.chatCompletion(
                 apiKey,
@@ -299,16 +311,22 @@ document.addEventListener('DOMContentLoaded', async function() {
                     max_tokens: 1000
                 }
             );
-
+            
+            // Get credits after analysis
+            const afterAnalysisResponse = await apiClient.fetchCredits(apiKey);
+            const afterAnalysisCredit = afterAnalysisResponse.total_available;
+            const creditsUsed = initUserCredit - afterAnalysisCredit;
+            
             // Update the UI with the elaborate analysis
+            document.getElementById('elaborateTextStatus').textContent = `Detailed analysis completed (used ${creditsUsed} credits)`;
             document.getElementById('elaborateTextContent').innerHTML = response.choices[0]?.message?.content.replace(/\n/g, '<br>');
         } catch (error) {
             console.error('Error in elaborate text analysis:', error);
-            document.getElementById('elaborateTextContent').textContent = 'Could not generate detailed analysis.';
+            document.getElementById('elaborateTextStatus').textContent = 'Error in detailed analysis';
+            document.getElementById('elaborateTextContent').textContent = 'Could not generate detailed analysis. Please try again.';
         } finally {
-            // Hide the spinner and update status
+            // Hide the spinner
             document.getElementById('elaborateTextSpinner').style.display = 'none';
-            document.getElementById('elaborateTextStatus').textContent = 'Analysis complete';
         }
     }
 });
