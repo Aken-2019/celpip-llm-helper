@@ -32,6 +32,9 @@ urlpatterns = [
     
     # Pages app (keep this at the bottom to avoid conflicts with other URLs)
     path('', include('pages.urls')),  # This will handle all page URLs
+
+    path("__reload__/", include("django_browser_reload.urls")),
+
 ]
 
 # Serve media files in development
