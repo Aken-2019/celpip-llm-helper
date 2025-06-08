@@ -21,7 +21,19 @@ from django.conf import settings
 from django.conf.urls.static import static
 
 urlpatterns = [
+    # Admin
     path("admin/", admin.site.urls),
+    
+    # Authentication
     path('accounts/', include('allauth.urls')),
+    
+    # Main app
     path("", include("api2d.urls")),
+    
+    # Pages app (keep this at the bottom to avoid conflicts with other URLs)
+    path('', include('pages.urls')),  # This will handle all page URLs
 ]
+
+# Serve media files in development
+if settings.DEBUG:
+    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
