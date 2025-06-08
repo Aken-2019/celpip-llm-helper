@@ -19,7 +19,7 @@ class Api2dKey(models.Model):
     user = models.ForeignKey('auth.User', on_delete=models.CASCADE)
     group = models.ForeignKey(Api2dGroup2ExpirationMapping, on_delete=models.CASCADE, related_name='api_keys')
     created_at = models.DateTimeField(auto_now_add=True)
-    expired_at = models.DateTimeField()
+    expired_at = models.DateTimeField(null=True)
 
     def save(self, *args, **kwargs):
         if not self.expired_at:
@@ -29,5 +29,6 @@ class Api2dKey(models.Model):
                 from django.utils.dateparse import parse_datetime
                 created_at = parse_datetime(created_at)
             # Set expired_at based on group's validate_days if not provided
-            self.expired_at = created_at + timedelta(days=self.group.validate_days)
+            if not self.expired_at and self.group.validate_days:
+                self.expired_at = created_at + timedelta(days=self.group.validate_days)
         super().save(*args, **kwargs)

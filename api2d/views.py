@@ -10,8 +10,8 @@ from django import forms
 from django.http import JsonResponse
 from .models import Api2dKey, Api2dGroup2ExpirationMapping
 from django.conf import settings
-
-
+from .utilities import Api2dClient
+from datetime import timedelta
 
 class MP3UploadForm(forms.Form):
     """Form for uploading MP3 files"""
@@ -65,6 +65,24 @@ class ApiKeyView(LoginRequiredMixin, View):
                 'api2d_openai_endpoint': api2d_openai_endpoint
             }
         except Api2dKey.DoesNotExist:
+            client = Api2dClient(os.getenv("DYNACONF_API2D_ADMIN_KEY"), os.getenv("DYNACONF_API2D_API_ENDPOINT"))
+            
+            key_group = Api2dGroup2ExpirationMapping.objects.first()
+            try:
+                api2d_key_instance = client.call_custom_key_save(
+                    type_id=key_group.type_id,
+                    n=1
+                )
+                api_key = Api2dKey.objects.create(
+                    key=api2d_key_instance[0]["key"],
+                    user=request.user,
+                    group=key_group,
+                    created_at=timezone.now(),
+                )
+                return redirect('api2d:api-key')
+            except ValueError as e:
+                messages.error(request, str(e))
+                return redirect('api2d:api-key')
             form = ApiKeyForm()
             context = {
                 'has_api_key': False,
@@ -135,7 +153,7 @@ def upload_mp3(request):
     try:
         # Get the user's API key
         api_key = Api2dKey.objects.get(user=request.user)
-        if api_key.expired_at < timezone.now():
+        if api_key.expired_at and api_key.expired_at < timezone.now():
             messages.error(request, 'Your API key has expired. Please renew it.')
             return redirect('api2d:api-key')
         context = {

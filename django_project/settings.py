@@ -19,14 +19,6 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.1/howto/deployment/checklist/
 
-# SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = "django-insecure-^beb80(fzx53c1p*4-1wtk2l=!q7s^_r(k4u1fu2+cn!df_va8"
-
-# SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
-
-ALLOWED_HOSTS = []
-
 
 # Application definition
 
@@ -44,6 +36,7 @@ INSTALLED_APPS = [
 
     "django.contrib.staticfiles",
     "api2d",
+    "pages",
 ]
 
 # Crispy Forms Configuration
@@ -84,15 +77,6 @@ TEMPLATES = [
 WSGI_APPLICATION = "django_project.wsgi.application"
 
 
-# Database
-# https://docs.djangoproject.com/en/5.1/ref/settings/#databases
-
-DATABASES = {
-    "default": {
-        "ENGINE": "django.db.backends.sqlite3",
-        "NAME": BASE_DIR / "db.sqlite3",
-    }
-}
 
 
 # Password validation
@@ -156,7 +140,7 @@ AUTHENTICATION_BACKENDS = [
 LOGIN_REDIRECT_URL = 'api2d:home'  # or your desired redirect URL
 ACCOUNT_LOGOUT_REDIRECT_URL = 'account_login'
 ACCOUNT_SIGNUP_REDIRECT_URL = 'api2d:home'  # or your desired redirect URL after signup
-ACCOUNT_EMAIL_VERIFICATION = 'none'  # or 'mandatory' or 'optional'
+ACCOUNT_EMAIL_VERIFICATION = 'mandatory'  # or 'mandatory' or 'optional' or 'none'
 ACCOUNT_LOGIN_METHODS = {'email', 'username'}
 ACCOUNT_EMAIL_REQUIRED = True
 ACCOUNT_USERNAME_REQUIRED = True
