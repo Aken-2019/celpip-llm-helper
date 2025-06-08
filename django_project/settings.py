@@ -33,7 +33,7 @@ INSTALLED_APPS = [
     'allauth.account',
     'crispy_forms',
     'crispy_bootstrap5',
-
+    'django.contrib.sites',
     "django.contrib.staticfiles",
     "api2d",
     "pages",
@@ -156,6 +156,8 @@ FILE_UPLOAD_MAX_MEMORY_SIZE = 2621440  # 2.5MB
 FILE_UPLOAD_TEMP_DIR = BASE_DIR / 'tmp'
 FILE_UPLOAD_PERMISSIONS = 0o644
 
+
+SITE_ID = 1
 # HERE STARTS DYNACONF EXTENSION LOAD (Keep at the very bottom of settings.py)
 # Read more at https://www.dynaconf.com/django/
 import dynaconf  # noqa

@@ -1,0 +1,29 @@
+{% load i18n %}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>{% trans "Email Address Changed" %}</title>
+</head>
+<body>
+    <div style="max-width: 600px; margin: 0 auto; font-family: Arial, sans-serif;">
+        <h2>{% trans "Email Address Changed" %}</h2>
+        
+        <p>{% blocktrans with site_name=current_site.name site_domain=current_site.domain %}
+        Your email address has been changed to <strong>{{ new_email }}</strong> for your account on {{ site_name }}.
+        {% endblocktrans %}</p>
+        
+        <p>{% trans "If you didn't request this change, please contact our support team immediately." %}</p>
+        
+        <p>{% blocktrans with site_name=site_domain %}Thank you for using {{ site_name }}!{% endblocktrans %}</p>
+        
+        <hr>
+        <p style="color: #666; font-size: 0.9em;">
+            {% blocktrans with site_name=site_domain %}
+            This is an automated message from {{ site_name }}. Please do not reply to this email.
+            {% endblocktrans %}
+        </p>
+    </div>
+</body>
+</html>

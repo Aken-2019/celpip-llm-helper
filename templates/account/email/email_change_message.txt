@@ -1,0 +1,11 @@
+{% load i18n %}
+
+{% autoescape off %}
+{% blocktrans with site_name=current_site.name site_domain=current_site.domain %}You're receiving this e-mail because your e-mail address has been changed to {{ new_email }} at {{ site_domain }}.
+
+If you didn't request this change, please contact us immediately.{% endblocktrans %}
+
+{% blocktrans with site_name=site_domain %}Thank you for using {{ site_name }}!{% endblocktrans %}
+
+{{ site_domain }}
+{% endautoescape %}
