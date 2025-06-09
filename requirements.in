@@ -7,7 +7,7 @@ django-allauth
 django-cors-headers
 dotenv
 pre-commit
-whitenoise
+whitenoise[brotli]
 black
 playwright
 pytest-playwright
@@ -16,3 +16,4 @@ drf-spectacular
 django-crispy-forms
 crispy-bootstrap5
 django-browser-reload
+gunicorn

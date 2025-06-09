@@ -64,6 +64,8 @@ filelock==3.17.0
     # via virtualenv
 greenlet==3.1.1
     # via playwright
+gunicorn==23.0.0
+    # via -r requirements.in
 identify==2.6.8
     # via pre-commit
 idna==3.10
@@ -83,6 +85,7 @@ nodeenv==1.9.1
 packaging==24.2
     # via
     #   black
+    #   gunicorn
     #   pytest
 pathspec==0.12.1
     # via black

@@ -35,6 +35,7 @@ INSTALLED_APPS = [
     'crispy_bootstrap5',
     "django_browser_reload",
     'django.contrib.sites',
+    "whitenoise.runserver_nostatic",
     "django.contrib.staticfiles",
     "api2d",
     "pages",
@@ -47,6 +48,7 @@ CRISPY_TEMPLATE_PACK = "bootstrap5"
 
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
+    "whitenoise.middleware.WhiteNoiseMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.common.CommonMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
@@ -59,6 +61,13 @@ MIDDLEWARE = [
     "django_browser_reload.middleware.BrowserReloadMiddleware",
 
 ]
+
+STORAGES = {
+    # ...
+    "staticfiles": {
+        "BACKEND": "whitenoise.storage.CompressedManifestStaticFilesStorage",
+    },
+}
 
 ROOT_URLCONF = "django_project.urls"
 
@@ -147,17 +156,18 @@ ACCOUNT_LOGOUT_REDIRECT_URL = 'account_login'
 ACCOUNT_SIGNUP_REDIRECT_URL = 'api2d:home'  # or your desired redirect URL after signup
 ACCOUNT_EMAIL_VERIFICATION = 'mandatory'  # or 'mandatory' or 'optional' or 'none'
 
-# Email-only authentication
-
-ACCOUNT_AUTHENTICATION_METHOD = 'email'
+# Authentication settings
+ACCOUNT_AUTHENTICATION_METHOD = 'email'  # Login with email
 ACCOUNT_EMAIL_REQUIRED = True
 ACCOUNT_UNIQUE_EMAIL = True
-ACCOUNT_USERNAME_REQUIRED = False
-ACCOUNT_USER_MODEL_USERNAME_FIELD = None
+ACCOUNT_USERNAME_REQUIRED = True  # Still collect username
+ACCOUNT_USERNAME_VALIDATORS = None  # Allow any username format
+ACCOUNT_USER_MODEL_USERNAME_FIELD = 'username'
 
 # Custom forms
 ACCOUNT_FORMS = {
     'login': 'users.forms.EmailLoginForm',
+    # 'signup': 'users.forms.CustomSignupForm',
 }
 
 FIXTURE_DIRS = [BASE_DIR / "fixtures"]
