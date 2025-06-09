@@ -2,7 +2,7 @@ default:
   # Django settings
   SECRET_KEY: "django-insecure-^beb80(fzx53c1p*4-1wtk2l=!q7s^_r(k4u1fu2+cn!df_va8"
   DEBUG: true
-  ALLOWED_HOSTS: ["tifen-dev-a1e69800ec80.herokuapp.com", "127.0.0.1"]
+  ALLOWED_HOSTS: ["tifen-dev-a1e69800ec80.herokuapp.com", "127.0.0.1","localhost", "gc4wso88gcsso40g8g4c8gss.5.255.127.216.sslip.io"]
   DATABASES:
     default:
       ENGINE: "django.db.backends.sqlite3"
