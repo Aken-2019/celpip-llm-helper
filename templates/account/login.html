@@ -1,18 +1,18 @@
 {% extends "base.html" %}
 {% load crispy_forms_tags %}
 
-{% block title %}Sign In{% endblock %}
+{% block title %}登录{% endblock %}
 
 {% block content %}
 <div class="row justify-content-center">
     <div class="col-md-6 col-lg-4">
         <div class="card shadow-sm">
             <div class="card-body p-4">
-                <h2 class="text-center mb-4">Sign In</h2>
+                <h2 class="text-center mb-4">用户登录</h2>
                 
                 {% if form.errors %}
                     <div class="alert alert-danger">
-                        <strong>Error:</strong> Invalid username or password. Please try again.
+                        <strong>错误：</strong> 用户名或密码不正确，请重试。
                     </div>
                 {% endif %}
 
@@ -21,7 +21,7 @@
                     {{ form|crispy }}
                     <div class="text-end mb-3">
                         <a href="{% url 'account_reset_password' %}" class="text-decoration-none small">
-                            Forgot Password?
+                            忘记密码？
                         </a>
                     </div>
                     
@@ -30,13 +30,13 @@
                     {% endif %}
                     
                     <div class="d-grid gap-2">
-                        <button class="btn btn-primary" type="submit">Sign In</button>
+                        <button class="btn btn-primary" type="submit">登录</button>
                     </div>
                 </form>
                 
                 <div class="mt-4 text-center">
-                    <p class="mb-2">Don't have an account?</p>
-                    <a href="{% url 'account_signup' %}" class="btn btn-outline-primary">Sign Up</a>
+                    <p class="mb-2">还没有账号？</p>
+                    <a href="{% url 'account_signup' %}" class="btn btn-outline-primary">注册新账号</a>
                 </div>
             </div>
         </div>

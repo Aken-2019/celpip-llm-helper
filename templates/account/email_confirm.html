@@ -3,7 +3,7 @@
 {% load i18n %}
 {% load account %}
 
-{% block head_title %}{% trans "Confirm Email Address" %}{% endblock %}
+{% block head_title %}{% trans "确认邮箱地址" %}{% endblock %}
 
 {% block content %}
 <div class="container mt-5">
@@ -11,7 +11,7 @@
         <div class="col-md-8 col-lg-6">
             <div class="card shadow">
                 <div class="card-header bg-primary text-white text-center">
-                    <h3 class="mb-0">{% trans "Confirm Email Address" %}</h3>
+                    <h3 class="mb-0">{% trans "确认邮箱地址" %}</h3>
                 </div>
                 <div class="card-body p-4">
                     {% if confirmation %}
@@ -19,7 +19,7 @@
                         
                         <p class="mb-4">
                             {% blocktrans with confirmation.email_address.email as email %}
-                                Please confirm that <a href="mailto:{{ email }}">{{ email }}</a> is an email address for user {{ user_display }}.
+                                请确认 <a href="mailto:{{ email }}">{{ email }}</a> 是用户 {{ user_display }} 的邮箱地址。
                             {% endblocktrans %}
                         </p>
 
@@ -27,7 +27,7 @@
                             {% csrf_token %}
                             <div class="d-grid gap-2">
                                 <button class="btn btn-primary" type="submit">
-                                    {% trans 'Confirm' %}
+                                    {% trans '确认' %}
                                 </button>
                             </div>
                         </form>
@@ -36,8 +36,8 @@
                         <div class="alert alert-warning" role="alert">
                             <p class="mb-0">
                                 {% blocktrans %}
-                                    This email confirmation link expired or is invalid. Please 
-                                    <a href="{{ email_url }}">issue a new email confirmation request</a>.
+                                    此邮箱确认链接已过期或无效。请
+                                    <a href="{{ email_url }}">重新发送确认邮件</a>。
                                 {% endblocktrans %}
                             </p>
                         </div>

@@ -2,7 +2,7 @@
 
 {% load i18n %}
 
-{% block head_title %}{% trans "Verify Your Email Address" %}{% endblock %}
+{% block head_title %}{% trans "验证您的电子邮箱" %}{% endblock %}
 
 {% block content %}
 <div class="container mt-5">
@@ -10,7 +10,7 @@
         <div class="col-md-8 col-lg-6">
             <div class="card shadow">
                 <div class="card-header bg-primary text-white text-center">
-                    <h3 class="mb-0">{% trans "Verify Your Email Address" %}</h3>
+                    <h3 class="mb-0">{% trans "验证您的电子邮箱" %}</h3>
                 </div>
                 <div class="card-body p-4">
                     <div class="text-center mb-4">
@@ -19,22 +19,22 @@
                     
                     <p class="text-center mb-4">
                         {% blocktrans %}
-                            We have sent an email to you for verification. Follow the link provided to finalize the signup process. 
-                            Please contact us if you do not receive it within a few minutes.
+                            我们已向您的邮箱发送了一封验证邮件。请点击邮件中的链接完成注册流程。
+                            如果您在几分钟内没有收到邮件，请检查垃圾邮件箱或联系我们。
                         {% endblocktrans %}
                     </p>
                     
                     <!-- <div class="alert alert-info" role="alert">
                         <p class="mb-0">
                             {% blocktrans %}
-                                <strong>Note:</strong> You can still <a href="{{ email_url }}">change your email address</a>.
+                                <strong>注意：</strong> 您仍然可以<a href="{{ email_url }}">更改您的电子邮箱地址</a>。
                             {% endblocktrans %}
                         </p>
                     </div> -->
                     
                     <div class="d-grid gap-2 mt-4">
                         <a href="{% url 'account_login' %}" class="btn btn-outline-primary">
-                            {% trans 'Back to Login' %}
+                            {% trans '返回登录' %}
                         </a>
                     </div>
                 </div>

@@ -4,24 +4,24 @@
 <html>
 <head>
     <meta charset="UTF-8">
-    <title>{% trans "Email Address Changed" %}</title>
+    <title>{% trans "邮箱地址已更改" %}</title>
 </head>
 <body>
     <div style="max-width: 600px; margin: 0 auto; font-family: Arial, sans-serif;">
-        <h2>{% trans "Email Address Changed" %}</h2>
+        <h2>{% trans "邮箱地址已更改" %}</h2>
         
         <p>{% blocktrans with site_name=current_site.name site_domain=current_site.domain %}
-        Your email address has been changed to <strong>{{ new_email }}</strong> for your account on {{ site_name }}.
+        您的{{ site_name }}账户邮箱地址已更改为 <strong>{{ new_email }}</strong>。
         {% endblocktrans %}</p>
         
-        <p>{% trans "If you didn't request this change, please contact our support team immediately." %}</p>
+        <p>{% trans "如果您未进行此更改，请立即联系我们的支持团队。" %}</p>
         
-        <p>{% blocktrans with site_name=site_domain %}Thank you for using {{ site_name }}!{% endblocktrans %}</p>
+        <p>{% blocktrans with site_name=site_domain %}感谢您使用{{ site_name }}！{% endblocktrans %}</p>
         
         <hr>
         <p style="color: #666; font-size: 0.9em;">
             {% blocktrans with site_name=site_domain %}
-            This is an automated message from {{ site_name }}. Please do not reply to this email.
+            您收到此邮件是因为您在{{ site_name }}上的邮箱地址已被修改。
             {% endblocktrans %}
         </p>
     </div>
