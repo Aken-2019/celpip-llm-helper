@@ -157,11 +157,10 @@ ACCOUNT_SIGNUP_REDIRECT_URL = 'api2d:home'  # or your desired redirect URL after
 ACCOUNT_EMAIL_VERIFICATION = 'mandatory'  # or 'mandatory' or 'optional' or 'none'
 
 # Authentication settings
-ACCOUNT_AUTHENTICATION_METHOD = 'email'  # Login with email
+ACCOUNT_LOGIN_METHODS = {'email'}  # ?: settings.ACCOUNT_AUTHENTICATION_METHOD is deprecated, use: settings.ACCOUNT_LOGIN_METHODS = {'email'}
 ACCOUNT_EMAIL_REQUIRED = True
 ACCOUNT_UNIQUE_EMAIL = True
 ACCOUNT_USERNAME_REQUIRED = True  # Still collect username
-ACCOUNT_USERNAME_VALIDATORS = None  # Allow any username format
 ACCOUNT_USER_MODEL_USERNAME_FIELD = 'username'
 
 # Custom forms
