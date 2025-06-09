@@ -38,6 +38,7 @@ INSTALLED_APPS = [
     "django.contrib.staticfiles",
     "api2d",
     "pages",
+    "users",  # Custom users app for authentication forms
 ]
 
 # Crispy Forms Configuration
@@ -145,9 +146,19 @@ LOGIN_REDIRECT_URL = 'api2d:home'  # or your desired redirect URL
 ACCOUNT_LOGOUT_REDIRECT_URL = 'account_login'
 ACCOUNT_SIGNUP_REDIRECT_URL = 'api2d:home'  # or your desired redirect URL after signup
 ACCOUNT_EMAIL_VERIFICATION = 'mandatory'  # or 'mandatory' or 'optional' or 'none'
-ACCOUNT_LOGIN_METHODS = {'email', 'username'}
+
+# Email-only authentication
+
+ACCOUNT_AUTHENTICATION_METHOD = 'email'
 ACCOUNT_EMAIL_REQUIRED = True
-ACCOUNT_USERNAME_REQUIRED = True
+ACCOUNT_UNIQUE_EMAIL = True
+ACCOUNT_USERNAME_REQUIRED = False
+ACCOUNT_USER_MODEL_USERNAME_FIELD = None
+
+# Custom forms
+ACCOUNT_FORMS = {
+    'login': 'users.forms.EmailLoginForm',
+}
 
 FIXTURE_DIRS = [BASE_DIR / "fixtures"]
 
