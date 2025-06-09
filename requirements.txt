@@ -8,6 +8,7 @@ asgiref==3.8.1
     # via
     #   django
     #   django-allauth
+    #   django-browser-reload
     #   django-cors-headers
 attrs==25.3.0
     # via
@@ -32,11 +33,14 @@ django==5.1.6
     #   -r requirements.in
     #   crispy-bootstrap5
     #   django-allauth
+    #   django-browser-reload
     #   django-cors-headers
     #   django-crispy-forms
     #   djangorestframework
     #   drf-spectacular
 django-allauth==65.4.1
+    # via -r requirements.in
+django-browser-reload==1.18.0
     # via -r requirements.in
 django-cors-headers==4.7.0
     # via -r requirements.in
