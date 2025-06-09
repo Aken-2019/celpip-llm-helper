@@ -16,6 +16,8 @@ attrs==25.3.0
     #   referencing
 black==25.1.0
     # via -r requirements.in
+brotli==1.1.0
+    # via whitenoise
 certifi==2025.1.31
     # via requests
 cfgv==3.4.0
@@ -28,10 +30,13 @@ crispy-bootstrap5==2025.4
     # via -r requirements.in
 distlib==0.3.9
     # via virtualenv
+dj-database-url==3.0.0
+    # via -r requirements.in
 django==5.1.6
     # via
     #   -r requirements.in
     #   crispy-bootstrap5
+    #   dj-database-url
     #   django-allauth
     #   django-browser-reload
     #   django-cors-headers
@@ -147,6 +152,7 @@ typing-extensions==4.12.2
     # via
     #   asgiref
     #   black
+    #   dj-database-url
     #   exceptiongroup
     #   pyee
     #   referencing
@@ -156,5 +162,5 @@ urllib3==2.3.0
     # via requests
 virtualenv==20.29.2
     # via pre-commit
-whitenoise==6.9.0
+whitenoise[brotli]==6.9.0
     # via -r requirements.in

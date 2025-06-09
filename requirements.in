@@ -17,3 +17,4 @@ django-crispy-forms
 crispy-bootstrap5
 django-browser-reload
 gunicorn
+dj-database-url
