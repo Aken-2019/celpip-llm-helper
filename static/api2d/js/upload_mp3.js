@@ -75,8 +75,9 @@ document.addEventListener('DOMContentLoaded', async function() {
         }
     }
 
-    // Initial credit info update
+    // Initial credit info update and hide copy buttons
     updateCreditInfo();
+    initCopyButtons();
     
     // Helper functions
     function showError(message) {
@@ -262,7 +263,7 @@ document.addEventListener('DOMContentLoaded', async function() {
 
     async function improveTranscription(text) {
         // Show spinner and update status
-        document.getElementById('wordCountStatus').textContent = '进行中...';
+        document.getElementById('wordCountStatus').textContent = '正在分析...';
         document.getElementById('wordCountSpinner').style.display = 'inline-block';
         document.getElementById('wordCountResult').style.display = 'block';
         
@@ -308,7 +309,7 @@ document.addEventListener('DOMContentLoaded', async function() {
 
     async function elaborateTextAnalysis(text) {
         // Show spinner and update status
-        document.getElementById('elaborateTextStatus').textContent = '进行中...';
+        document.getElementById('elaborateTextStatus').textContent = '正在分析...';
         document.getElementById('elaborateTextSpinner').style.display = 'inline-block';
         document.getElementById('elaborateTextResult').style.display = 'block';
         

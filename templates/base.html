@@ -58,14 +58,14 @@
 
     <!-- Notifications -->
     {% if notifications %}
-    <div class="container mt-3">
+    <div class="container mt-2">
         {% for notification in notifications %}
             {% if notification.is_currently_active %}
-            <div class="alert {{ notification.css_class }}" role="alert">
-                {% if notification.title %}
-                    <h5 class="alert-heading">{{ notification.title }}</h5>
-                {% endif %}
-                {{ notification.message|linebreaks }}
+            <div class="alert {{ notification.css_class }} mb-2 py-1 px-2" role="alert">
+                <!-- {% if notification.title %}
+                    <h6 class="alert-heading mb-1">{{ notification.title }}</h6>
+                {% endif %} -->
+                <div class="small">{{ notification.message|linebreaks }}</div>
             </div>
             {% endif %}
         {% endfor %}
@@ -91,7 +91,7 @@
     <!-- Footer -->
     <footer class="bg-light py-4 mt-5">
         <div class="container text-center">
-            <p class="mb-0">&copy; {% now "Y" %} My Django Project. All rights reserved.</p>
+            <p class="mb-0">&copy; {% now "Y" %} {% site_name %}. All rights reserved.</p>
         </div>
     </footer>
 
