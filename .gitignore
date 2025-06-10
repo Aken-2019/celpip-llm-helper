@@ -199,3 +199,7 @@ fixtures
 
 # Ignore dynaconf secret files
 .secrets.*
+
+
+#playwright
+test-results/
