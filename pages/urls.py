@@ -5,4 +5,6 @@ app_name = 'pages'
 
 urlpatterns = [
     path('<slug:slug>/', views.PageDetailView.as_view(), name='page_detail'),
+    path("", views.HomePageView.as_view(), name='home'),
+
 ]

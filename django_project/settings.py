@@ -152,9 +152,9 @@ AUTHENTICATION_BACKENDS = [
 ]
 
 # allauth settings
-LOGIN_REDIRECT_URL = 'api2d:home'  # or your desired redirect URL
+LOGIN_REDIRECT_URL = 'pages:home'  # or your desired redirect URL
 ACCOUNT_LOGOUT_REDIRECT_URL = 'account_login'
-ACCOUNT_SIGNUP_REDIRECT_URL = 'api2d:home'  # or your desired redirect URL after signup
+ACCOUNT_SIGNUP_REDIRECT_URL = 'pages:home'  # or your desired redirect URL after signup
 ACCOUNT_EMAIL_VERIFICATION = 'mandatory'  # or 'mandatory' or 'optional' or 'none'
 
 # Authentication settings
