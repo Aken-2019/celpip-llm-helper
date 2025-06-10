@@ -4,12 +4,11 @@
 {% load static %}
 
 {% block content %}
-<div class="container mt-4">
     <h2>绑定AI点卡</h2>
 
 
 
-    <div class="card mt-4">
+    <div class="card shadow mt-4">
         <div class="card-body">
             {% if has_api_key %}
                 <h5 class="card-title">点卡信息</h5>
@@ -63,7 +62,6 @@
             {% endif %}
         </div>
     </div>
-</div>
 
 {% block extra_js %}
 <script src="{% static 'api2d/js/apiClient.js' %}"></script>

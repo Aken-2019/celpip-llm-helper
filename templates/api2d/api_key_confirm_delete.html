@@ -1,32 +1,30 @@
 {% extends "base.html" %}
 
 {% block content %}
-<div class="container mt-5">
-    <div class="row justify-content-center">
-        <div class="col-md-6 col-lg-4">
-            <div class="card shadow">
-                <div class="card-body p-4">
-                    <h2 class="text-center mb-4">Delete API Key</h2>
-                    <p class="text-center">
-                        Are you sure you want to delete your API key?
-                        <br>
-                        <strong>This action cannot be undone.</strong>
-                    </p>
-                    
-                    <form method="post" class="mt-4">
-                        {% csrf_token %}
-                        <div class="d-grid gap-2">
-                            <button type="submit" class="btn btn-danger">
-                                <i class="bi bi-trash me-1"></i> Delete API Key
-                            </button>
-                            <a href="{% url 'api2d:api-key' %}" class="btn btn-outline-secondary">
-                                Cancel
-                            </a>
-                        </div>
-                    </form>
+
+<div class="col-md-6 col-lg-4">
+    <div class="card shadow">
+        <div class="card-body p-4">
+            <h2 class="text-center mb-4">Delete API Key</h2>
+            <p class="text-center">
+                Are you sure you want to delete your API key?
+                <br>
+                <strong>This action cannot be undone.</strong>
+            </p>
+            
+            <form method="post" class="mt-4">
+                {% csrf_token %}
+                <div class="d-grid gap-2">
+                    <button type="submit" class="btn btn-danger">
+                        <i class="bi bi-trash me-1"></i> Delete API Key
+                    </button>
+                    <a href="{% url 'api2d:api-key' %}" class="btn btn-outline-secondary">
+                        Cancel
+                    </a>
                 </div>
-            </div>
+            </form>
         </div>
     </div>
 </div>
+
 {% endblock %}
