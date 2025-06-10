@@ -16,12 +16,21 @@ class Api2dGroup2ExpirationMapping(models.Model):
 
 class Api2dKey(models.Model):
     key = models.CharField(max_length=100, unique=True)
-    user = models.ForeignKey('auth.User', on_delete=models.CASCADE)
+    user = models.OneToOneField('auth.User', on_delete=models.CASCADE, unique=True)
     group = models.ForeignKey(Api2dGroup2ExpirationMapping, on_delete=models.CASCADE, related_name='api_keys')
     created_at = models.DateTimeField(auto_now_add=True)
     expired_at = models.DateTimeField(null=True)
 
+    class Meta:
+        verbose_name = 'API Key'
+        verbose_name_plural = 'API Keys'
+
     def save(self, *args, **kwargs):
+        # Check if this is a new key and user already has one
+        if not self.pk and Api2dKey.objects.filter(user=self.user).exists():
+            from django.core.exceptions import ValidationError
+            raise ValidationError('This user already has an API key.')
+            
         if not self.expired_at:
             # Convert created_at to datetime if it's a string
             created_at = self.created_at
@@ -31,4 +40,4 @@ class Api2dKey(models.Model):
             # Set expired_at based on group's validate_days if not provided
             if not self.expired_at and self.group.validate_days:
                 self.expired_at = created_at + timedelta(days=self.group.validate_days)
-        super().save(*args, **kwargs)
+        return super().save(*args, **kwargs)
