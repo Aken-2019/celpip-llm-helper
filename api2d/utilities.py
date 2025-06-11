@@ -4,7 +4,6 @@ from dataclasses import dataclass
 from datetime import datetime
 
 
-
 class Api2dClient:
     """Client for interacting with the API2D API"""
     
@@ -71,16 +70,3 @@ class Api2dCustomKey():
     created_at: datetime
     enabled: bool
 
-if __name__ == "__main__":
-    import os
-    from dotenv import load_dotenv
-    load_dotenv()
-    API2D_API_ENDPOINT = os.getenv("DYNACONF_API2D_API_ENDPOINT")
-    API2D_ADMIN_KEY = os.getenv("DYNACONF_API2D_ADMIN_KEY")
-    client = Api2dClient(API2D_ADMIN_KEY, API2D_API_ENDPOINT)
-
-    key = client.call_custom_key_search_key(os.getenv("DYNACONF_API2D_TEST_FORWARD_KEY"))
-    print(key)
-
-    class_key = client.get_key(os.getenv("DYNACONF_API2D_TEST_FORWARD_KEY"))
-    print(class_key)
