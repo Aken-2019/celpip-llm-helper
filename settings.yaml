@@ -1,6 +1,6 @@
 default:
   # Django settings
-  ALLOWED_HOSTS: ["tifen-dev-a1e69800ec80.herokuapp.com", "127.0.0.1","localhost", "gc4wso88gcsso40g8g4c8gss.5.255.127.216.sslip.io"]
+  ALLOWED_HOSTS: ["tifen-uat.harrylearns.com", "127.0.0.1","localhost", "gc4wso88gcsso40g8g4c8gss.5.255.127.216.sslip.io"]
 
 
 
