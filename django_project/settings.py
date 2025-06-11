@@ -58,9 +58,7 @@ MIDDLEWARE = [
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
     # Add the account middleware:
     "allauth.account.middleware.AccountMiddleware",
-
     "django_browser_reload.middleware.BrowserReloadMiddleware",
-
 ]
 
 STORAGES = {
