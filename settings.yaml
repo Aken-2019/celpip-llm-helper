@@ -1,7 +1,7 @@
 default:
   # Django settings
   ALLOWED_HOSTS: ["tifen-uat.harrylearns.com", "127.0.0.1","localhost"]
-
+  DEBUG: true
 
   CSRF_TRUSTED_ORIGINS: [
     "https://tifen-uat.harrylearns.com",
