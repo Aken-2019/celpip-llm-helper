@@ -2,7 +2,7 @@ import requests
 import json
 from dataclasses import dataclass
 from datetime import datetime
-
+import logging
 
 class Api2dClient:
     """Client for interacting with the API2D API"""
@@ -23,7 +23,7 @@ class Api2dClient:
             return response.json()["data"]["custom_key_array"]
         except requests.exceptions.RequestException as e:
             # Log the error or handle it as needed
-            print(f"Error Creating API key info: {e}")
+            logging.error(f"Error Creating API key info: {e}")
             return None
 
     def call_custom_key_search_key(self, key):
@@ -36,7 +36,7 @@ class Api2dClient:
             return response.json()["data"]["custom_key_array"]
         except requests.exceptions.RequestException as e:
             # Log the error or handle it as needed
-            print(f"Error fetching API key info: {e}")
+            logging.error(f"Error fetching API key info: {e}")
             return None
 
     def get_key(self, key):
