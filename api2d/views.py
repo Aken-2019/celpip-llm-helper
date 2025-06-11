@@ -1,4 +1,3 @@
-import os
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.decorators import login_required
@@ -7,11 +6,10 @@ from django.utils import timezone
 from django.views.generic import View, DeleteView
 from django.urls import reverse_lazy
 from django import forms
-from django.http import JsonResponse
 from .models import Api2dKey, Api2dGroup2ExpirationMapping
 from django.conf import settings
 from .utilities import Api2dClient
-from datetime import timedelta
+from django.conf import settings
 
 class MP3UploadForm(forms.Form):
     """Form for uploading MP3 files"""
@@ -57,15 +55,14 @@ class ApiKeyView(LoginRequiredMixin, View):
             form = ApiKeyForm()
             
             # Get the API endpoint from environment variable
-            api2d_openai_endpoint = os.getenv("DYNACONF_API2D_OPENAI_ENDPOINT")
             context = {
                 'has_api_key': True,
                 'api_key': api_key,
                 'form': form,
-                'api2d_openai_endpoint': api2d_openai_endpoint
+                'api2d_openai_endpoint': settings.API2D_OPENAI_ENDPOINT
             }
         except Api2dKey.DoesNotExist:
-            client = Api2dClient(os.getenv("DYNACONF_API2D_ADMIN_KEY"), os.getenv("DYNACONF_API2D_API_ENDPOINT"))
+            client = Api2dClient(settings.API2D_ADMIN_KEY, settings.API2D_API_ENDPOINT)
             
             key_group = Api2dGroup2ExpirationMapping.objects.first()
             try:
@@ -104,7 +101,7 @@ class ApiKeyView(LoginRequiredMixin, View):
                 return redirect('api2d:api-key')
 
             from .utilities import Api2dClient
-            client = Api2dClient(os.getenv("DYNACONF_API2D_ADMIN_KEY"), os.getenv("DYNACONF_API2D_API_ENDPOINT"))
+            client = Api2dClient(settings.API2D_ADMIN_KEY, settings.API2D_API_ENDPOINT)
             try:
                 api2d_key_instance = client.get_key(form.cleaned_data['key'])
             except ValueError as e:
@@ -158,9 +155,9 @@ def upload_mp3(request):
             return redirect('api2d:api-key')
         context = {
             'api_key': api_key.key,
-            'api2d_openai_endpoint': os.getenv("DYNACONF_API2D_OPENAI_ENDPOINT"),
-            'api2d_openai_stt_model': os.getenv("DYNACONF_API2D_OPENAI_STT_MODEL"),
-            'api2d_openai_txt_model': os.getenv("DYNACONF_API2D_OPENAI_TXT_MODEL"),
+            'api2d_openai_endpoint': settings.API2D_OPENAI_ENDPOINT,  # Updated to use Django's endpoint
+            'api2d_openai_stt_model': settings.API2D_OPENAI_STT_MODEL,
+            'api2d_openai_txt_model': settings.API2D_OPENAI_TXT_MODEL,
             'celpip_improve_sys_prompt': settings.CELPIP_IMPROVE_SYS_PROMPT,
             'celpip_extend_sys_prompt': settings.CELPIP_EXTEND_SYS_PROMPT,
             'is_admin': request.user.is_superuser,  # Add admin status
