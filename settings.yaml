@@ -1,8 +1,20 @@
 default:
   # Django settings
-  ALLOWED_HOSTS: ["tifen-uat.harrylearns.com", "127.0.0.1","localhost", "gc4wso88gcsso40g8g4c8gss.5.255.127.216.sslip.io"]
+  ALLOWED_HOSTS: ["tifen-uat.harrylearns.com", "127.0.0.1","localhost"]
 
 
+  CSRF_TRUSTED_ORIGINS: [
+    "https://tifen-uat.harrylearns.com",
+    "http://gc4wso88gcsso40g8g4c8gss.5.255.127.216.sslip.io",
+    "http://localhost:8000",
+    "http://127.0.0.1:8000",
+  ]
+
+  # API2D Configuration
+  API2D_API_ENDPOINT: "https://api.api2d.net"  # Replace with your actual API2D endpoint
+  API2D_OPENAI_ENDPOINT: "https://openai.api2d.net"  # Replace with your actual OpenAI-compatible endpoint
+  API2D_OPENAI_STT_MODEL: "gpt-4o-mini-transcribe"
+  API2D_OPENAI_TXT_MODEL: "gpt-4.1-nano-2025-04-14"
 
   # Email configuration
   EMAIL_BACKEND: "django.core.mail.backends.smtp.EmailBackend"
