@@ -11,7 +11,7 @@ default:
   ]
 
   # API2D Configuration
-  API2D_API_ENDPOINT: "https://api.api2d.net"  # Replace with your actual API2D endpoint
+  API2D_API_ENDPOINT: "https://api.api2d.com"  # Replace with your actual API2D endpoint
   API2D_OPENAI_ENDPOINT: "https://openai.api2d.net"  # Replace with your actual OpenAI-compatible endpoint
   API2D_OPENAI_STT_MODEL: "gpt-4o-mini-transcribe"
   API2D_OPENAI_TXT_MODEL: "gpt-4.1-nano-2025-04-14"
