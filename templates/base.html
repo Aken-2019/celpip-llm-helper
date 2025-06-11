@@ -29,6 +29,9 @@
                             <a class="nav-link text-white" href="{% url 'api2d:celpip-speaking' %}">思培口语</a>
                         </li>
                         <li class="nav-item">
+                            <a class="nav-link text-white" href="{% url 'api2d:api-key' %}">查询/充值积分</a>
+                        </li>
+                        <li class="nav-item">
                             <a class="nav-link text-white" href="{% url 'pages:page_detail' slug='contact' %}">联系客服</a>
                         </li>
                         {% if user.is_authenticated %}
@@ -38,8 +41,6 @@
                                 {{ user.username }}
                             </a>
                             <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
-                                <li><a class="dropdown-item" href="{% url 'api2d:api-key' %}">绑定AI点卡</a></li>
-                                <li><hr class="dropdown-divider"></li>
                                 <li><a class="dropdown-item" href="{% url 'account_logout' %}">退出登录</a></li>
                                 <li><hr class="dropdown-divider"></li>
                                 <li><a class="dropdown-item" href="{% url 'account_change_password' %}">修改密码</a></li> 

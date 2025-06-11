@@ -59,16 +59,25 @@ document.addEventListener('DOMContentLoaded', async function() {
     // @param {Object} [creditsData] - Optional credits data object with total_available and total_granted
     async function updateCreditInfo(creditsData) {
         const creditInfoElement = document.getElementById('creditInfo');
-        if (!creditInfoElement) return;
+        console.log(123)
 
         try {
             let creditsResponse = creditsData;
             if (!creditsData) {
                 creditsResponse = await apiClient.fetchCredits(apiKey);
             }
-            
+            console.log('Available credits are less than 100', creditsResponse);
             const available = creditsResponse?.total_available ?? 'N/A';
-            creditInfoElement.textContent = `当前剩余积分: ${available}`;
+            // Set text color to red if available credits are less than 100
+            if (available !== 'N/A' && Number(available) < 100) {
+                creditInfoElement.textContent = `当前剩余积分: ${available}, 请尽快充值。`;
+                creditInfoElement.classList.remove('text-muted');
+                creditInfoElement.classList.add('text-danger');
+            } else {
+                creditInfoElement.textContent = `当前剩余积分: ${available}`;
+                creditInfoElement.classList.remove('text-danger');
+                creditInfoElement.classList.add('text-success');
+            }
         } catch (error) {
             console.error('Error updating credit info:', error);
             creditInfoElement.textContent = '无法加载积分信息';
