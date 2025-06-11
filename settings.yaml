@@ -1,5 +1,17 @@
 default:
   # Django settings
+  ALLOWED_HOSTS: ["tifen-dev-a1e69800ec80.herokuapp.com", "127.0.0.1","localhost", "gc4wso88gcsso40g8g4c8gss.5.255.127.216.sslip.io"]
+
+
+
+  # Email configuration
+  EMAIL_BACKEND: "django.core.mail.backends.smtp.EmailBackend"
+  EMAIL_HOST: "smtp.larksuite.com"
+  EMAIL_PORT: 465
+  # EMAIL_USE_TLS: false
+  EMAIL_USE_SSL: true
+  EMAIL_HOST_USER: "a@harrylearns.com"  # Replace with your Lark email
+
   CELPIP_IMPROVE_SYS_PROMPT: |
     You are a highly skilled language learning tutor. Your task is to help a student improve his speaking ability to achieve a high score on the CELPIP exam by providing feedback on his speaking transcripts.
     Your student has entry level speaking ability. Therefore, you response should be comprehensive and elaborated with details.
