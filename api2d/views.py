@@ -123,7 +123,7 @@ class ApiKeyView(LoginRequiredMixin, View):
 class ApiKeyDeleteView(LoginRequiredMixin, DeleteView):
     """View to delete the user's API key"""
     model = Api2dKey
-    success_url = reverse_lazy('api2d:api-key')
+    success_url = reverse_lazy('pages:home')  # Redirect to home page after deletion
     template_name = 'api2d/api_key_confirm_delete.html'
     
     def get_object(self, queryset=None):
@@ -158,7 +158,7 @@ def upload_mp3(request):
         }
         return render(request, 'api2d/upload_mp3.html', context)
     except Api2dKey.DoesNotExist:
-        messages.error(request, 'Please add your API key first.')
+        messages.error(request, '积分不足，请先充值。')
         return redirect('api2d:api-key')
 
 
