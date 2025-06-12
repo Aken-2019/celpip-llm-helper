@@ -59,14 +59,12 @@ document.addEventListener('DOMContentLoaded', async function() {
     // @param {Object} [creditsData] - Optional credits data object with total_available and total_granted
     async function updateCreditInfo(creditsData) {
         const creditInfoElement = document.getElementById('creditInfo');
-        console.log(123)
 
         try {
             let creditsResponse = creditsData;
             if (!creditsData) {
                 creditsResponse = await apiClient.fetchCredits(apiKey);
             }
-            console.log('Available credits are less than 100', creditsResponse);
             const available = creditsResponse?.total_available ?? 'N/A';
             // Set text color to red if available credits are less than 100
             if (available !== 'N/A' && Number(available) < 100) {
