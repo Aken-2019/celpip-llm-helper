@@ -59,6 +59,7 @@ document.addEventListener('DOMContentLoaded', async function() {
     // @param {Object} [creditsData] - Optional credits data object with total_available and total_granted
     async function updateCreditInfo(creditsData) {
         const creditInfoElement = document.getElementById('creditInfo');
+        const submitButton = document.querySelector('button[type="submit"]');
 
         try {
             let creditsResponse = creditsData;
@@ -66,15 +67,23 @@ document.addEventListener('DOMContentLoaded', async function() {
                 creditsResponse = await apiClient.fetchCredits(apiKey);
             }
             const available = creditsResponse?.total_available ?? 'N/A';
-            // Set text color to red if available credits are less than 100
+            // Set text color to red and disable button if available credits are less than 100
             if (available !== 'N/A' && Number(available) < 100) {
-                creditInfoElement.textContent = `当前剩余积分: ${available}, 请尽快充值。`;
+                creditInfoElement.textContent = `当前剩余积分: ${available}, 为避免因点数不足导致功能异常，请先充值积分至100点以上。`;
                 creditInfoElement.classList.remove('text-muted');
                 creditInfoElement.classList.add('text-danger');
+                if (submitButton) {
+                    submitButton.disabled = true;
+                    submitButton.classList.add('disabled');
+                }
             } else {
                 creditInfoElement.textContent = `当前剩余积分: ${available}`;
                 creditInfoElement.classList.remove('text-danger');
                 creditInfoElement.classList.add('text-success');
+                if (submitButton) {
+                    submitButton.disabled = false;
+                    submitButton.classList.remove('disabled');
+                }
             }
         } catch (error) {
             console.error('Error updating credit info:', error);
