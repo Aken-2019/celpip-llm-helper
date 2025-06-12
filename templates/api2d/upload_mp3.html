@@ -15,10 +15,29 @@
                     <div class="form-text">This text will be used when test mode is enabled.</div>
                 </div>
                 {% endif %}
-                <div class="card-header bg-light">
-                    <h4>思培口语 - 提分工具</h4>
+                <div class="card-header bg-light d-flex justify-content-between align-items-center">
+                    <h4 class="mb-0">思培口语 - AI润色</h4>
+                    <button class="btn btn-sm btn-primary" type="button" data-bs-toggle="collapse" data-bs-target="#helpCollapse" aria-expanded="false" aria-controls="helpCollapse">
+                        <i class="bi bi-question-circle me-1"></i>使用说明
+                    </button>
                 </div>
                 <div class="card-body">
+                    <div class="collapse mb-4" id="helpCollapse">
+                        <div class="alert alert-info">
+                            <p class="mb-2"><strong>第一步：上传录音</strong></p>
+                            <ul class="mb-3">
+                                <li>点击"选择文件"按钮上传您的口语录音</li>
+                                <li>点击下方润色按钮</li>
+                            </ul>
+                            <p class="mb-2"><strong>您将获得：</strong></p>
+                            <ul class="mb-0">
+                                <li>口语文件准确的文字转写</li>
+                                <li>为思培口语评分标准定制的语法和用词润色</li>
+                                <li>充实的口语内容扩展</li>
+                            </ul>
+                        </div>
+                    </div>
+                    
                     <form id="audioUploadForm" enctype="multipart/form-data">
                         <div class="mb-3">
                             <label for="audioFile" class="form-label">上传口语录音文件</label>
