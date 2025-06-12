@@ -86,7 +86,6 @@ document.addEventListener('DOMContentLoaded', async function() {
 
     // Initial credit info update and hide copy buttons
     updateCreditInfo();
-    initCopyButtons();
     
     // Helper functions
     function showError(message) {
