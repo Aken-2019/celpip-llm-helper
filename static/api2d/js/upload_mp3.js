@@ -146,26 +146,26 @@ document.addEventListener('DOMContentLoaded', async function() {
         const file = e.target.files[0];
         if (!file) return;
 
-        // Show audio player if file is selected
-        document.getElementById('audioPlayer').style.display = 'block';
+        // Create object URL for the selected file
+        const audioUrl = URL.createObjectURL(file);
         const audioPlayer = document.getElementById('audioPlayerElement');
         
-        // Create object URL for the file
-        const objectUrl = URL.createObjectURL(file);
-        audioPlayer.src = objectUrl;
+        // Set the audio source and load it
+        audioPlayer.src = audioUrl;
+        audioPlayer.load();
         
-        // Clean up the object URL when no longer needed
-        audioPlayer.addEventListener('ended', () => {
-            URL.revokeObjectURL(objectUrl);
+        // Show audio player
+        document.getElementById('audioPlayer').style.display = 'block';
+        
+        // Clean up the object URL when the audio element is unloaded
+        audioPlayer.addEventListener('loadedmetadata', function() {
+            // URL will be automatically revoked when the audio element is unloaded
         });
-        audioPlayer.addEventListener('error', () => {
-            URL.revokeObjectURL(objectUrl);
-        });
-        audioPlayer.addEventListener('pause', () => {
-            URL.revokeObjectURL(objectUrl);
-        });
-        audioPlayer.addEventListener('loadstart', () => {
-            URL.revokeObjectURL(objectUrl);
+        
+        // Handle errors
+        audioPlayer.addEventListener('error', function() {
+            console.error('Error loading audio file');
+            showError('无法播放音频文件，请确保文件格式正确');
         });
 
         // Show file info
