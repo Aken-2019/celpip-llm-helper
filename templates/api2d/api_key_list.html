@@ -76,9 +76,7 @@
     // Function to fetch and display credits
     // Call fetchCredits when the page loads if we have an API key
     document.addEventListener('DOMContentLoaded', () => {
-        const apiKeyInput = document.getElementById('apiKey');
-        if (apiKeyInput && apiKeyInput.value) {
-            apiClient.fetchCredits(apiKeyInput.value)
+            apiClient.fetchCredits('{{ api_key.key }}')
                 .then(response => {
                     const creditsSection = document.getElementById('creditsSection');
                     const creditsAmount = document.getElementById('creditsAmount');
@@ -91,7 +89,6 @@
                     creditsSection.className = 'alert alert-danger';
                     creditsAmount.textContent = 'Failed to fetch credits. Please try again later.';
                 });
-        }
     });
 
     function copyToClipboard() {
