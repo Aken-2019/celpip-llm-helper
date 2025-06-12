@@ -10,11 +10,6 @@
             <div class="card-body p-4">
                 <h2 class="text-center mb-4">用户登录</h2>
                 
-                {% if form.errors %}
-                    <div class="alert alert-danger">
-                        <strong>错误：</strong> 用户名或密码不正确，请重试。
-                    </div>
-                {% endif %}
 
                 <form class="login" method="POST" action="{% url 'account_login' %}">
                     {% csrf_token %}
