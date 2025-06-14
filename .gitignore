@@ -190,7 +190,7 @@ cython_debug/
 
 # dynaconf
 .secret.toml
-
+settings.yaml
 
 # project
 .env
