@@ -117,36 +117,36 @@ document.addEventListener('DOMContentLoaded', async function() {
         return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
     }
     
-    // Process the selected file
-    function processFile(file) {
-        // Show loading state
-        const submitBtn = form.querySelector('button[type="submit"]');
-        const originalBtnText = submitBtn.innerHTML;
-        submitBtn.disabled = true;
-        submitBtn.innerHTML = '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Processing...';
+    // // Process the selected file
+    // function processFile(file) {
+    //     // Show loading state
+    //     const submitBtn = form.querySelector('button[type="submit"]');
+    //     const originalBtnText = submitBtn.innerHTML;
+    //     submitBtn.disabled = true;
+    //     submitBtn.innerHTML = '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Processing...';
         
-        // Hide any previous messages
-        resultDiv.style.display = 'none';
-        // For now, just simulate processing
-        setTimeout(() => {
-            // Show success message with file info
-            document.getElementById('fileName').textContent = file.name;
-            document.getElementById('fileSize').textContent = formatFileSize(file.size);
-            resultDiv.style.display = 'block';
+    //     // Hide any previous messages
+    //     resultDiv.style.display = 'none';
+    //     // For now, just simulate processing
+    //     setTimeout(() => {
+    //         // Show success message with file info
+    //         document.getElementById('fileName').textContent = file.name;
+    //         document.getElementById('fileSize').textContent = formatFileSize(file.size);
+    //         resultDiv.style.display = 'block';
             
-            // Reset form and button
-            form.reset();
-            submitBtn.disabled = false;
-            submitBtn.innerHTML = originalBtnText;
+    //         // Reset form and button
+    //         form.reset();
+    //         submitBtn.disabled = false;
+    //         submitBtn.innerHTML = originalBtnText;
             
-            console.log('File processed successfully:', {
-                name: file.name,
-                size: file.size,
-                type: file.type,
-                lastModified: new Date(file.lastModified).toLocaleString()
-            });
-        }, 1000); // Simulate processing time
-    }
+    //         console.log('File processed successfully:', {
+    //             name: file.name,
+    //             size: file.size,
+    //             type: file.type,
+    //             lastModified: new Date(file.lastModified).toLocaleString()
+    //         });
+    //     }, 1000); // Simulate processing time
+    // }
     
     // Handle file selection
     fileInput.addEventListener('change', async function(e) {

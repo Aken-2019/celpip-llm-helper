@@ -233,7 +233,7 @@ class ApiClient {
             // Parse response
             const data = await response.json();
             if (!response.ok) {
-                throw new Error(data.error || 'Failed to transcribe audio');
+                throw new Error(data.message || 'Failed to transcribe audio');
             }
             return data;
         } catch (error) {
