@@ -1,4 +1,4 @@
 [start]
 cmd = '''python manage.py collectstatic --noinput && \
 python manage.py migrate && \
-gunicorn django_project.wsgi --capture-output'''
+gunicorn django_project.wsgi --log-level=info --access-logfile - --error-logfile - '''
