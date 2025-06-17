@@ -44,14 +44,14 @@
                                 {{ user.username }}
                             </a>
                             <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
-                                <li><a class="dropdown-item" href="{% url 'account_logout' %}">退出登录</a></li>
+                                <li><a class="dropdown-item" href="{% url 'account_logout' %}" aria-label="Logout">退出登录</a></li>
                                 <li><hr class="dropdown-divider"></li>
                                 <li><a class="dropdown-item" href="{% url 'account_change_password' %}">修改密码</a></li> 
                             </ul>
                         </li>
                         {% else %}
                         <li class="nav-item ms-3">
-                            <a class="btn btn-outline-light" href="{% url 'account_login' %}">登录</a>
+                            <a class="btn btn-outline-light" href="{% url 'account_login' %}" aria-label="Login">登录</a>
                         </li>
                         {% endif %}
                     </ul>
