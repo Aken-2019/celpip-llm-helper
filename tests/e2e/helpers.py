@@ -21,9 +21,11 @@ class DjangoE2ETestCase(LiveServerTestCase):
         self.user = self.create_test_user()
         self.client.force_login(self.user)
         self.cookie = self.client.cookies["sessionid"]
-    
+
     def create_test_user(self):
-        """Create a test user if it doesn't exist."""
+        """Create a test user if it doesn't exist and verify their email."""
+        from allauth.account.models import EmailAddress
+        
         user, created = User.objects.get_or_create(
             username=self.username,
             defaults={
@@ -31,9 +33,22 @@ class DjangoE2ETestCase(LiveServerTestCase):
                 'is_active': True
             }
         )
+        
         if created:
             user.set_password(self.password)
             user.save()
+            
+            # Ensure the email is verified
+            EmailAddress.objects.get_or_create(
+                user=user,
+                email=user.email,
+                defaults={
+                    'email': user.email,
+                    'verified': True,
+                    'primary': True
+                }
+            )
+            
         return user
     
     def setup_browser(self, playwright: Playwright) -> BrowserContext:
@@ -75,16 +90,17 @@ class DjangoE2ETestCase(LiveServerTestCase):
             expect(self.page).to_have_url(f"{self.live_server_url}{url}")
         expect(self.page.locator('body')).to_be_visible()
     
-    def login(self, username: str = None, password: str = None):
-        """Helper method to log in through the UI."""
-        username = username or self.username
+    def login(self, email: str = None, password: str = None):
+        """Helper method to log in through the UI using email."""
+        email = email or getattr(self.user, 'email', 'test@example.com')
         password = password or self.password
         
         self.page.goto(f"{self.live_server_url}/accounts/login/")
-        self.page.fill('input[name="username"]', username)
+        self.page.fill('input[name="login"]', email)
         self.page.fill('input[name="password"]', password)
         self.page.click('button[type="submit"]')
-    
+        self.page.wait_for_load_state('networkidle')  # Wait for any redirects to complete
+        
     def navigate_to(self, menu_text: str, submenu_text: str = None):
         """Navigate through the application menu."""
         if submenu_text:
@@ -106,3 +122,18 @@ class DjangoE2ETestCase(LiveServerTestCase):
         import os
         os.makedirs('test-results', exist_ok=True)
         self.page.screenshot(path=f'test-results/{name}.png')
+    
+    def logout(self):
+        """Log out the current user through the UI with confirmation."""
+        try:
+            self.page.goto(f"{self.live_server_url}/accounts/logout/")
+            self.page.wait_for_selector('form[action*="logout"]', state='visible')
+            # Submit the logout confirmation form
+            self.page.get_by_role('button', name='Logout').click()
+            # Wait for logout to complete
+            self.page.wait_for_load_state('networkidle')
+            # Verify we're logged out by checking for login link
+            expect(self.page.get_by_role('link', name='Login')).to_be_visible()
+        except Exception as e:
+            self.take_screenshot('logout_error')
+            raise Exception(f"Logout failed: {str(e)}")
