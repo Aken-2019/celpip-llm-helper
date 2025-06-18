@@ -2,6 +2,7 @@ from django.contrib.staticfiles.testing import LiveServerTestCase
 from django.contrib.auth import get_user_model
 from django.test import Client
 from playwright.sync_api import BrowserContext, Playwright, Page, expect
+from django.conf import settings
 
 User = get_user_model()
 
@@ -53,7 +54,8 @@ class DjangoE2ETestCase(LiveServerTestCase):
     
     def setup_browser(self, playwright: Playwright) -> BrowserContext:
         """Set up and return a browser context with authentication."""
-        browser = playwright.chromium.launch(headless=True)
+        headless = getattr(settings, 'PLAYWRIGHT_HEADLESS', True)
+        browser = playwright.chromium.launch(headless=headless)
         context = browser.new_context()
         
         # Add session cookie for authentication
