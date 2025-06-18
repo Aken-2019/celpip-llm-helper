@@ -19,7 +19,7 @@ class TestPageDetailView(DjangoE2ETestCase):
         
         # Navigate to the page
         url = reverse('pages:page_detail', kwargs={'slug': 'test-page'})
-        with self.settings(DEBUG=False):  # set debug to false to align with prod
+        with self.settings(DEBUG=True):  # set debug to false to align with prod
 
             with sync_playwright() as playwright:
                 self.open(url, playwright)
