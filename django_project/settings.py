@@ -29,13 +29,12 @@ INSTALLED_APPS = [
     "django.contrib.contenttypes",
     "django.contrib.sessions",
     "django.contrib.messages",
-
-    'allauth',
-    'allauth.account',
-    'crispy_forms',
-    'crispy_bootstrap5',
+    "allauth",
+    "allauth.account",
+    "crispy_forms",
+    "crispy_bootstrap5",
     "django_browser_reload",
-    'django.contrib.sites',
+    "django.contrib.sites",
     "whitenoise.runserver_nostatic",
     "django.contrib.staticfiles",
     "api2d",
@@ -73,7 +72,7 @@ ROOT_URLCONF = "django_project.urls"
 TEMPLATES = [
     {
         "BACKEND": "django.template.backends.django.DjangoTemplates",
-        "DIRS": [BASE_DIR / 'templates'],
+        "DIRS": [BASE_DIR / "templates"],
         "APP_DIRS": True,
         "OPTIONS": {
             "context_processors": [
@@ -81,16 +80,14 @@ TEMPLATES = [
                 "django.template.context_processors.request",
                 "django.contrib.auth.context_processors.auth",
                 "django.contrib.messages.context_processors.messages",
-                'django.template.context_processors.request',
-                'pages.context_processors.active_notifications',
+                "django.template.context_processors.request",
+                "pages.context_processors.active_notifications",
             ],
         },
     },
 ]
 
 WSGI_APPLICATION = "django_project.wsgi.application"
-
-
 
 
 # Password validation
@@ -131,11 +128,11 @@ STATIC_URL = "/static/"
 
 # Additional locations of static files
 STATICFILES_DIRS = [
-    BASE_DIR / 'static',
+    BASE_DIR / "static",
 ]
 
 # The absolute path to the directory where collectstatic will collect static files for deployment.
-STATIC_ROOT = BASE_DIR / 'staticfiles'
+STATIC_ROOT = BASE_DIR / "staticfiles"
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
@@ -144,47 +141,48 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 AUTHENTICATION_BACKENDS = [
     # Needed to login by username in Django admin, regardless of `allauth`
-    'django.contrib.auth.backends.ModelBackend',
-
+    "django.contrib.auth.backends.ModelBackend",
     # `allauth` specific authentication methods, such as login by email
-    'allauth.account.auth_backends.AuthenticationBackend',
+    "allauth.account.auth_backends.AuthenticationBackend",
 ]
 
 # allauth settings
-LOGIN_REDIRECT_URL = 'pages:home'  # or your desired redirect URL
-ACCOUNT_LOGOUT_REDIRECT_URL = 'account_login'
-ACCOUNT_SIGNUP_REDIRECT_URL = 'pages:home'  # or your desired redirect URL after signup
-ACCOUNT_EMAIL_VERIFICATION = 'mandatory'  # or 'mandatory' or 'optional' or 'none'
+LOGIN_REDIRECT_URL = "pages:home"  # or your desired redirect URL
+ACCOUNT_LOGOUT_REDIRECT_URL = "account_login"
+ACCOUNT_SIGNUP_REDIRECT_URL = "pages:home"  # or your desired redirect URL after signup
+ACCOUNT_EMAIL_VERIFICATION = "mandatory"  # or 'mandatory' or 'optional' or 'none'
 
 # Authentication settings
-ACCOUNT_LOGIN_METHODS = {'email'}  # ?: settings.ACCOUNT_AUTHENTICATION_METHOD is deprecated, use: settings.ACCOUNT_LOGIN_METHODS = {'email'}
+ACCOUNT_LOGIN_METHODS = {
+    "email"
+}  # ?: settings.ACCOUNT_AUTHENTICATION_METHOD is deprecated, use: settings.ACCOUNT_LOGIN_METHODS = {'email'}
 ACCOUNT_EMAIL_REQUIRED = True
 ACCOUNT_UNIQUE_EMAIL = True
 ACCOUNT_USERNAME_REQUIRED = True  # Still collect username
-ACCOUNT_USER_MODEL_USERNAME_FIELD = 'username'
+ACCOUNT_USER_MODEL_USERNAME_FIELD = "username"
 
 # Custom forms
 ACCOUNT_FORMS = {
-    'login': 'users.forms.EmailLoginForm',
+    "login": "users.forms.EmailLoginForm",
     # 'signup': 'users.forms.CustomSignupForm',
 }
 
 FIXTURE_DIRS = [BASE_DIR / "fixtures"]
 
 # File upload settings
-MEDIA_URL = '/media/'
-MEDIA_ROOT = BASE_DIR / 'media'
+MEDIA_URL = "/media/"
+MEDIA_ROOT = BASE_DIR / "media"
 
 # Temporary file upload (in-memory for files up to 2.5MB, file system for larger files)
 FILE_UPLOAD_MAX_MEMORY_SIZE = 2621440  # 2.5MB
-FILE_UPLOAD_TEMP_DIR = BASE_DIR / 'tmp'
+FILE_UPLOAD_TEMP_DIR = BASE_DIR / "tmp"
 FILE_UPLOAD_PERMISSIONS = 0o644
 
 
 SITE_ID = 1
 
 DATABASES = {
-    'default': dj_database_url.config(
+    "default": dj_database_url.config(
         conn_max_age=600,
         conn_health_checks=True,
     ),
@@ -192,22 +190,22 @@ DATABASES = {
 
 
 LOGGING = {
-    'version': 1,
-    'disable_existing_loggers': False,
-    'handlers': {
-        'console': {
-            'class': 'logging.StreamHandler',
+    "version": 1,
+    "disable_existing_loggers": False,
+    "handlers": {
+        "console": {
+            "class": "logging.StreamHandler",
         },
     },
-    'root': {
-        'handlers': ['console'],
-        'level': 'WARNING',
+    "root": {
+        "handlers": ["console"],
+        "level": "WARNING",
     },
-    'loggers': {
-        'django': {
-            'handlers': ['console'],
-            'level': 'WARNING',
-            'propagate': True,
+    "loggers": {
+        "django": {
+            "handlers": ["console"],
+            "level": "WARNING",
+            "propagate": True,
         },
     },
 }
@@ -215,9 +213,9 @@ LOGGING = {
 # HERE STARTS DYNACONF EXTENSION LOAD (Keep at the very bottom of settings.py)
 # Read more at https://www.dynaconf.com/django/
 import dynaconf  # noqa
+
 settings = dynaconf.DjangoDynaconf(
     __name__,
     load_dotenv=True,
 )  # noqa
 # HERE ENDS DYNACONF EXTENSION LOAD (No more code below this line)
- 
