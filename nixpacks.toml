@@ -1,4 +1,19 @@
+[phases.setup]
+nixPkgs = ['nodejs', 'python310']
+
+[phases.install]
+cmds = [
+    # Install Python dependencies
+    "pip install -r requirements.txt",
+    # Install Node.js dependencies
+    "cd frontend && npm ci && cd .."
+]
+
+[phases.build]
+cmds = [
+    # Build frontend assets
+    "cd frontend && npm run build && cd .."
+]
+
 [start]
-cmd = '''python manage.py collectstatic --noinput && \
-python manage.py migrate && \
-gunicorn django_project.wsgi --log-level=info --access-logfile - --error-logfile - '''
+cmd = "sh -c 'python manage.py collectstatic --noinput && python manage.py migrate && gunicorn django_project.wsgi --log-level=info --access-logfile - --error-logfile -'"
