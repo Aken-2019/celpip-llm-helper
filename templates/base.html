@@ -1,6 +1,7 @@
 {% load template_filters %}
 {% load site_info %}
 {% load static %}
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -94,7 +95,21 @@
             </div>
         </div>
     </main>
+    
+    <!-- Add your Svelte component here -->
+    <!-- <div class="container mt-5">
+        <h2>Example Counter Component</h2>
+        <div id="testComponent"
+            data-svelte-component="exampleComponent"
+            data-message="message!"
+            data-count=2
+            >
+        </div>
+    </div> -->
 
+    <!-- Include your Svelte components bundle -->
+    <!-- <script src="{% static 'frontend/assets/components.js' %}"></script> -->
+    
     <!-- Footer -->
     <footer class="bg-light py-4 mt-5">
         <div class="container text-center">

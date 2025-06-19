@@ -2,7 +2,7 @@ import { defineConfig } from 'vite';
 import { svelte } from '@sveltejs/vite-plugin-svelte';
 import path from 'path';
 
-export default defineConfig({
+export default defineConfig(({}) => ({
   plugins: [svelte()],
   resolve: {
     alias: {
@@ -13,22 +13,28 @@ export default defineConfig({
     outDir: '../static/frontend',
     emptyOutDir: true,
     rollupOptions: {
-      input: 'src/main.ts',
+      input: 'main.ts',
       output: {
-        entryFileNames: 'assets/[name].[hash].js',
+        entryFileNames: 'assets/components.js',
         chunkFileNames: 'assets/[name].[hash].js',
         assetFileNames: 'assets/[name].[hash][extname]'
       }
     }
   },
   server: {
-    port: 3000,
-    proxy: {
-      '/api': {
-        target: 'http://localhost:8000',
-        changeOrigin: true,
-        secure: false
-      }
-    }
+    port: 5173,
+    strictPort: true,
+    fs: {
+      // Allow serving files from one level up from the package root
+      allow: ['..']
+    },
+    // Uncomment and adjust when you need to proxy API requests
+    // proxy: {
+    //   '/api': {
+    //     target: 'http://localhost:8000',
+    //     changeOrigin: true,
+    //     rewrite: (path) => path.replace(/^\/api/, '')
+    //   }
+    // }
   }
-});
+}));
