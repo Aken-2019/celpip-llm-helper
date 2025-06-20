@@ -1,13 +1,19 @@
 [phases.setup]
-nixPkgs = ['nodejs', 'python310']
+nixPkgs = [
+    'nodejs',
+    'python3',
+    'postgresql_16.dev',
+    'gcc',
+]
 
 [phases.install]
 cmds = [
-    # Install Python dependencies
-    "pip install -r requirements.txt",
-    # Install Node.js dependencies
+    # Create and use virtual environment directly
+    "python -m venv --copies /opt/venv",
+    ". /opt/venv/bin/activate && pip install -r requirements.txt",
     "cd frontend && npm ci && cd .."
 ]
+
 
 [phases.build]
 cmds = [
@@ -15,5 +21,9 @@ cmds = [
     "cd frontend && npm run build && cd .."
 ]
 
+# Add the virtualenv's bin to PATH
+[phases.setup-args]
+ENV_PREPEND_PATH = "/opt/venv/bin"
+
 [start]
-cmd = "sh -c 'python manage.py collectstatic --noinput && python manage.py migrate && gunicorn django_project.wsgi --log-level=info --access-logfile - --error-logfile -'"
+cmd = "sh -c 'source /opt/venv/bin/activate && python manage.py collectstatic --noinput && python manage.py migrate && gunicorn django_project.wsgi --log-level=info --access-logfile - --error-logfile -'"
