@@ -1,9 +1,6 @@
 [phases.setup]
-nixPkgs = [
+nixPkgs = ["...",
     'nodejs',
-    'python3',
-    'postgresql_16.dev',
-    'gcc',
 ]
 
 [phases.install]
@@ -14,16 +11,11 @@ cmds = [
     "cd frontend && npm ci && cd .."
 ]
 
-
 [phases.build]
 cmds = [
     # Build frontend assets
     "cd frontend && npm run build && cd .."
 ]
-
-# Add the virtualenv's bin to PATH
-[phases.setup-args]
-ENV_PREPEND_PATH = "/opt/venv/bin"
 
 [start]
 cmd = "sh -c 'source /opt/venv/bin/activate && python manage.py collectstatic --noinput && python manage.py migrate && gunicorn django_project.wsgi --log-level=info --access-logfile - --error-logfile -'"
