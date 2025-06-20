@@ -3,6 +3,7 @@ from django.contrib.sites.models import Site
 
 register = template.Library()
 
+
 @register.simple_tag
 def site_name():
     """
@@ -13,4 +14,4 @@ def site_name():
         current_site = Site.objects.get_current()
         return current_site.name
     except (Site.DoesNotExist, Site.MultipleObjectsReturned):
-        return 'My Django Project'  # Default fallback
+        return "My Django Project"  # Default fallback

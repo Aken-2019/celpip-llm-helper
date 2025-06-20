@@ -5,27 +5,32 @@ from allauth.account.forms import LoginForm, SignupForm
 
 User = get_user_model()
 
+
 class EmailLoginForm(LoginForm):
     """
     Custom login form that enforces email-only authentication.
     """
+
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         # Update the login field to be email-only
-        self.fields['login'].label = _('Email')
-        self.fields['login'].widget = forms.EmailInput(attrs={
-            'type': 'email',
-            'placeholder': _('Your email address'),
-            'autocomplete': 'email',
-            'class': 'form-control'
-        })
-        
+        self.fields["login"].label = _("Email")
+        self.fields["login"].widget = forms.EmailInput(
+            attrs={
+                "type": "email",
+                "placeholder": _("Your email address"),
+                "autocomplete": "email",
+                "class": "form-control",
+            }
+        )
+
     def clean_login(self):
         """Ensure the login field contains a valid email address."""
-        login = self.cleaned_data.get('login')
-        if login and '@' not in login:
-            raise forms.ValidationError(_('Please enter a valid email address.'))
+        login = self.cleaned_data.get("login")
+        if login and "@" not in login:
+            raise forms.ValidationError(_("Please enter a valid email address."))
         return login
+
 
 # class CustomSignupForm(SignupForm):
 #     """
@@ -44,7 +49,7 @@ class EmailLoginForm(LoginForm):
 #             'autocomplete': 'email',
 #             'class': 'form-control'
 #         })
-        
+
 #     def clean_email(self):
 #         email = super().clean_email()
 #         if email and '@' not in email:

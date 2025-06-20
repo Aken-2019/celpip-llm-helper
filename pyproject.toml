@@ -1,0 +1,22 @@
+[tool.black]
+line-length = 88
+target-version = ['py310']
+include = '\.pyi?$'
+# Exclude common directories
+exclude = '''
+/(
+    \.git
+  | \.mypy_cache
+  | \.pytest_cache
+  | \.tox
+  | \.venv
+  | _build
+  | build
+  | dist
+  | migrations
+  | static
+  | frontend
+  | node_modules
+  | venv
+)/
+'''

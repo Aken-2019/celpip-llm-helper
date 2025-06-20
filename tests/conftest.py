@@ -2,6 +2,7 @@ import pytest
 from playwright.sync_api import Page, expect, sync_playwright
 from django.test import LiveServerTestCase
 
+
 @pytest.fixture(scope="session")
 def browser_context_args(browser_context_args):
     return {
@@ -13,24 +14,26 @@ def browser_context_args(browser_context_args):
         "ignore_https_errors": True,
     }
 
+
 @pytest.fixture(scope="function")
 def authenticated_page(live_server, browser):
     # Create a new browser context and page for each test
     context = browser.new_context()
     page = context.new_page()
-    
+
     # Here you can add authentication logic if needed
     # For example, if using Django's built-in authentication:
     # page.goto(f"{live_server.url}/admin/login/")
     # page.fill("#id_username", "admin")
     # page.fill("#id_password", "password")
     # page.click("button[type='submit']")
-    
+
     yield page
-    
+
     # Cleanup
     page.close()
     context.close()
+
 
 @pytest.fixture(scope="session")
 def browser_type_launch_args(browser_type_launch_args):

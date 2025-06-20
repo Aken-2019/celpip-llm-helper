@@ -202,3 +202,7 @@ fixtures
 
 #playwright
 test-results/
+
+# static assets
+/static/frontend/assets/
+!/static/frontend/assets/.keep  # Keep this directory structure

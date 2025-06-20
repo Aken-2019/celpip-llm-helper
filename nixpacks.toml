@@ -1,4 +1,21 @@
+[phases.setup]
+nixPkgs = ["...",
+    'nodejs',
+]
+
+[phases.install]
+cmds = [
+    # Create and use virtual environment directly
+    "python -m venv --copies /opt/venv",
+    ". /opt/venv/bin/activate && pip install -r requirements.txt",
+    "cd frontend && npm ci && cd .."
+]
+
+[phases.build]
+cmds = [
+    # Build frontend assets
+    "cd frontend && npm run build && cd .."
+]
+
 [start]
-cmd = '''python manage.py collectstatic --noinput && \
-python manage.py migrate && \
-gunicorn django_project.wsgi --log-level=info --access-logfile - --error-logfile - '''
+cmd = ". /opt/venv/bin/activate && python manage.py collectstatic --noinput && python manage.py migrate && gunicorn django_project.wsgi --log-level=info --access-logfile - --error-logfile -"
