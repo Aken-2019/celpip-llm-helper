@@ -1,5 +1,5 @@
 <script lang="ts">
-  export let count = 0;
+  export let count: number = 0;
   export let message: string = 'Hello, Svelte!';
   function handleClick() {
     count += 1;
