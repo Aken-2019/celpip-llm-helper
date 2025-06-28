@@ -202,15 +202,11 @@ class ApiClient {
      * @returns {Promise<Object>} Response data containing the transcription
      */
     async transcribeAudio(file, apiKey, model="gpt-4o-mini-transcribe", language="en", options = {}) {
-        const defaultOptions = {
-            model: model,
-            language: language,
-        };
-        
-        // Create FormData and append file content
+        // Create FormData and append file content and options
         const formData = new FormData();
         formData.append("file", file); 
         formData.append("model", model);
+        formData.append("language", language);
 
         const headers = {
             'Authorization': `Bearer ${apiKey}`,

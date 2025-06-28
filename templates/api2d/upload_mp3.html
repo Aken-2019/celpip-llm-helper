@@ -3,8 +3,8 @@
 
 {% block content %}
 
-            <div class="card shadow">
-                {% if is_admin %}
+<div class="card shadow" style="max-width: 800px; margin: 0 auto;">
+    {% if is_admin %}
                 <div class="mb-3 form-check form-switch">
                     <input class="form-check-input" type="checkbox" id="testModeToggle" data-bs-toggle="tooltip" data-bs-placement="top" title="Enable test mode with custom text">
                     <label class="form-check-label" for="testModeToggle">Test Mode</label>
@@ -26,7 +26,7 @@
                         <div class="alert alert-info">
                             <p class="mb-2"><strong>操作步骤</strong></p>
                             <ol class="mb-3">
-                                <li>点击"选择文件"按钮上传您的口语录音</li>
+                                <li>选择"录制音频"开始录制您的口语录音 (或者选择"上传文件"上传您的口语录音)</li>
                                 <li>点击下方润色按钮</li>
                             </ol>
                             <p class="mb-2"><strong>您将获得：</strong></p>
@@ -38,19 +38,67 @@
                         </div>
                     </div>
                     
+                    <ul class="nav nav-pills mb-4" id="audioSourceTabs" role="tablist">
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link active" id="record-tab" data-bs-toggle="tab" data-bs-target="#record-tab-pane" type="button" role="tab" aria-controls="record-tab-pane" aria-selected="true">
+                                <i class="bi bi-mic me-1"></i>🎙️录制音频
+                            </button>
+                        </li>
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link" id="upload-tab" data-bs-toggle="tab" data-bs-target="#upload-tab-pane" type="button" role="tab" aria-controls="upload-tab-pane" aria-selected="false">
+                                <i class="bi bi-upload me-1"></i>📁上传文件
+                            </button>
+                        </li>
+                    </ul>
+
                     <form id="audioUploadForm" enctype="multipart/form-data">
-                        <div class="mb-3">
-                            <label for="audioFile" class="form-label">第一步: 上传口语录音文件</label>
-                            <input class="form-control" type="file" id="audioFile" required>
-                            <div class="form-text">
-                                最大文件大小：10MB。支持格式：MP3, MP4, M4A, WAV, WebM。
+                    <div class="tab-content" id="audioSourceTabsContent">
+                        <!-- Record Tab -->
+                        <div class="tab-pane fade show active" id="record-tab-pane" role="tabpanel" aria-labelledby="record-tab" tabindex="0">
+                            <div class="row justify-content-center mb-5">
+                                <div class="mb-3">
+                                    <label class="form-label">选择录制时长</label>
+                                    <div class="d-flex gap-4">
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="radio" name="recordingDuration" id="duration60" value="60" checked>
+                                            <label class="form-check-label" for="duration60">
+                                                60 秒 （第2，3，4，5，6，8题）
+                                            </label>
+                                        </div>
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="radio" name="recordingDuration" id="duration90" value="90">
+                                            <label class="form-check-label" for="duration90">
+                                                90 秒 （第1， 7题）
+                                            </label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-8">
+                                    <div id="recorderComponent"
+                                    data-svelte-component="recorder"
+                                    >
+                                    </div>
+                                </div>
+                            </div>
+                            <input type="hidden" id="recordedAudio" name="audioFile">
+                        </div>
+
+                        <!-- Upload Tab -->
+                        <div class="tab-pane fade" id="upload-tab-pane" role="tabpanel" aria-labelledby="upload-tab" tabindex="0">
+                            <div class="mb-3">
+                                <label for="audioFile" class="form-label">选择音频文件</label>
+                                <input class="form-control" name="audioFile" type="file" id="audioFile" accept="audio/*">
+                                <div class="form-text">
+                                    最大文件大小：10MB。支持格式：MP3, MP4, M4A, WAV, WebM。
+                                </div>
                             </div>
                         </div>
+                    </div>
                         <div id="audioPlayer" class="mt-3" style="display: none;">
                             <h5>音频预览</h5>
                             <div class="card">
                                 <div class="card-body">
-                                    <audio id="audioPlayerElement" class="w-100" controls>
+                                    <audio id="audioPlayerElement" class="w-100" controls preload="metadata">
                                         Your browser does not support the audio element.
                                     </audio>
                                 </div>
@@ -155,8 +203,50 @@
                 </div>
                 
                 <script>
-                // Add copy functionality
+                // Handle recording duration change
                 document.addEventListener('DOMContentLoaded', function() {
+                    const durationRadios = document.querySelectorAll('input[name="recordingDuration"]');
+                    let recorderComponent = null;
+
+                    // Initialize the recorder component
+                    function initRecorder() {
+                        const element = document.getElementById('recorderComponent');
+                        if (element && !element._component) {
+                            recorderComponent = new Recorder({
+                                target: element,
+                                props: {
+                                    length: parseInt(durationRadios[0].value),
+                                    showPlayButton: true
+                                }
+                            });
+                            element._component = recorderComponent;
+                        } else if (element && element._component) {
+                            // Update existing component
+                            recorderComponent = element._component;
+                            recorderComponent.$set({
+                                length: parseInt(durationRadios[0].value)
+                            });
+                        }
+                    }
+
+                    // Initialize on page load
+                    initRecorder();
+
+                    // Update recorder when duration changes
+                    durationRadios.forEach(radio => {
+                        radio.addEventListener('change', function() {
+                            const newDuration = parseInt(this.value);
+                            if (recorderComponent) {
+                                recorderComponent.$set({
+                                    length: newDuration
+                                });
+                            } else {
+                                initRecorder();
+                            }
+                        });
+                    });
+
+                    // Add copy functionality
                     document.querySelectorAll('.copy-btn').forEach(button => {
                         button.addEventListener('click', function() {
                             const targetId = this.getAttribute('data-target');
@@ -193,9 +283,41 @@
         endpoint: '{{ api2d_openai_endpoint|escapejs }}',
         apiKey: '{{ api_key|escapejs }}',
         sttModel: '{{ api2d_openai_stt_model|escapejs }}',
-        language: '{{ api2d_openai_language|escapejs }}',
+        language: 'en',
         txtModel: '{{ api2d_openai_txt_model|escapejs }}'
     };
+
+    // Handle recorded audio from Svelte 5 component
+    document.addEventListener('recordingComplete', (event) => {
+        console.log("recordingComplete", event);
+        
+        const { 
+            blob: audioBlob, 
+            fileName = 'recording.m4a',
+            metadata = {}
+        } = event.detail;
+        
+        console.log('Recording metadata:', metadata);
+        
+        const file = new File([audioBlob], fileName, { 
+            type: metadata.mimeType || 'audio/mp4',
+        });
+        
+        // Create a data transfer object to simulate file input
+        const dataTransfer = new DataTransfer();
+        dataTransfer.items.add(file);
+
+        // Set the file input with the recorded audio
+        const fileInput = document.getElementById('audioFile');
+        fileInput.files = dataTransfer.files;
+        
+        // Show the audio player with the recorded audio
+        const audioPlayer = document.getElementById('audioPlayer');
+        const audioElement = document.getElementById('audioPlayerElement');
+        audioElement.src = URL.createObjectURL(audioBlob);
+        audioElement.load();
+        audioPlayer.style.display = 'block';
+    });
 </script>
 
 <!-- Safely pass multiline prompts using json_script -->

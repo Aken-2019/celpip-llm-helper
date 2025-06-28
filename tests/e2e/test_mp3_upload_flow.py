@@ -11,8 +11,10 @@ from django.utils import timezone
 from datetime import timedelta
 from api2d.models import Api2dGroup2ExpirationMapping, Api2dKey
 from django.conf import settings
+import pytest
 
 
+@pytest.mark.e2e
 class TestMP3Upload(DjangoE2ETestCase):
     """Test MP3 file upload and transcription functionality."""
 

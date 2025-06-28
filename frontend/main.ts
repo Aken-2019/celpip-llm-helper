@@ -1,14 +1,48 @@
 // Import all your Svelte components here
 import ExampleComponent from '@/components/ExampleComponent.svelte';
+import Recorder from '@/components/Recorder.svelte';
 import { mount } from 'svelte';
 
 console.log('main.ts loaded')
+
+// Define the expected props interface for our components
+interface ComponentProps {
+  [key: string]: string | number | boolean | null | undefined;
+}
+
+// Helper function to parse dataset with type safety
+function parseDataset(element: HTMLElement): ComponentProps {
+  const props: ComponentProps = {};
+  const dataset = element.dataset;
+
+  Object.entries(dataset).forEach(([key, value]) => {
+    if (value === undefined) return;
+    
+    // Try to parse the value based on its content
+    if (value === 'true' || value === 'false') {
+      props[key] = value === 'true';
+    } else if (value === 'null') {
+      props[key] = null;
+    } else if (value === 'undefined') {
+      props[key] = undefined;
+    } else if (!isNaN(Number(value))) {
+      // If it's a number, convert it
+      props[key] = Number(value);
+    } else {
+      // Otherwise keep as string
+      props[key] = value;
+    }
+  });
+
+  return props;
+}
+
 // Map of component names to their implementations
 const components = {
   'exampleComponent': ExampleComponent,
+  'recorder': Recorder,
   // Add more components here as needed
 };
-
 
 // Auto-initialize components when the DOM is loaded
 if (typeof window !== 'undefined') {
@@ -24,8 +58,8 @@ if (typeof window !== 'undefined') {
           // Debug the raw dataset
           console.log('Raw dataset:', { ...element.dataset });
           
-          // Get and parse the dataset
-          const props = element.dataset;
+          // Use our type-safe parser
+          const props = parseDataset(element);
           console.log(`Creating component with props:`, props);
           
           // Debug the Component constructor
