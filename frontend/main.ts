@@ -1,5 +1,6 @@
 // Import all your Svelte components here
 import ExampleComponent from '@/components/ExampleComponent.svelte';
+import Recorder from '@/components/Recorder.svelte';
 import { mount } from 'svelte';
 
 console.log('main.ts loaded')
@@ -39,6 +40,7 @@ function parseDataset(element: HTMLElement): ComponentProps {
 // Map of component names to their implementations
 const components = {
   'exampleComponent': ExampleComponent,
+  'recorder': Recorder,
   // Add more components here as needed
 };
 

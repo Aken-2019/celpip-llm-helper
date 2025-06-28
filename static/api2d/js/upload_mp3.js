@@ -157,7 +157,6 @@ document.addEventListener('DOMContentLoaded', async function() {
         const audioUrl = URL.createObjectURL(file);
         const audioPlayer = document.getElementById('audioPlayerElement');
         
-        // Set the audio source and load it
         audioPlayer.src = audioUrl;
         audioPlayer.load();
         
@@ -207,14 +206,20 @@ document.addEventListener('DOMContentLoaded', async function() {
         // processFile(file);
     });
     
-    // Prevent form submission (we're handling it with JavaScript)
+    // Handle form submission with proper tab-based validation
     form.addEventListener('submit', async (e) => {
         e.preventDefault();
+        
+        const activeTab = document.querySelector('.tab-pane.active');
         const fileInput = document.getElementById('audioFile');
         const file = fileInput.files[0];
 
-        if (!file) {
-            showError('Please select an audio file.');
+        // Validate based on active tab
+        if (activeTab.id === 'upload-tab-pane' && !file) {
+            showError('Please select an audio file to upload.');
+            return;
+        } else if (activeTab.id === 'record-tab-pane' && (!file || file.size === 0)) {
+            showError('Please record an audio before submitting.');
             return;
         }
 
