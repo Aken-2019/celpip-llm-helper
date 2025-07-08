@@ -88,43 +88,6 @@ class ApiKeyView(LoginRequiredMixin, View):
 
         return render(request, "api2d/api_key_list.html", context)
 
-    # def post(self, request, *args, **kwargs):
-    #     form = ApiKeyForm(request.POST)
-    #     if form.is_valid():
-    #         # Check if user already has an API key
-    #         if Api2dKey.objects.filter(user=request.user).exists():
-    #             messages.error(request, 'You already have an API key. Please delete it before adding a new one.')
-    #             return redirect('api2d:api-key')
-    #         if Api2dKey.objects.filter(key=form.cleaned_data['key']).exists():
-    #             messages.error(request, 'This API key is already in use by another user.')
-    #             return redirect('api2d:api-key')
-
-    #         from .utilities import Api2dClient
-    #         client = Api2dClient(settings.API2D_ADMIN_KEY, settings.API2D_API_ENDPOINT)
-    #         try:
-    #             api2d_key_instance = client.get_key(form.cleaned_data['key'])
-    #         except ValueError as e:
-    #             messages.error(request, str(e))
-    #             return redirect('api2d:api-key')
-
-    #         # Save the new API key
-    #         api_key = form.save(commit=False)
-    #         api_key.created_at = api2d_key_instance.created_at
-    #         api_key.user = request.user
-    #         api_key.group = Api2dGroup2ExpirationMapping.objects.filter(type_id=api2d_key_instance.type_id).first()
-    #         api_key.save()
-
-    #         messages.success(request, 'API key added successfully!')
-    #         return redirect('api2d:api-key')
-
-    #     # If form is not valid, show errors
-    #     context = {
-    #         'has_api_key': Api2dKey.objects.filter(user=request.user).exists(),
-    #         'api_key': Api2dKey.objects.filter(user=request.user).first(),
-    #         'form': form
-    #     }
-    #     return render(request, 'api2d/api_key_list.html', context)
-
 
 class ApiKeyDeleteView(LoginRequiredMixin, DeleteView):
     """View to delete the user's API key"""
@@ -164,6 +127,26 @@ def upload_mp3(request):
             "is_admin": request.user.is_superuser,  # Add admin status
         }
         return render(request, "api2d/upload_mp3.html", context)
+    except Api2dKey.DoesNotExist:
+        messages.error(request, "积分不足，请先充值。")
+        return redirect("api2d:api-key")
+
+
+@login_required
+def celpip_writting(request):
+    try:
+        # Get the user's API key
+        api_key = Api2dKey.objects.get(user=request.user)
+        if api_key.expired_at and api_key.expired_at < timezone.now():
+            messages.error(request, "Your API key has expired. Please renew it.")
+            return redirect("api2d:api-key")
+        context = {
+            "api_key": api_key.key,
+            "api2d_claude_endpoint": settings.API2D_CLAUDE_ENDPOINT,  # Updated to use Django's endpoint
+            "api2d_claude_model": settings.API2D_CLAUDE_MODEL,
+            "celpip_writting_system_prompt": settings.CLAUDE_CELPIP_WRITTING_SYSTEM_PROMPT,
+        }
+        return render(request, "api2d/CelpipWritting.html", context)
     except Api2dKey.DoesNotExist:
         messages.error(request, "积分不足，请先充值。")
         return redirect("api2d:api-key")

@@ -1,6 +1,9 @@
 // Import all your Svelte components here
 import ExampleComponent from '@/components/ExampleComponent.svelte';
 import Recorder from '@/components/Recorder.svelte';
+import TextInput from '@/components/TextInput.svelte';
+import MarkdownArea from '@/components/MarkdownArea.svelte';
+import CelpipWritting from '@/django-pages/api2d/CelpipWritting.svelte';
 import { mount } from 'svelte';
 
 console.log('main.ts loaded')
@@ -41,6 +44,9 @@ function parseDataset(element: HTMLElement): ComponentProps {
 const components = {
   'exampleComponent': ExampleComponent,
   'recorder': Recorder,
+  'textInput': TextInput,
+  'markdownArea': MarkdownArea,
+  'celpipWritting': CelpipWritting,
   // Add more components here as needed
 };
 
@@ -49,9 +55,7 @@ if (typeof window !== 'undefined') {
   document.addEventListener('DOMContentLoaded', () => {
     console.log('DOMContentLoaded event triggered')
     Object.entries(components).forEach(([id, Component]) => {
-      console.log(`Initializing ${id} components`);
       const elements = document.querySelectorAll<HTMLElement>(`[data-svelte-component="${id}"]`);
-      console.log(`Found ${elements.length} elements with data-svelte-component="${id}"`);
       
       elements.forEach((element) => {
         try {
