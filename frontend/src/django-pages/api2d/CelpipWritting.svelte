@@ -12,8 +12,8 @@
     });
 
     let inputContent = $state('');
-    let outputContent = $state('待生成...');
-    let suggestionContent = $state('待生成...');
+    let outputContent = $state('`待生成...`');
+    let suggestionContent = $state('`待生成...`');
     let isLoading = $state(false);
     let credit_comsumed = $state(-1)
     let total_available = $state(-1)

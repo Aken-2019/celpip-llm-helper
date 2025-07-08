@@ -12,5 +12,5 @@ urlpatterns = [
     path("api-key/", ApiKeyView.as_view(), name="api-key"),
     path("api-key/delete/", ApiKeyDeleteView.as_view(), name="api-key-delete"),
     path("celpip/speaking/", upload_mp3, name="celpip-speaking"),
-    path("celpip/writting/", celpip_writting, name="celpip-writting"),
+    path("celpip/writting/", celpip_writting, name="celpip-writing"),
 ]
