@@ -14,12 +14,12 @@
     );
 </script>
 
-<label class="form-label" for="textInput-id">{title}</label>
-<div class="input-group">
-    <textarea id="textInput-id" class="form-control" bind:value={message} rows="15"></textarea>
-</div>
-<div class="d-flex justify-content-end">
+<div class="d-flex justify-content-between align-items-center mb-2">
+    <label class="form-label m-0" for="textInput-id">{title}</label>
     {#if showCounter}
-        <span>Count: {counts}</span>
+        <span class="text-muted small">Count: {counts}</span>
     {/if}
+</div>
+<div class="input-group">
+    <textarea id="textInput-id" class="form-control" bind:value={message} rows="12"></textarea>
 </div>
