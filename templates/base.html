@@ -60,11 +60,11 @@
     <div class="container mt-2">
         {% for notification in notifications %}
             {% if notification.is_currently_active %}
-            <div class="alert {{ notification.css_class }} mb-2 py-1 px-2" role="alert">
+            <div class="alert {{ notification.css_class }} py-1 px-2" role="alert">
                 <!-- {% if notification.title %}
                     <h6 class="alert-heading mb-1">{{ notification.title }}</h6>
                 {% endif %} -->
-                <div class="small">{{ notification.message|linebreaks }}</div>
+                <div class="small">{{ notification.message }}</div>
             </div>
             {% endif %}
         {% endfor %}
