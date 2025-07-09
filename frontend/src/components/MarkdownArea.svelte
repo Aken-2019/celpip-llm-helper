@@ -1,7 +1,7 @@
 <script lang="ts">
     import { marked } from 'marked';
     
-    let { content = '', title = '' } = $props<string>();
+    let { content = '', title = '', showCopyButton = false } = $props<string>();
     let html_content = $derived(marked(content));
 
     function copyToClipboard() {
@@ -29,12 +29,14 @@
         <p class="card-text" id="card-text">
             {@html html_content}
         </p>
+        {#if showCopyButton}
         <button 
             class="btn btn-outline-secondary btn-sm copy-btn" 
             onclick={copyToClipboard}
             title="复制到剪贴板">
             <i class="bi bi-clipboard me-1"></i>复制文字
         </button>
+        {/if}
     </div>
 </div>
 
