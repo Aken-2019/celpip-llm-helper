@@ -11,6 +11,28 @@
  * - Authentication via API key or token
  */
 
+export class ApiError extends Error {
+    status: number;
+    data: any;
+    response: Response;
+
+    constructor(message: string, status: number, response: Response, data?: any) {
+        super(message);
+        this.name = 'ApiError';
+        this.status = status;
+        this.response = response;
+        this.data = data;
+        
+        // This is needed to make instanceof work with custom errors in TypeScript
+        Object.setPrototypeOf(this, ApiError.prototype);
+    }
+
+    // Helper to check if an error is an ApiError
+    static isApiError(error: unknown): error is ApiError {
+        return error instanceof ApiError;
+    }
+}
+
 interface ApiClientOptions {
     baseUrl?: string;
     headers?: Record<string, string>;
@@ -78,47 +100,67 @@ export class ApiClient {
             includeAuth = true
         }: RequestOptions = {}
     ): Promise<any> {
-        // Build URL with query parameters
-        let url = `${this.baseUrl}${endpoint}`;
-        if (params) {
-            const queryString = new URLSearchParams(params).toString();
-            url += `?${queryString}`;
-        }
-
-        // Prepare headers
-        const requestHeaders = { ...this.headers, ...headers };
-        
-        // Add CSRF token if enabled and available
-        if (this.useCsrf && this.csrfToken) {
-            requestHeaders['X-CSRFToken'] = this.csrfToken;
-        }
-
-        // Prepare request config
-        const config: RequestInit = {
-            method,
-            headers: requestHeaders,
-            credentials: 'same-origin' as const // Include cookies for CSRF
-        };
-
-        // Add request body for methods that support it
-        if (data && ['POST', 'PUT', 'PATCH', 'DELETE'].includes(method.toUpperCase())) {
-            // If data is FormData, use it directly
-            if (data instanceof FormData) {
-                config.body = data as BodyInit;
-            } else {
-                config.body = JSON.stringify(data);
-            }
-        }
-
         try {
+            // Build URL with query parameters
+            let url = `${this.baseUrl}${endpoint}`;
+            if (params) {
+                const queryString = new URLSearchParams(params).toString();
+                url += `?${queryString}`;
+            }
+
+            // Prepare headers
+            const requestHeaders = { ...this.headers, ...headers };
+            
+            // Add CSRF token if enabled and available
+            if (this.useCsrf && this.csrfToken) {
+                requestHeaders['X-CSRFToken'] = this.csrfToken;
+            }
+
+            // Prepare request config
+            const config: RequestInit = {
+                method,
+                headers: requestHeaders,
+                credentials: 'same-origin' as const // Include cookies for CSRF
+            };
+
+            // Add request body for methods that support it
+            if (data && ['POST', 'PUT', 'PATCH', 'DELETE'].includes(method.toUpperCase())) {
+                // If data is FormData, use it directly
+                if (data instanceof FormData) {
+                    config.body = data as BodyInit;
+                } else {
+                    config.body = JSON.stringify(data);
+                }
+            }
+
             const response = await fetch(url, config);
             
             // Handle non-2xx responses
             if (!response.ok) {
-                throw new Error(`HTTP error! status: ${response.status}`);
+                // Clone the response to read it multiple times if needed
+                const errorResponse = response.clone();
+                let errorData;
+                
+                // Try to parse error response as JSON, fall back to text
+                const contentType = errorResponse.headers.get('content-type');
+                try {
+                    errorData = contentType && contentType.includes('application/json')
+                        ? await errorResponse.json()
+                        : await errorResponse.text();
+                } catch (e) {
+                    errorData = await errorResponse.text();
+                }
+                
+                // Throw a structured ApiError
+                throw new ApiError(
+                    `HTTP error! status: ${response.status}`,
+                    response.status,
+                    response,
+                    errorData
+                );
             }
 
-            // Try to parse JSON response, fall back to text if not JSON
+            // Handle successful response
             const contentType = response.headers.get('content-type');
             if (contentType && contentType.includes('application/json')) {
                 return await response.json();
@@ -127,14 +169,27 @@ export class ApiClient {
             }
         } catch (error: unknown) {
             console.error('API request failed:', error);
+            
+            // Convert non-ApiError to ApiError if it's a fetch error
+            const apiError = ApiError.isApiError(error) 
+                ? error 
+                : new ApiError(
+                    error instanceof Error ? error.message : 'An unknown error occurred',
+                    0,
+                    new Response(null, { status: 0 }),
+                    error
+                  );
+            
             if (this.onError) {
-                const errorMessage = error instanceof Error ? error : new Error('An unknown error occurred');
-                this.onError(errorMessage, { method, endpoint });
+                const errorContext = { 
+                    method: method || 'UNKNOWN', 
+                    endpoint: endpoint || 'unknown',
+                    context: 'API request failed'
+                };
+                this.onError(apiError, errorContext);
             }
-            if (error instanceof Error) {
-                throw error;
-            }
-            throw new Error('An unknown error occurred');
+            
+            throw apiError;
         }
     }
 
@@ -282,9 +337,7 @@ export class ApiClient {
         options: Record<string, any> = {},
         endpoint: string = '/v1/chat/completions'
     ): Promise<any> {
-        const {
-            ...otherOptions
-        } = options;
+        const { ...otherOptions } = options;
 
         try {
             // Prepare headers with authorization
@@ -306,18 +359,27 @@ export class ApiClient {
             });
         } catch (error: unknown) {
             console.error('Error in chat completion:', error);
+            
+            // Convert to ApiError if it isn't already
+            const apiError = ApiError.isApiError(error) 
+                ? error 
+                : new ApiError(
+                    error instanceof Error ? error.message : 'An unknown error occurred during chat completion',
+                    0,
+                    new Response(null, { status: 0 }),
+                    error
+                  );
+
             if (this.onError) {
-                const errorMessage = error instanceof Error ? error : new Error('An unknown error occurred during chat completion');
-                this.onError(errorMessage, {
+                this.onError(apiError, {
                     method: 'POST',
-                    endpoint: '/v1/chat/completions',
+                    endpoint: endpoint,
                     context: 'Chat completion request'
                 });
             }
-            if (error instanceof Error) {
-                throw error;
-            }
-            throw new Error('An unknown error occurred during chat completion');
+            
+            // Re-throw the error to be handled by the caller
+            throw apiError;
         }
     }
 }
