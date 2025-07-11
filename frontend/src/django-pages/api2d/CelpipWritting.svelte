@@ -63,11 +63,7 @@ import { ApiClient, ApiError } from '../../utils/apiClient';
             let xml_response = new DOMParser().parseFromString(wrapped_xml_response, 'text/xml');
             outputContent = xml_response.getElementsByTagName('revised_text')[0]?.textContent || 'Error, please contact support';
             suggestionContent = xml_response.getElementsByTagName('feedbacks')[0]?.textContent || 'Error, please contact support';
-            credit_comsumed = response.final_total
-
-                
-
-            
+            credit_comsumed = response.usage.final_total
             const credit_after_submit = await apiClient.fetchCredits(apiKey)
             total_available = credit_after_submit.total_available;
         } 
