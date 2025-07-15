@@ -201,7 +201,9 @@ referencing==0.36.2
     #   jsonschema
     #   jsonschema-specifications
 requests==2.32.4
-    # via pytest-base-url
+    # via
+    #   -r /home/haojie/django-user-app/requirements.in
+    #   pytest-base-url
 rich==14.0.0
     # via typer
 rpds-py==0.26.0

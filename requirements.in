@@ -13,3 +13,4 @@ django-browser-reload
 gunicorn
 dj-database-url
 isort
+requests
