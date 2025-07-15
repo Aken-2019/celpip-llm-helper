@@ -62,7 +62,7 @@ import { ApiClient, ApiError } from '../../utils/apiClient';
             let wrapped_xml_response = "<root><revised_text>" + response.content[0]?.text + "</feedbacks></root>"
             let xml_response = new DOMParser().parseFromString(wrapped_xml_response, 'text/xml');
             outputContent = xml_response.getElementsByTagName('revised_text')[0]?.textContent || 'Error, please contact support';
-            suggestionContent = xml_response.getElementsByTagName('feedbacks')[0]?.textContent || 'Error, please contact support';
+            suggestionContent = xml_response.getElementsByTagName('grammar_focused_feedback')[0]?.textContent || 'Error, please contact support';
             credit_comsumed = response.usage.final_total
             const credit_after_submit = await apiClient.fetchCredits(apiKey)
             total_available = credit_after_submit.total_available;
@@ -114,6 +114,27 @@ import { ApiClient, ApiError } from '../../utils/apiClient';
         <MarkdownArea title='润色结果' content={outputContent} />
     </div>
     <div class='my-4'>
-        <MarkdownArea title='分析与建议' content={suggestionContent} />
+        <MarkdownArea title='语法建议' content={`
+<style>
+table {
+  border-collapse: collapse;
+  width: 100%;
+}
+
+th, td {
+  text-align: left;
+  padding: 8px;
+}
+
+tr:nth-child(even){background-color: #f2f2f2}
+
+th {
+  background-color: #04AA6D;
+  color: white;
+}
+</style>
+${suggestionContent}`} />
     </div>
 </div>
+
+
