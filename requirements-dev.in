@@ -1,0 +1,14 @@
+-r requirements.in
+pytest
+pytest-django
+black
+playwright
+pytest-playwright
+pre-commit
+typer
+pyyaml
+polars
+anthropic
+openai
+pandas
+pyarrow
