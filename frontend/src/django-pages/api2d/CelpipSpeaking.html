@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block content %}
+
+    <div data-svelte-component="celpipSpeaking" 
+    data-endpoint="{{ api2d_openai_endpoint}}" 
+    data-api-key="{{ api_key}}" 
+    data-txt-model="{{ api2d_openai_txt_model}}"
+    data-celpip-improve-sys-prompt="{{ celpip_improve_sys_prompt }}"
+    data-stt-model="{{ api2d_openai_stt_model}}"
+    data-is-test-mode=0
+    >
+    </div>
+
+{% endblock %}
+

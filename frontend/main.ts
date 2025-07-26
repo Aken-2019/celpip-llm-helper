@@ -4,6 +4,7 @@ import Recorder from '@/components/Recorder.svelte';
 import TextInput from '@/components/TextInput.svelte';
 import MarkdownArea from '@/components/MarkdownArea.svelte';
 import CelpipWritting from '@/django-pages/api2d/CelpipWritting.svelte';
+import CelpipSpeaking from '@/django-pages/api2d/CelpipSpeaking.svelte';
 import { mount } from 'svelte';
 
 console.log('main.ts loaded')
@@ -47,6 +48,8 @@ const components = {
   'textInput': TextInput,
   'markdownArea': MarkdownArea,
   'celpipWritting': CelpipWritting,
+  'celpipSpeaking': CelpipSpeaking,
+
   // Add more components here as needed
 };
 

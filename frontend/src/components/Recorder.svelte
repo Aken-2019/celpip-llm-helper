@@ -1,14 +1,37 @@
 <script lang="ts">
 import { onMount, onDestroy } from 'svelte';
 
-  
-let {length = 60, showPlayButton = true, fileName = 'recording.m4a', metadata = {}} = $props<{
-  length: number,
-  showPlayButton?: boolean,
-  fileName?: string,
-  metadata?: Record<string, any>
+// Define the recording details type
+type RecordingDetails = {
+  blob: Blob;
+  fileName: string;
+  metadata: Record<string, any>;
+} | null;
+
+// Component props
+let {
+  length,
+  showPlayButton,
+  fileName,
+  metadata,
+  audioRecord = $bindable(null),
+  onRecordingComplete = null,
+} = $props<{
+  length?: number;
+  showPlayButton?: boolean;
+  fileName?: string;
+  metadata?: Record<string, any>;
+  audioRecord?: RecordingDetails | null
+  onRecordingComplete?: (event: { detail: RecordingDetails | null }) => void;
 }>();
-let remainingTime = $state(length);
+
+// State
+const lengthValue = $state(length ?? 60);
+const fileNameValue = $state(fileName ?? 'recording.m4a');
+const metadataValue = $state(metadata ?? {});
+
+let remainingTime = $state(lengthValue);
+
   let timer: number | null = null;
 
   // State variables
@@ -22,6 +45,8 @@ let remainingTime = $state(length);
   let analyser: AnalyserNode;
   let dataArray: Uint8Array;
   let animationId: number;
+
+  
 async function  startRecording() {
     try {
         // Reset remaining time
@@ -72,7 +97,6 @@ async function  startRecording() {
         };
         // Set up the onstop handler before starting
         mediaRecorder.onstop = handleRecordingStop;
-        
         mediaRecorder.start();
         isRecording = true;
         draw();
@@ -86,23 +110,42 @@ async function  startRecording() {
 
 function handleRecordingStop() {
   const audioBlob = new Blob(audioChunks, { type: mediaRecorder.mimeType || 'audio/mp4' });
-    audioUrl = URL.createObjectURL(audioBlob);
-    const event = new CustomEvent('recordingComplete', { 
-      detail: { 
-        blob: audioBlob,
-        fileName: fileName.endsWith('.m4a') ? fileName : `${fileName}.m4a`,
-        metadata: {
-          ...metadata,
-          duration: length - remainingTime,
-          timestamp: new Date().toISOString(),
-          mimeType: mediaRecorder.mimeType || 'audio/mp4'
-        }
-      },
-      bubbles: true,
-      composed: true
-    });
-    console.log("Dispatching recordingComplete event with metadata", event);
-    document.dispatchEvent(event);
+  audioUrl = URL.createObjectURL(audioBlob);
+  // Update the recording details
+  const recordingFileName = fileNameValue.endsWith('.m4a') ? fileNameValue : `${fileNameValue}.m4a`;
+  const recordingMetadata = {
+    ...metadataValue,
+    duration: lengthValue - remainingTime,
+    timestamp: new Date().toISOString(),
+    mimeType: mediaRecorder.mimeType || 'audio/mp4'
+  };
+  
+  // Update the recording details
+  audioRecord = {
+    blob: audioBlob,
+    fileName: recordingFileName,
+    metadata: recordingMetadata
+  };
+  // Dispatch the event for backward compatibility
+  const event = new CustomEvent('recordingComplete', { 
+    detail: audioRecord,
+    bubbles: true,
+    composed: true
+  });
+  
+  console.log("Dispatching recordingComplete event with metadata", event);
+  dispatchEvent(event);
+
+  // Call the onRecordingComplete callback if provided
+  if (typeof onRecordingComplete === 'function') {
+    try {
+      onRecordingComplete({
+        detail: audioRecord
+      });
+    } catch (err) {
+      console.error('Error in onRecordingComplete callback:', err);
+    }
+  }
 }
 
 async function stopRecording() {
@@ -120,6 +163,7 @@ async function stopRecording() {
             timer = null;
         }
     }
+
 }
 
 async function  playRecording() {

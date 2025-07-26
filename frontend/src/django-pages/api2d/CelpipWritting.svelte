@@ -2,7 +2,7 @@
     import TextInput from '@/components/TextInput.svelte';
     import MarkdownArea from '@/components/MarkdownArea.svelte';
     import { onMount } from 'svelte';
-import { ApiClient, ApiError } from '../../utils/apiClient';
+    import { ApiClient, ApiError } from '../../utils/apiClient';
     let {endpoint, 
         apiKey, 
         txtModel,
