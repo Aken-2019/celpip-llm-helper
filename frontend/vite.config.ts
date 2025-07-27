@@ -15,7 +15,7 @@ export default defineConfig(({ command }) => ({
     emptyOutDir: true,
     rollupOptions: {
       input: {
-        main: './index.html',
+        // main: './index.html',
         components: './main.ts'
       },
       output: {
