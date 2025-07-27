@@ -43,7 +43,6 @@ function parseDataset(element: HTMLElement): ComponentProps {
 
 // Map of component names to their implementations
 const components = {
-  'exampleComponent': ExampleComponent,
   'recorder': Recorder,
   'textInput': TextInput,
   'markdownArea': MarkdownArea,

@@ -1,6 +1,11 @@
 import pytest
-from playwright.sync_api import Page, expect, sync_playwright
-from django.test import LiveServerTestCase
+from django.core.management import call_command
+
+
+@pytest.fixture(scope="session", autouse=True)
+def collectstatic():
+    """Run collectstatic before all tests."""
+    call_command("collectstatic", "--noinput", "--clear")
 
 
 @pytest.fixture(scope="session")
