@@ -43,7 +43,9 @@ jobs:
     - name: Run tests with coverage
       env:
         DATABASE_URL: postgres://postgres:postgres@localhost:5432/test_db
-        DEBUG: "False"
+        DYNACONF_ALLOWED_HOSTS: "['127.0.0.1','localhost']"
+        DYNACONF_DEBUG: "False"
+        DYNACONF_SECRET_KEY: "test-secret-key"
       run: |
         python manage.py check
         pytest --cov=./ --cov-report=xml --cov-report=term
