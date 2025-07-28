@@ -155,8 +155,12 @@ ACCOUNT_SIGNUP_REDIRECT_URL = "pages:home"  # or your desired redirect URL after
 ACCOUNT_EMAIL_VERIFICATION = "mandatory"  # or 'mandatory' or 'optional' or 'none'
 
 # Authentication settings
-ACCOUNT_LOGIN_METHODS = {"email"}
-ACCOUNT_SIGNUP_FIELDS = ["email*", "username*", "password1*", "password2*"]
+ACCOUNT_LOGIN_METHODS = {
+    "email"
+}  # ?: settings.ACCOUNT_AUTHENTICATION_METHOD is deprecated, use: settings.ACCOUNT_LOGIN_METHODS = {'email'}
+ACCOUNT_EMAIL_REQUIRED = True
+ACCOUNT_UNIQUE_EMAIL = True
+ACCOUNT_USERNAME_REQUIRED = True  # Still collect username
 ACCOUNT_USER_MODEL_USERNAME_FIELD = "username"
 
 # Custom forms
