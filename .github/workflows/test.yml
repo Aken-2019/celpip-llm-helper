@@ -59,6 +59,11 @@ jobs:
       working-directory: frontend
       run: npm run build
 
+    - name: Install Playwright
+      run: |
+        python -m playwright install --with-deps
+        python -m playwright install-deps
+
     - name: Run tests with coverage
       env:
         DATABASE_URL: postgres://postgres:postgres@localhost:5432/test_db
