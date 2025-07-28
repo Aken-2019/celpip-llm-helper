@@ -1,8 +1,8 @@
 <script lang="ts">
-    import { onMount, onDestroy } from 'svelte';
+    import { onMount } from 'svelte';
     import MarkdownArea from '@/components/MarkdownArea.svelte';
+    import Recorder from '@/components/Recorder.svelte';
     import { ApiClient } from '../../utils/apiClient';
-    import Recorder from '../../components/Recorder.svelte';
     
     // Define the shape of the recording complete event detail
     type RecordingCompleteEventDetail = {

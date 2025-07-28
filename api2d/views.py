@@ -109,30 +109,6 @@ class ApiKeyDeleteView(LoginRequiredMixin, DeleteView):
 
 
 @login_required
-def upload_mp3(request):
-    """Serve the MP3 processing page"""
-    try:
-        # Get the user's API key
-        api_key = Api2dKey.objects.get(user=request.user)
-        if api_key.expired_at and api_key.expired_at < timezone.now():
-            messages.error(request, "Your API key has expired. Please renew it.")
-            return redirect("api2d:api-key")
-        context = {
-            "api_key": api_key.key,
-            "api2d_openai_endpoint": settings.API2D_OPENAI_ENDPOINT,  # Updated to use Django's endpoint
-            "api2d_openai_stt_model": settings.API2D_OPENAI_STT_MODEL,
-            "api2d_openai_txt_model": settings.API2D_OPENAI_TXT_MODEL,
-            "celpip_improve_sys_prompt": settings.CELPIP_IMPROVE_SYS_PROMPT,
-            "celpip_extend_sys_prompt": settings.CELPIP_EXTEND_SYS_PROMPT,
-            "is_admin": request.user.is_superuser,  # Add admin status
-        }
-        return render(request, "api2d/upload_mp3.html", context)
-    except Api2dKey.DoesNotExist:
-        messages.error(request, "积分不足，请先充值。")
-        return redirect("api2d:api-key")
-
-
-@login_required
 def celpip_speaking(request):
     """Serve the MP3 processing page"""
     try:
@@ -147,7 +123,6 @@ def celpip_speaking(request):
             "api2d_openai_stt_model": settings.API2D_OPENAI_STT_MODEL,
             "api2d_openai_txt_model": settings.API2D_CLAUDE_MODEL,
             "celpip_improve_sys_prompt": settings.CLAUDE_CELPIP_WRITTING_SYSTEM_PROMPT,
-            "is_admin": request.user.is_superuser,  # Add admin status
         }
         return render(request, "api2d/CelpipSpeaking.html", context)
     except Api2dKey.DoesNotExist:
