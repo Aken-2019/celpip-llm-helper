@@ -49,6 +49,7 @@
         useCsrf: false
     });
 
+
     // Load credits on mount
     onMount(() => {
         updateCredits();
@@ -135,7 +136,7 @@
                     stop_sequences: ['</grammar_focused_feedback>'],
                     max_tokens: 4096
                 },
-                '/v1/messages'
+                '/claude/v1/messages'
             );
             console.log(response)
             // let wrapped_xml_response = "<root><revised_text>" + response.choices[0]?.message.content + "</grammar_focused_feedback></root>"
