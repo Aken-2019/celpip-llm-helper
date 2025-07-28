@@ -2,7 +2,6 @@ from django.urls import path
 from .views import (
     ApiKeyView,
     ApiKeyDeleteView,
-    upload_mp3,
     celpip_writting,
     celpip_speaking,
 )
