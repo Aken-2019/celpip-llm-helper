@@ -140,7 +140,7 @@ def celpip_writting(request):
             return redirect("api2d:api-key")
         context = {
             "api_key": api_key.key,
-            "api2d_claude_endpoint": settings.API2D_CLAUDE_ENDPOINT,  # Updated to use Django's endpoint
+            "api2d_openai_endpoint": settings.API2D_OPENAI_ENDPOINT,  # Updated to use Django's endpoint
             "api2d_claude_model": settings.API2D_CLAUDE_MODEL,
             "celpip_writting_system_prompt": settings.CLAUDE_CELPIP_WRITTING_SYSTEM_PROMPT,
         }

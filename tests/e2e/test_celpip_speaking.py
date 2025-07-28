@@ -100,7 +100,7 @@ class TestCelpipSpeaking(DjangoE2ETestCase):
 
             # Below is the claude mock
             page.route(
-                "**/v1/messages*",
+                "**/claude/v1/messages*",
                 lambda route: route.fulfill(
                     status=200,
                     content_type="application/json",

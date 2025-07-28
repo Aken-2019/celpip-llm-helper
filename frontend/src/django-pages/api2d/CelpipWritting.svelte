@@ -55,7 +55,7 @@
                     stop_sequences: ['</grammar_focused_feedback>'],
                     max_tokens: 4096
                 },
-                '/v1/messages'
+                '/claude/v1/messages'
             );
 
             console.log(response)

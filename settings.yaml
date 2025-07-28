@@ -5,7 +5,6 @@ default:
   API2D_OPENAI_STT_MODEL: "gpt-4o-mini-transcribe"
   API2D_OPENAI_TXT_MODEL: "gpt-4.1-nano-2025-04-14"
 
-  API2D_CLAUDE_ENDPOINT: "https://openai.api2d.net/claude"
   API2D_CLAUDE_MODEL: "claude-3-5-haiku-latest" # "claude-sonnet-4-20250514"
 
   # Email configuration
