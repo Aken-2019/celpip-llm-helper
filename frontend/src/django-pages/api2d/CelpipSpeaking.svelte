@@ -1,6 +1,6 @@
 <script lang="ts">
     import { onMount, onDestroy } from 'svelte';
-    
+    import MarkdownArea from '@/components/MarkdownArea.svelte';
     import { ApiClient } from '../../utils/apiClient';
     import Recorder from '../../components/Recorder.svelte';
     
@@ -36,13 +36,12 @@
     let isProcessing = $state(false);
     let errorMessage = $state('');
     let credits = $state<{total_available: number} | null>(null);
+    let credit_comsumed_stt = $state(-1);
+    let credit_comsumed_txt = $state(-1);
     // Transcription results
-    let transcription = $state('');
-    let improvedText = $state('');
-
-    // UI state
-    let showTranscription = $state(false);
-    let showImprovedText = $state(false);
+    let transcription = $state('`待转写...`');
+    let improvedText = $state('`待润色...`');
+    let suggestionContent = $state('`待润色...`');
 
     // Initialize API client
     const apiClient = new ApiClient({
@@ -126,12 +125,28 @@
                 txtModel,
                 [
                     { role: 'system', content: celpipImproveSysPrompt },
-                    { role: 'user', content: transcription }
-                ]
+                    { role: 'user', content: transcription },
+                    {
+                        role: 'assistant',
+                        content: "<revised_text>"
+                    }
+                ],
+                {
+                    stop_sequences: ['</grammar_focused_feedback>'],
+                    max_tokens: 4096
+                },
+                '/v1/messages'
             );
-            
-            improvedText = response.choices[0].message.content;
-            showImprovedText = true;
+            console.log(response)
+            // let wrapped_xml_response = "<root><revised_text>" + response.choices[0]?.message.content + "</grammar_focused_feedback></root>"
+            let wrapped_xml_response = "<root><revised_text>" + response.content[0]?.text + "</grammar_focused_feedback></root>"
+            let xml_response = new DOMParser().parseFromString(wrapped_xml_response, 'text/xml');
+            improvedText = xml_response.getElementsByTagName('revised_text')[0]?.textContent || 'Error, please contact support';
+            suggestionContent = xml_response.getElementsByTagName('grammar_focused_feedback')[0]?.textContent || 'Error, please contact support';
+            suggestionContent = suggestionContent.replace(/"/g, '`');
+            improvedText = improvedText.replace(/"/g, '`');
+            credit_comsumed_txt = response.usage.final_total
+            await updateCredits()
         } catch (error) {
             console.error('Error improving text:', error);
             errorMessage = '改进文本时出错，请重试';
@@ -151,7 +166,6 @@
         try {
             // Handle test mode
             if (isTestMode) {
-                showTranscription = true;
                 transcription = testTranscription;
                 await improveText();
                 return;
@@ -184,7 +198,6 @@
         formData.append('file', file);
         
         // Show loading state for transcription
-        showTranscription = true;
         transcription = '正在转写音频...';
         try {
                 // Step 1: Transcribe audio
@@ -196,7 +209,7 @@
                 );
                 
                 transcription = transcriptionResponse.text || '未能识别到文本';
-                
+                credit_comsumed_stt = transcriptionResponse.usage.final_total;
             } catch (error) {
                 console.error('Transcription error:', error);
                 errorMessage = '转写失败: ' + (error instanceof Error ? error.message : '未知错误');
@@ -335,7 +348,8 @@
                 <button 
                     class="nav-link {activeTab === 'upload' ? 'active' : ''}" 
                     onclick={() => activeTab = 'upload'}
-                    type="button">
+                    type="button"
+                    data-testid="upload-tab-button">
                     📁 上传文件
                 </button>
             </li>
@@ -421,6 +435,7 @@
                 <button 
                     type="submit" 
                     class="btn btn-primary"
+                    data-testid="submit-button"
                     disabled={isProcessing || (activeTab === 'upload' && !audioFile) || (credits?.total_available ?? 0) < 100}>
                     {#if isProcessing}
                     <span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
@@ -456,50 +471,42 @@
         </div>
         {/if}
         
-        <!-- Results Section -->
-        {#if showTranscription || showImprovedText}
-        <div class="mt-4">
-            <!-- Transcription Result -->
-            {#if showTranscription}
-            <div class="card mb-4">
-                <div class="card-header d-flex justify-content-between align-items-center">
-                    <h5 class="mb-0">1. 转文字</h5>
-                    <button 
-                        class="btn btn-sm btn-outline-secondary"
-                        onclick={() => copyToClipboard(transcription)}
-                        title="复制到剪贴板">
-                        <i class="bi bi-clipboard me-1"></i>复制文字
-                    </button>
-                </div>
-                <div class="card-body">
-                    <div class="bg-light p-3 rounded">
-                        {@html transcription.replace(/\n/g, '<br>')}
-                    </div>
-                </div>
+            <div class='my-4' data-testid="transcription-text">
+                <MarkdownArea 
+                    title='1. 转文字' 
+                    content={transcription}
+                /> 
             </div>
-            {/if}
-            
-            <!-- Improved Text -->
-            {#if showImprovedText}
-            <div class="card mb-4">
-                <div class="card-header d-flex justify-content-between align-items-center">
-                    <h5 class="mb-0">2. 文本润色</h5>
-                    <button 
-                        class="btn btn-sm btn-outline-secondary"
-                        onclick={() => copyToClipboard(improvedText)}
-                        title="复制到剪贴板">
-                        <i class="bi bi-clipboard me-1"></i>复制润色文本
-                    </button>
-                </div>
-                <div class="card-body">
-                    <div class="bg-light p-3 rounded">
-                        {@html improvedText.replace(/\n/g, '<br>')}
-                    </div>
-                </div>
+            <div class='my-4' data-testid="improved-text">
+                <MarkdownArea 
+                    title='2. 润色结果' 
+                    content={improvedText}
+                />
             </div>
-            {/if}
-        </div>
-        {/if}
-    </div>
-</div>
+            <div class='my-4' data-testid="suggestion-text">
+                <MarkdownArea 
+                    title='3. 具体建议' 
+                    content={`
+<style>
+table {
+border-collapse: collapse;
+width: 100%;
+}
 
+th, td {
+text-align: left;
+padding: 8px;
+}
+
+tr:nth-child(even){background-color: #f2f2f2}
+
+th {
+background-color: #04AA6D;
+color: white;
+}
+</style>
+${suggestionContent}`} 
+                />
+            </div>
+        </div>
+    </div>

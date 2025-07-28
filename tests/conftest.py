@@ -1,10 +1,26 @@
+import os
+import subprocess
 import pytest
 from django.core.management import call_command
 
 
 @pytest.fixture(scope="session", autouse=True)
 def collectstatic():
-    """Run collectstatic before all tests."""
+    """Run npm build and collectstatic before all tests."""
+    # Get the project root directory (one level up from tests)
+    project_root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+    frontend_dir = os.path.join(project_root, "frontend")
+
+    # Run npm run build in the frontend directory
+    try:
+        subprocess.run(
+            ["npm", "run", "build"], cwd=frontend_dir, check=True, capture_output=True
+        )
+    except subprocess.CalledProcessError as e:
+        print(f"Error running npm build: {e.stderr.decode()}")
+        raise
+
+    # Then collect static files
     call_command("collectstatic", "--noinput", "--clear")
 
 

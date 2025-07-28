@@ -52,14 +52,14 @@
                     }
                 ],
                 {
-                    stop_sequences: ['</feedbacks>'],
+                    stop_sequences: ['</grammar_focused_feedback>'],
                     max_tokens: 4096
                 },
                 '/v1/messages'
             );
 
             console.log(response)
-            let wrapped_xml_response = "<root><revised_text>" + response.content[0]?.text + "</feedbacks></root>"
+            let wrapped_xml_response = "<root><revised_text>" + response.content[0]?.text + "</grammar_focused_feedback></root>"
             let xml_response = new DOMParser().parseFromString(wrapped_xml_response, 'text/xml');
             outputContent = xml_response.getElementsByTagName('revised_text')[0]?.textContent || 'Error, please contact support';
             suggestionContent = xml_response.getElementsByTagName('grammar_focused_feedback')[0]?.textContent || 'Error, please contact support';
@@ -111,10 +111,10 @@
             {/if}
     </div>
     <div class='my-4'>
-        <MarkdownArea title='润色结果' content={outputContent} />
+        <MarkdownArea title='1. 润色结果' content={outputContent} />
     </div>
     <div class='my-4'>
-        <MarkdownArea title='语法建议' content={`
+        <MarkdownArea title='2. 具体建议' content={`
 <style>
 table {
   border-collapse: collapse;

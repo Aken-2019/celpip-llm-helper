@@ -45,7 +45,10 @@ class TestCelpipWritingPage(DjangoE2ETestCase):
                 self.page.wait_for_selector('[data-svelte-component="celpipWritting"]')
                 # Test input
                 test_essay = "This is a test essay. It has some grammar issues that need to be fixed."
-
+                # Add this in your test
+                html_content = self.page.content()
+                with open("page_content.html", "w", encoding="utf-8") as f:
+                    f.write(html_content)
                 # Find the textarea and type the test input
                 textarea = self.page.locator("textarea")
                 textarea.fill(test_essay)

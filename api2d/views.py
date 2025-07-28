@@ -143,11 +143,10 @@ def celpip_speaking(request):
             return redirect("api2d:api-key")
         context = {
             "api_key": api_key.key,
-            "api2d_openai_endpoint": settings.API2D_OPENAI_ENDPOINT,  # Updated to use Django's endpoint
+            "api2d_openai_endpoint": settings.API2D_CLAUDE_ENDPOINT,  # Updated to use Django's endpoint
             "api2d_openai_stt_model": settings.API2D_OPENAI_STT_MODEL,
-            "api2d_openai_txt_model": settings.API2D_OPENAI_TXT_MODEL,
-            "celpip_improve_sys_prompt": settings.CELPIP_IMPROVE_SYS_PROMPT,
-            "celpip_extend_sys_prompt": settings.CELPIP_EXTEND_SYS_PROMPT,
+            "api2d_openai_txt_model": settings.API2D_CLAUDE_MODEL,
+            "celpip_improve_sys_prompt": settings.CLAUDE_CELPIP_WRITTING_SYSTEM_PROMPT,
             "is_admin": request.user.is_superuser,  # Add admin status
         }
         return render(request, "api2d/CelpipSpeaking.html", context)
