@@ -14,8 +14,8 @@ This project is an application to help CELPIP (Canadian English Language Profici
 - Infrastructure: Debian Linux (hosted on a VPS)
 
 ## To-do
-[] Add dark/light mode switch
-[] Add multi-language support
+- [ ] Add dark/light mode switch
+- [ ] Add multi-language support
 
 ## Screenshots
 ### Speaking
