@@ -23,6 +23,9 @@ This project is an application to help CELPIP (Canadian English Language Profici
 
 ## Screenshots
 ### Speaking
+Users can record or upload their practices and get feedbacks.
 ![Speaking](docs/screenshots/celpip-speaking.png)
+
 ### Writing
+Users can type directly at the website and get feedbacks.
 ![Writing](docs/screenshots/celpip-writing.png)
