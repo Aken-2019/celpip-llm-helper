@@ -1,3 +1,7 @@
+
+# CELPIP Exam Helper
+
+## About
 This project is an application to help CELPIP (Canadian English Language Proficiency Index Program) students improve their speaking and writing skills. It's currently hosted on an VPS which is accessible at [https://tifen.harrylearns.com](https://tifen.harrylearns.com). 
 
 ## Features
