@@ -449,7 +449,7 @@
                 <!-- Credit Info -->
                 <div class="mt-2 small">
                     {#if credits}
-                        {#if (credits.total_available ?? 0) < 100}
+                        {#if (credits.total_available ?? 0) < 150}
                         <span class="text-danger">
                             当前剩余积分: {credits.total_available}, 为避免因点数不足导致功能异常，请先充值积分至100点以上。
                         </span>
