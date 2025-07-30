@@ -2,15 +2,17 @@
 # CELPIP Exam Helper Powered by LLM
 
 ## About
-This project is an application to help CELPIP (Canadian English Language Proficiency Index Program) students improve their speaking and writing skills. It's currently hosted on an VPS which is accessible at [https://tifen.harrylearns.com](https://tifen.harrylearns.com). 
+This project is an application to help CELPIP (Canadian English Language Proficiency Index Program) students improve their speaking and writing skills by integrating LLM models. It's accessible at [https://tifen.harrylearns.com](https://tifen.harrylearns.com). 
+
+
 
 ## Features
-- Users can either record their speaking (or upload their audio file) and get immediate feedback from LLM, including a revised version of the practice and grammar corrections.
-- Prompts are engineered specifially for CELPIP test, inspired by [YouTuber - HZad Education](https://www.youtube.com/@hzadeducation-coachingcent986/playlists).
-- Users can deposit credits to their account and only pay for the number of LLM tokens they use.
+- User interface: Users can either record their speaking (or upload their audio file) and get immediate feedback, including a revised version of the practice and grammar corrections.
+- LLM integration: Prompts are engineered specifially for CELPIP test, inspired by [YouTuber - HZad Education](https://www.youtube.com/@hzadeducation-coachingcent986/playlists).
+- Pricing model: Users can deposit credits to their account and only pay for the number of LLM tokens they use, powered by API provider - [API2D](https://api2d.com/).
 
-## Tech Stack
-- Backend: Django
+## Tech Stack   
+- Backend: Django     
 - Frontend: Svelte 
 - LLM: OpenAI, Claude
 - Testing: GitHub Actions, Pytest, Playwright
