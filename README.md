@@ -15,7 +15,7 @@ This project is an application to help CELPIP (Canadian English Language Profici
 | Category      | Technologies |
 |--------------|--------------|
 | Backend      | Django |
-| Frontend     | Svelte |
+| Frontend     | Svelte, Bootstrap |
 | LLM          | OpenAI's Whisper for STT, Antropic's Claude for chats|
 | Testing      | GitHub Actions, Pytest, Playwright |
 | Deployment   | Docker, Coolify (Self-hosted PaaS) |
