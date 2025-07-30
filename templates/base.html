@@ -29,11 +29,8 @@
         </button>
         <div class="collapse navbar-collapse" id="navbarNav">
             <ul class="navbar-nav ms-auto">
-                {% if debug %}
-                    <a class="nav-link text-white" href="{% url 'api2d:celpip-writting' %}">📝思培写作</a>
-                {% endif %}
                     <a class="nav-link text-white" href="{% url 'pages:home' %}">首页</a>
-                    <a class="nav-link text-white" href="{% url 'api2d:celpip-speaking' %}">🤩思培口语</a>
+                    <a class="nav-link text-white" href="{% url 'api2d:celpip-speaking' %}">🔊思培口语</a>
                     <a class="nav-link text-white" href="{% url 'api2d:celpip-writing' %}">📝思培写作</a>
                     <a class="nav-link text-white" href="{% url 'api2d:api-key' %}">🪙充值积分</a>
                     <a class="nav-link text-white" href="{% url 'pages:page_detail' slug='contact' %}">联系客服</a>
