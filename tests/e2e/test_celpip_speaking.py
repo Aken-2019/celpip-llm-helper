@@ -15,7 +15,7 @@ import pytest
 
 
 @pytest.mark.e2e
-class TestMP3Upload(DjangoE2ETestCase):
+class TestCelpipSpeaking(DjangoE2ETestCase):
     """Test MP3 file upload and transcription functionality."""
 
     def setUp(self):
@@ -63,6 +63,7 @@ class TestMP3Upload(DjangoE2ETestCase):
                     body=json.dumps(
                         {
                             "text": "This is a test transcription from the mock API",
+                            "usage": {"final_total": 200},
                         }
                     ),
                 ),
@@ -76,78 +77,96 @@ class TestMP3Upload(DjangoE2ETestCase):
                     body=json.dumps({"total_available": 200, "total_granted": 200}),
                 ),
             )
+            # Below is the openai mock
+            # page.route(
+            #     "**/v1/chat/completions*",
+            #     lambda route: route.fulfill(
+            #         status=200,
+            #         content_type="application/json",
+            #         body=json.dumps(
+            #             {
+            #                 "choices": [
+            #                     {
+            #                         "message": {
+            #                             "content": "This is a test chat completion from the mock API"
+            #                         }
+            #                     }
+            #                 ],
+            #             }
+            #         ),
+            #     ),
+            # )
+            # reload to let the patching work
 
+            # Below is the claude mock
             page.route(
-                "**/v1/chat/completions*",
+                "**/claude/v1/messages*",
                 lambda route: route.fulfill(
                     status=200,
                     content_type="application/json",
                     body=json.dumps(
                         {
-                            "choices": [
+                            "content": [
                                 {
-                                    "message": {
-                                        "content": "This is a test chat completion from the mock API"
-                                    }
+                                    "text": "<revised_text>This is a test revised text</revised_text><grammar_focused_feedback>Test feedback</grammar_focused_feedback>"
                                 }
                             ],
+                            "usage": {"final_total": 100},
                         }
                     ),
                 ),
             )
-            # reload to let the patching work
+
             page.reload()
 
             try:
                 self.take_screenshot("before_file_selection")
-                # Wait for the form to be visible
-                page.wait_for_selector("form#audioUploadForm", state="visible")
+
+                # Wait for the upload tab button to be visible and clickable
+                upload_tab_button = page.get_by_test_id("upload-tab-button")
+                upload_tab_button.wait_for(
+                    state="visible", timeout=10000
+                )  # Wait up to 10 seconds
+
+                # Click the button
+                upload_tab_button.click()
+
+                # Wait for the file input to be visible in the upload tab
+                file_input = page.locator("#audioFile")
+                file_input.wait_for(state="visible", timeout=10000)
 
                 # Set the test file
-                file_input = page.locator("#audioFile")
                 file_input.set_input_files(self.test_audio_path)
                 # file_input.set_input_files('/home/haojie/django-user-app/tests/speech-to-txt-testing-file.M4A')
-
-                # Manually trigger the change event
-                page.evaluate(
-                    """() => {
-                    const event = new Event('change', { bubbles: true });
-                    document.querySelector('#audioFile').dispatchEvent(event);
-                }"""
-                )
 
                 # Wait for the audio player to be visible
                 self.take_screenshot("after_file_selection")
 
                 # wait a bit to let the fetch credit work
-                page.wait_for_timeout(3000)
+                page.wait_for_timeout(1000)
 
                 self.take_screenshot("after_credit_fetch")
 
                 # Click the submit button
                 # page.click('form#audioUploadForm button[type="submit"]')
-                page.get_by_role("button", name="开始润色与扩写").click()
+                page.get_by_test_id("submit-button").click()
 
                 self.take_screenshot("after_submit")
 
-                # Wait for the transcription text to update from the default value
-                page.wait_for_function(
-                    """() => {
-                    const el = document.querySelector('#transcriptionText');
-                    return el && el.textContent !== '口语文字将会显示在这里...';
-                }"""
-                )
-
                 self.take_screenshot("after_transcription")
-                # Verify the transcription
-                transcription_text = page.text_content("#transcriptionText")
+                # Verify the transcription using data-testid
+                transcription_text = page.text_content(
+                    '[data-testid="transcription-text"]'
+                )
                 self.assertIn("test transcription", transcription_text)
 
-                improved_text = page.text_content("#wordCountAdvice")
-                self.assertIn("test chat completion", improved_text)
+                # Verify improved text using data-testid
+                improved_text = page.text_content('[data-testid="improved-text"]')
+                self.assertIn("This is a test revised text", improved_text)
 
-                expanded_text = page.text_content("#elaborateTextContent")
-                self.assertIn("test chat completion", expanded_text)
+                # Verify suggestion text using data-testid
+                suggestion_text = page.text_content('[data-testid="suggestion-text"]')
+                self.assertIn("Test feedback", suggestion_text)
 
             except Exception as e:
                 self.take_screenshot("mp3_upload_error")

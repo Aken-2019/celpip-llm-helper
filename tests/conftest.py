@@ -1,6 +1,27 @@
+import os
+import subprocess
 import pytest
-from playwright.sync_api import Page, expect, sync_playwright
-from django.test import LiveServerTestCase
+from django.core.management import call_command
+
+
+@pytest.fixture(scope="session", autouse=True)
+def collectstatic():
+    """Run npm build and collectstatic before all tests."""
+    # Get the project root directory (one level up from tests)
+    project_root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+    frontend_dir = os.path.join(project_root, "frontend")
+
+    # Run npm run build in the frontend directory
+    try:
+        subprocess.run(
+            ["npm", "run", "build"], cwd=frontend_dir, check=True, capture_output=True
+        )
+    except subprocess.CalledProcessError as e:
+        print(f"Error running npm build: {e.stderr.decode()}")
+        raise
+
+    # Then collect static files
+    call_command("collectstatic", "--noinput", "--clear")
 
 
 @pytest.fixture(scope="session")
