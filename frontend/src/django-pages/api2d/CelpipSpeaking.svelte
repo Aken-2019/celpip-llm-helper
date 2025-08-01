@@ -36,8 +36,8 @@
     let isProcessing = $state(false);
     let errorMessage = $state('');
     let credits = $state<{total_available: number} | null>(null);
-    let credit_comsumed_stt = $state(-1);
-    let credit_comsumed_txt = $state(-1);
+    let credit_consumed = $state(0);
+    let last_credits = $state<number | null>(null);
     // Transcription results
     let transcription = $state('`待转写...`');
     let improvedText = $state('`待润色...`');
@@ -61,14 +61,25 @@
         };
     });
 
-    // Update credit information
-    async function updateCredits() {
+    // Update credit information and track consumption
+    async function updateCredits(): Promise<boolean> {
         try {
             const response = await apiClient.fetchCredits(apiKey);
+            
+            // Calculate credit consumption if we have a previous value
+            if (last_credits !== null) {
+                const currentCredits = response.total_available;
+                credit_consumed = last_credits - currentCredits;
+            }
+            
+            // Update last_credits for next calculation
+            last_credits = response.total_available;
             credits = response;
+            
+            return true;
         } catch (error) {
-            console.error('Error fetching credits:', error);
-            errorMessage = '无法加载积分信息';
+            console.error('无法加载积分信息:', error);
+            throw error;
         }
     }
 
@@ -115,46 +126,49 @@
     }
 
     // Improve transcribed text
-    async function improveText() {
-        if (!transcription) return;
-        
-        isProcessing = true;
-        
-        try {
-            const response = await apiClient.chatCompletion(
-                apiKey,
-                txtModel,
-                [
-                    { role: 'system', content: celpipImproveSysPrompt },
-                    { role: 'user', content: transcription },
-                    {
-                        role: 'assistant',
-                        content: "<revised_text>"
-                    }
-                ],
+    async function improveText(): Promise<boolean> {
+        improvedText = '正在润色...';
+        suggestionContent = '正在生成建议...';
+        const response = await apiClient.chatCompletion(
+            apiKey,
+            txtModel,
+            [
+                { role: 'system', content: celpipImproveSysPrompt },
+                { role: 'user', content: transcription },
                 {
-                    stop_sequences: ['</grammar_focused_feedback>'],
-                    max_tokens: 4096
-                },
-                '/claude/v1/messages'
-            );
-            console.log(response)
-            // let wrapped_xml_response = "<root><revised_text>" + response.choices[0]?.message.content + "</grammar_focused_feedback></root>"
-            let wrapped_xml_response = "<root><revised_text>" + response.content[0]?.text + "</grammar_focused_feedback></root>"
-            let xml_response = new DOMParser().parseFromString(wrapped_xml_response, 'text/xml');
-            improvedText = xml_response.getElementsByTagName('revised_text')[0]?.textContent || 'Error, please contact support';
-            suggestionContent = xml_response.getElementsByTagName('grammar_focused_feedback')[0]?.textContent || 'Error, please contact support';
-            suggestionContent = suggestionContent.replace(/"/g, '`');
-            improvedText = improvedText.replace(/"/g, '`');
-            credit_comsumed_txt = response.usage.final_total
-            await updateCredits()
-        } catch (error) {
-            console.error('Error improving text:', error);
-            errorMessage = '改进文本时出错，请重试';
-            throw error;
-        } finally {
-            isProcessing = false;
-        }
+                    role: 'assistant',
+                    content: "<revised_text>"
+                }
+            ],
+            {
+                stop_sequences: ['</grammar_focused_feedback>'],
+                max_tokens: 4096
+            },
+            '/claude/v1/messages'
+        );
+        
+        const wrapped_xml_response = "<root><revised_text>" + response.content[0]?.text + "</grammar_focused_feedback></root>";
+        const xml_response = new DOMParser().parseFromString(wrapped_xml_response, 'text/xml');
+        
+        improvedText = xml_response.getElementsByTagName('revised_text')[0]?.textContent || 'Error, please contact support';
+        suggestionContent = xml_response.getElementsByTagName('grammar_focused_feedback')[0]?.textContent || 'Error, please contact support';
+        suggestionContent = suggestionContent.replace(/"/g, '`');
+        improvedText = improvedText.replace(/"/g, '`');
+        return true;
+    }
+    
+    // Process audio file through API
+    async function processAudioFile(file: File): Promise<void> {
+        transcription = '正在转写音频...';
+        
+        const transcriptionResponse = await apiClient.transcribeAudio(
+            file,
+            apiKey,
+            sttModel,
+            language
+        );
+        
+        transcription = transcriptionResponse.text || '未能识别到文本';
     }
     
     // Handle form submission
@@ -162,6 +176,7 @@
         e.preventDefault();
         if (isProcessing) return;
         
+        isProcessing = true;
         errorMessage = '';
         
         try {
@@ -178,68 +193,18 @@
                 return;
             }
             
-            // Transcribe audio
+            // Process audio and improve text
             await processAudioFile(audioFile);
+            await improveText();
             
-            // Improve and extend text if transcription is successful
-            if (transcription) {
-                await improveText();
-            }
         } catch (error) {
-            console.error('Error processing audio:', error);
-            errorMessage = '处理音频时出错，请重试';
+            const message = error instanceof Error ? error.message : '未知错误';
+            console.error('处理请求时出错:', error);
+            errorMessage = `处理请求时出错: ${message}`;
         } finally {
             isProcessing = false;
+            await updateCredits();
         }
-    }
-
-    // Process audio file through API
-    async function processAudioFile(file: File) {
-        const formData = new FormData();
-        formData.append('file', file);
-        
-        // Show loading state for transcription
-        transcription = '正在转写音频...';
-        try {
-                // Step 1: Transcribe audio
-                const transcriptionResponse = await apiClient.transcribeAudio(
-                    file,
-                    apiKey,
-                    sttModel,
-                    language
-                );
-                
-                transcription = transcriptionResponse.text || '未能识别到文本';
-                credit_comsumed_stt = transcriptionResponse.usage.final_total;
-            } catch (error) {
-                console.error('Transcription error:', error);
-                errorMessage = '转写失败: ' + (error instanceof Error ? error.message : '未知错误');
-            }
-    }
-    
-    // Copy text to clipboard
-    function copyToClipboard(text: string) {
-        navigator.clipboard.writeText(text).then(() => {
-            // Show a temporary tooltip or notification
-            const notification = document.createElement('div');
-            notification.textContent = '已复制到剪贴板';
-            notification.style.position = 'fixed';
-            notification.style.bottom = '20px';
-            notification.style.right = '20px';
-            notification.style.backgroundColor = '#28a745';
-            notification.style.color = 'white';
-            notification.style.padding = '10px 20px';
-            notification.style.borderRadius = '5px';
-            notification.style.zIndex = '1000';
-            document.body.appendChild(notification);
-            
-            setTimeout(() => {
-                document.body.removeChild(notification);
-            }, 2000);
-        }).catch(err => {
-            console.error('Failed to copy text:', err);
-            errorMessage = '复制失败，请手动选择并复制文本。';
-        });
     }
 
     function handleRecordingComplete({ detail }: { detail: RecordingCompleteEventDetail }) {
@@ -437,7 +402,7 @@
                     type="submit" 
                     class="btn btn-primary"
                     data-testid="submit-button"
-                    disabled={isProcessing || (activeTab === 'upload' && !audioFile) || (credits?.total_available ?? 0) < 100}>
+                    disabled={isProcessing || (activeTab === 'upload' && !audioFile) || (credits?.total_available ?? 0) < 150}>
                     {#if isProcessing}
                     <span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
                     处理中...
@@ -449,15 +414,19 @@
                 <!-- Credit Info -->
                 <div class="mt-2 small">
                     {#if credits}
-                        {#if (credits.total_available ?? 0) < 150}
-                        <span class="text-danger">
-                            当前剩余积分: {credits.total_available}, 为避免因点数不足导致功能异常，请先充值积分至100点以上。
-                        </span>
-                        {:else}
                         <span class="text-success">
                             当前剩余积分: {credits.total_available}
                         </span>
-                        {/if}
+                            {#if credit_consumed > 0}
+                            <span class="text-success">
+                                本次消耗积分: {credit_consumed}
+                            </span>
+                            {/if}
+                            {#if (credits.total_available ?? 0) < 150}
+                            <span class="text-danger">
+                                为避免因点数不足导致功能异常，请先充值积分至100点以上。
+                            </span>
+                            {/if}
                     {:else}
                     <span>正在加载积分信息...</span>
                     {/if}
