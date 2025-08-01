@@ -126,15 +126,8 @@ function handleRecordingStop() {
     fileName: recordingFileName,
     metadata: recordingMetadata
   };
-  // Dispatch the event for backward compatibility
-  const event = new CustomEvent('recordingComplete', { 
-    detail: audioRecord,
-    bubbles: true,
-    composed: true
-  });
   
-  console.log("Dispatching recordingComplete event with metadata", event);
-  dispatchEvent(event);
+
 
   // Call the onRecordingComplete callback if provided
   if (typeof onRecordingComplete === 'function') {
