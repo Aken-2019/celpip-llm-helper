@@ -2,18 +2,18 @@
 {% load crispy_forms_tags %}
 {% load i18n %}
 
-{% block title %}{% trans "注册" %}{% endblock %}
+{% block title %}{% trans "Sign Up" %}{% endblock %}
 
 {% block content %}
 <div class="row justify-content-center">
     <div class="col-md-8 col-lg-6">
         <div class="card shadow-sm">
             <div class="card-body p-4">
-                <h2 class="text-center mb-4">{% trans "创建账户" %}</h2>
+                <h2 class="text-center mb-4">{% trans "Create an Account" %}</h2>
                 
                 {% if form.errors %}
                     <div class="alert alert-danger">
-                        <strong>{% trans "错误：" %}</strong> {% trans "请更正以下错误" %}
+                        <strong>{% trans "Error: " %}</strong> {% trans "Please correct the following errors" %}
                         {{ form.non_field_errors }}
                     </div>
                 {% endif %}
@@ -29,19 +29,19 @@
                     <div class="form-check mb-3">
                         <input type="checkbox" class="form-check-input" id="terms" required>
                         <label class="form-check-label" for="terms">
-                            {% trans "我已阅读并同意" %} <a href="#" class="text-decoration-none">{% trans "服务条款" %}</a> 
-                            {% trans "和" %} <a href="#" class="text-decoration-none">{% trans "隐私政策" %}</a>
+                            {% trans "I have read and agree to the" %} <a href="#" class="text-decoration-none">{% trans "Terms of Service" %}</a> 
+                            {% trans "and" %} <a href="#" class="text-decoration-none">{% trans "Privacy Policy" %}</a>
                         </label>
                     </div>
                     
                     <div class="d-grid gap-2">
-                        <button class="btn btn-primary" type="submit">{% trans "注册账户" %}</button>
+                        <button class="btn btn-primary" type="submit">{% trans "Sign Up" %}</button>
                     </div>
                 </form>
                 
                 <div class="mt-4 text-center">
-                    <p class="mb-2">{% trans "已有账户？" %}</p>
-                    <a href="{% url 'account_login' %}" class="btn btn-outline-secondary">{% trans "立即登录" %}</a>
+                    <p class="mb-2">{% trans "Already have an account?" %}</p>
+                    <a href="{% url 'account_login' %}" class="btn btn-outline-secondary">{% trans "Login Now" %}</a>
                 </div>
             </div>
         </div>

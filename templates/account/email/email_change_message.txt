@@ -1,11 +1,11 @@
 {% load i18n %}
 
 {% autoescape off %}
-{% blocktrans with site_name=current_site.name site_domain=current_site.domain %}您收到此邮件是因为您在 {{ site_domain }} 的邮箱地址已更改为 {{ new_email }}。
+{% blocktrans with site_name=current_site.name site_domain=current_site.domain %}You're receiving this email because your email address at {{ site_domain }} has been changed to {{ new_email }}.
 
-如果您未进行此更改，请立即联系我们。{% endblocktrans %}
+If you didn't make this change, please contact us immediately.{% endblocktrans %}
 
-{% blocktrans with site_name=site_domain %}感谢您使用 {{ site_name }}！{% endblocktrans %}
+{% blocktrans with site_name=site_domain %}Thank you for using {{ site_name }}!{% endblocktrans %}
 
 {{ site_domain }}
 {% endautoescape %}

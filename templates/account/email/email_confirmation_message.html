@@ -5,35 +5,35 @@
 <html>
 <head>
     <meta charset="UTF-8">
-    <title>{% trans "确认您的电子邮箱地址" %}</title>
+    <title>{% trans "Confirm Your Email Address" %}</title>
 </head>
 <body>
     <div style="max-width: 600px; margin: 0 auto; font-family: Arial, sans-serif;">
-        <h2>{% trans "确认您的电子邮箱地址" %}</h2>
+        <h2>{% trans "Confirm Your Email Address" %}</h2>
         
         <p>{% user_display user as user_display %}</p>
         
         <p>{% blocktrans with site_name=current_site.name site_domain=current_site.domain %}
-        您收到此邮件是因为用户 <strong>{{ user_display }}</strong> 在 {{ site_name }} 上使用此邮箱地址注册了账户。
+        You're receiving this email because user <strong>{{ user_display }}</strong> has registered an account on {{ site_name }} using this email address.
         {% endblocktrans %}</p>
         
-        <p>{% trans "请点击下方按钮确认此操作：" %}</p>
+        <p>{% trans "Please click the button below to confirm this action:" %}</p>
         
         <p style="text-align: center; margin: 30px 0;">
             <a href="{{ activate_url }}" style="background-color: #4CAF50; color: white; padding: 12px 24px; text-decoration: none; border-radius: 4px; font-weight: bold;">
-                {% trans "确认电子邮箱" %}
+                {% trans "Confirm Email Address" %}
             </a>
         </p>
         
-        <p>{% blocktrans with site_name=site_domain %}或者将以下链接复制到浏览器中打开：{% endblocktrans %}</p>
+        <p>{% blocktrans with site_name=site_domain %}Or copy and paste the following link into your browser:{% endblocktrans %}</p>
         <p><code style="word-break: break-all;">{{ activate_url }}</code></p>
         
-        <p>{% blocktrans with site_name=site_domain %}感谢您使用 {{ site_name }}！{% endblocktrans %}</p>
+        <p>{% blocktrans with site_name=site_domain %}Thank you for using {{ site_name }}!{% endblocktrans %}</p>
         
         <hr>
         <p style="color: #666; font-size: 0.9em;">
             {% blocktrans with site_name=site_domain %}
-            这是来自 {{ site_name }} 的自动通知邮件，请勿直接回复。
+            This is an automated message from {{ site_name }}. Please do not reply to this email.
             {% endblocktrans %}
         </p>
     </div>

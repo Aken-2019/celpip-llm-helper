@@ -1,33 +1,34 @@
 {% extends "base.html" %}
+{% load i18n %}
 {% load crispy_forms_tags %}
 {% load api2d_filters %}
 {% load static %}
 
 {% block content %}
-    <h2>账户积分</h2>
+    <h2>{% trans 'Account Credits' %}</h2>
     <div class="card shadow mt-4">
         <div class="card-body">
             {% if has_api_key %}
                 <div class="mt-3">
                     <div id="creditsSection" class="alert alert-info">
                         <i class="bi bi-currency-dollar me-2"></i>
-                        <span id="creditsAmount">Checking credits...</span>
+                        <span id="creditsAmount">{% trans 'Checking credits...' %}</span>
                     </div>
                     <div class="mt-3">
                         <a href="https://api2d.com/merchant/{{ api_key.group.type_id }}?hide_key_input=1&hide_key=1&key={{ api_key.key|base64encode }}" target="_blank" class="btn btn-outline-primary">
-                            <i class="bi bi-credit-card me-1"></i> 积分充值
+                            <i class="bi bi-credit-card me-1"></i> {% trans 'Add Credits' %}
                         </a>
                     </div>
                 </div>
             {% else %}
-                <h5 class="card-title">Add New API Key</h5>
+                <h5 class="card-title">{% trans 'Add New API Key' %}</h5>
                 <form method="post" action="{% url 'api2d:api-key' %}">
                     {% csrf_token %}
                     {{ form|crispy }}
                     <div class="form-text mb-3">
-                        Enter your API key to link it to your account.
+                        {% trans 'Enter your API key to link it to your account.' %}
                     </div>
-                    <button type="submit" class="btn btn-primary">Save API Key</button>
+                    <button type="submit" class="btn btn-primary">{% trans 'Save API Key' %}</button>
                 </form>
             {% endif %}
         </div>
@@ -36,7 +37,7 @@
     {% if user.is_superuser %}
     <div class="card shadow mt-4">
         <div class="card-body">
-            <h5 class="card-title">点卡信息</h5>
+            <h5 class="card-title">{% trans 'API Key Information' %}</h5>
             <div class="input-group mb-3">
                 <input type="text" 
                     class="form-control" 
@@ -46,19 +47,19 @@
                 <button class="btn btn-outline-secondary" 
                         type="button" 
                         onclick="copyToClipboard()">
-                    Copy
+                    {% trans 'Copy' %}
                 </button>
             </div>
             <p class="text-muted">
                 <small>
-                    创建日期: {{ api_key.created_at|date:"M d, Y H:i" }}<br>
+                    {% trans 'Created' %}: {{ api_key.created_at|date:"M d, Y H:i" }}<br>
                     {% if api_key.expired_at %}
-                        到期日期: {{ api_key.expired_at|date:"M d, Y H:i" }}
+                        {% trans 'Expires' %}: {{ api_key.expired_at|date:"M d, Y H:i" }}
                     {% endif %}
                 </small>
             </p>
             <a href="{% url 'api2d:api-key-delete' %}" class="btn btn-outline-danger">
-                <i class="bi bi-trash me-1"></i> 删除 API Key
+                <i class="bi bi-trash me-1"></i> {% trans 'Delete API Key' %}
             </a>
         </div>
     </div>
@@ -81,13 +82,13 @@
                     const creditsSection = document.getElementById('creditsSection');
                     const creditsAmount = document.getElementById('creditsAmount');
                     creditsSection.style.display = 'block';
-                    creditsAmount.textContent = `可用积分: ${response.total_available}`;
+                    creditsAmount.textContent = `{% trans 'Available credits' %}: ${response.total_available}`;
                 })
                 .catch(error => {
                     console.error('Error fetching credits:', error);
                     // Show an error message to the user
                     creditsSection.className = 'alert alert-danger';
-                    creditsAmount.textContent = 'Failed to fetch credits. Please try again later.';
+                    creditsAmount.textContent = '{% trans "Failed to fetch credits. Please try again later." %}';
                 });
     });
 

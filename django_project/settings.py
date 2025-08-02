@@ -214,7 +214,7 @@ LOGGING = {
 LANGUAGE_CODE = 'en'
 LANGUAGES = [
     ('en', 'English'),
-    ('zh_HAns?', '简体中文'),
+    # ('zh_HAns?', '简体中文'),
 ]
 LOCALE_PATHS = [
     BASE_DIR / 'locale',

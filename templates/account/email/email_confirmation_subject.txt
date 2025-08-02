@@ -1,3 +1,3 @@
 {% load account %}
 {% load i18n %}
-{% blocktrans with site_name=current_site.name %}请确认您的电子邮箱地址 - {{ site_name }}{% endblocktrans %}
+{% blocktrans with site_name=current_site.name %}Please Confirm Your Email Address - {{ site_name }}{% endblocktrans %}
