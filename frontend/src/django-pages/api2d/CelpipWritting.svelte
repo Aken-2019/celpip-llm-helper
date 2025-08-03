@@ -16,8 +16,8 @@
 
     // State variables
     let inputContent = $state('');
-    let outputContent = $state('`待生成...`');
-    let suggestionContent = $state('`待生成...`');
+    let outputContent = $state('`Waiting input...`');
+    let suggestionContent = $state('`Waiting input...`');
     let isProcessing = $state(false);
     let credit_consumed = $state(0);
     let credits = $state<{total_available: number} | null>(null);
@@ -42,7 +42,7 @@
             return credits;
         } catch (error) {
             console.error('Error updating credits:', error);
-            errorMessage = '更新积分信息失败';
+            errorMessage = 'Failed to update credit information';
             throw error;
         }
     }
@@ -53,7 +53,7 @@
             await updateCredits();
         } catch (error) {
             console.error('Failed to fetch initial credits:', error);
-            errorMessage = '无法加载积分信息，请刷新页面重试';
+            errorMessage = 'Failed to load credit information, please refresh the page';
         }
     });
     
@@ -111,11 +111,11 @@
             console.error('Error in submit:', error);
             
             if (ApiError.isApiError(error)) {
-                errorMessage = error.data?.message || error.message || 'API请求失败';
+                errorMessage = error.data?.message || error.message || 'API request failed';
             } else if (error instanceof Error) {
-                errorMessage = error.message || '处理请求时出错';
+                errorMessage = error.message || 'Error processing request';
             } else {
-                errorMessage = '发生未知错误';
+                errorMessage = 'An unknown error occurred';
             }
         } finally {
             isProcessing = false;
@@ -124,7 +124,7 @@
 </script>
 
 <div class="container p-4">
-    <TextInput showCounter={true} title="请在此写入作文内容" bind:message={inputContent}/>
+    <TextInput showCounter={true} title="Please write your essay here" bind:message={inputContent}/>
     <div class="d-flex justify-content-center">
         <button 
             class="btn btn-primary my-2" 
@@ -134,9 +134,9 @@
         >
             {#if isProcessing}
                 <span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
-                处理中...
+                Processing...
             {:else}
-                提交
+                Submit
             {/if}
         </button>
     </div>
@@ -147,19 +147,19 @@
         {#if credits}
             <div class="small">
                 <span class="text-success">
-                    当前剩余积分: {credits.total_available}
+                    Remaining credits: {credits.total_available}
                 </span>
                 
                 {#if credit_consumed > 0}
                     <span class="text-success ms-2">
-                        本次消耗积分: {credit_consumed}
+                        Credits used: {credit_consumed}
                     </span>
                 {/if}
             </div>
             
             {#if credits.total_available < 150}
                 <div class="text-danger mt-1">
-                    为避免因点数不足导致功能异常，请先充值积分至150点以上。
+                    To prevent service interruption, please top up your credits to at least 150 points.
                 </div>
             {/if}
         {/if}
@@ -172,11 +172,11 @@
     </div>
     
     <div class='my-4'>
-        <MarkdownArea title='1. 润色结果' content={outputContent} />
+        <MarkdownArea title='1. Improved Text' content={outputContent} />
     </div>
     
     <div class='my-4'>
-        <MarkdownArea title='2. 具体建议' content={`
+        <MarkdownArea title='2. Detailed Suggestions' content={`
 <style>
 table {
   border-collapse: collapse;
