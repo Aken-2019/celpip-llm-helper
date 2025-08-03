@@ -1,14 +1,15 @@
 {% extends "base.html" %}
+{% load i18n %}
 {% load crispy_forms_tags %}
 
-{% block title %}登录{% endblock %}
+{% block title %}{% trans 'Login' %}{% endblock %}
 
 {% block content %}
 <div class="row justify-content-center">
     <div class="col-md-8 col-lg-8">
         <div class="card shadow-sm">
             <div class="card-body p-4">
-                <h2 class="text-center mb-4">用户登录</h2>
+                <h2 class="text-center mb-4">{% trans 'User Login' %}</h2>
                 
 
                 <form class="login" method="POST" action="{% url 'account_login' %}">
@@ -16,7 +17,7 @@
                     {{ form|crispy }}
                     <div class="text-end mb-3">
                         <a href="{% url 'account_reset_password' %}" class="text-decoration-none small">
-                            忘记密码？
+                            {% trans 'Forgot password?' %}
                         </a>
                     </div>
                     
@@ -25,13 +26,13 @@
                     {% endif %}
                     
                     <div class="d-grid gap-2">
-                        <button class="btn btn-primary" type="submit" aria-label="Login">登录</button>
+                        <button class="btn btn-primary" type="submit" aria-label="{% trans 'Login' %}">{% trans 'Login' %}</button>
                     </div>
                 </form>
                 
                 <div class="mt-4 text-center">
-                    <p class="mb-2">还没有账号？</p>
-                    <a href="{% url 'account_signup' %}" class="btn btn-outline-primary">注册新账号</a>
+                    <p class="mb-2">{% trans "Don't have an account yet?" %}</p>
+                    <a href="{% url 'account_signup' %}" class="btn btn-outline-primary">{% trans 'Register New Account' %}</a>
                 </div>
             </div>
         </div>

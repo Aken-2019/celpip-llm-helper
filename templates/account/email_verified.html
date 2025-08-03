@@ -2,7 +2,7 @@
 
 {% load i18n %}
 
-{% block head_title %}{% trans "邮箱验证成功" %}{% endblock %}
+{% block head_title %}{% trans "Email Verified Successfully" %}{% endblock %}
 
 {% block content %}
 <div class="container mt-5">
@@ -10,24 +10,24 @@
         <div class="col-md-8 col-lg-6">
             <div class="card shadow">
                 <div class="card-header bg-success text-white text-center">
-                    <h3 class="mb-0">{% trans "邮箱验证成功" %}</h3>
+                    <h3 class="mb-0">{% trans "Email Verified Successfully" %}</h3>
                 </div>
                 <div class="card-body p-4 text-center">
                     <div class="mb-4">
                         <i class="bi bi-check-circle" style="font-size: 4rem; color: #198754;"></i>
                     </div>
                     
-                    <h4 class="mb-4">{% trans '感谢您验证邮箱地址！' %}</h4>
+                    <h4 class="mb-4">{% trans 'Thank you for verifying your email address!' %}</h4>
                     
                     <p class="mb-4">
                         {% blocktrans %}
-                            您的邮箱地址已成功验证。现在您可以使用我们服务的所有功能。
+                            Your email address has been successfully verified. You now have full access to all features of our service.
                         {% endblocktrans %}
                     </p>
                     
                     <div class="d-grid gap-2 col-md-6 mx-auto">
                         <a href="{% url 'account_login' %}" class="btn btn-success">
-                            {% trans '前往登录' %}
+                            {% trans 'Go to Login' %}
                         </a>
                     </div>
                 </div>

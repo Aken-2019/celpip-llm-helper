@@ -39,9 +39,9 @@
     let credit_consumed = $state(0);
     let last_credits = $state<number | null>(null);
     // Transcription results
-    let transcription = $state('`待转写...`');
-    let improvedText = $state('`待润色...`');
-    let suggestionContent = $state('`待润色...`');
+    let transcription = $state('`Waiting input...`');
+    let improvedText = $state('`Waiting input...`');
+    let suggestionContent = $state('`Waiting input...`');
 
     // Initialize API client
     const apiClient = new ApiClient({
@@ -78,7 +78,7 @@
             
             return true;
         } catch (error) {
-            console.error('无法加载积分信息:', error);
+            console.error('Failed to load credit information:', error);
             throw error;
         }
     }
@@ -100,13 +100,13 @@
         
         // Check both MIME type and file extension for better compatibility
         if (!supportedTypes.includes(file.type) && fileExt !== 'm4a') {
-            errorMessage = '不支持的音频格式。请上传 MP3, MP4, M4A, WAV 或 WebM 文件。';
+            errorMessage = 'Unsupported audio format. Please upload MP3, MP4, M4A, WAV, or WebM files.';
             return;
         }
         
         // Validate file size
         if (file.size > MAX_FILE_SIZE) {
-            errorMessage = `文件太大。最大支持 ${formatFileSize(MAX_FILE_SIZE)}。`;
+            errorMessage = `File too large. Maximum size supported is ${formatFileSize(MAX_FILE_SIZE)}.`;
             return;
         }
         
@@ -127,8 +127,8 @@
 
     // Improve transcribed text
     async function improveText(): Promise<boolean> {
-        improvedText = '正在润色...';
-        suggestionContent = '正在生成建议...';
+        improvedText = 'Improving text...';
+        suggestionContent = 'Generating suggestions...';
         const response = await apiClient.chatCompletion(
             apiKey,
             txtModel,
@@ -159,7 +159,7 @@
     
     // Process audio file through API
     async function processAudioFile(file: File): Promise<void> {
-        transcription = '正在转写音频...';
+        transcription = 'Transcribing audio...';
         
         const transcriptionResponse = await apiClient.transcribeAudio(
             file,
@@ -168,7 +168,7 @@
             language
         );
         
-        transcription = transcriptionResponse.text || '未能识别到文本';
+        transcription = transcriptionResponse.text || 'No text recognized';
     }
     
     // Handle form submission
@@ -189,7 +189,7 @@
             
             // Handle file upload
             if (!audioFile) {
-                errorMessage = '请先上传或录制音频';
+                errorMessage = 'Please upload or record an audio file first';
                 return;
             }
             
@@ -252,26 +252,26 @@
             id="testModeToggle" 
             data-bs-toggle="tooltip" 
             data-bs-placement="top" 
-            title="使用测试文本">
-        <label class="form-check-label" for="testModeToggle">测试模式</label>
+            title="Use test text">
+        <label class="form-check-label" for="testModeToggle">Test Mode</label>
     </div>
     {/if}
     
     {#if isTestMode}
     <div class="mb-3">
-        <label for="testTranscription" class="form-label">测试文本</label>
+        <label for="testTranscription" class="form-label">Test Text</label>
         <textarea 
             class="form-control font-monospace" 
             id="testTranscription" 
             bind:value={testTranscription}
             rows="5" 
-            placeholder="在此输入测试文本..."></textarea>
-        <div class="form-text">测试模式下将使用此文本进行处理</div>
+            placeholder="Enter test text here..."></textarea>
+        <div class="form-text">Test mode will use this text for processing</div>
     </div>
     {/if}
     
     <div class="card-header bg-light d-flex justify-content-between align-items-center">
-        <h4 class="mb-0">思培口语 - AI润色</h4>
+        <h4 class="mb-0">Celpip Speaking - AI Polish</h4>
         <button 
             class="btn btn-sm btn-primary" 
             type="button" 
@@ -279,23 +279,23 @@
             data-bs-target="#helpCollapse" 
             aria-expanded="false" 
             aria-controls="helpCollapse">
-            <i class="bi bi-question-circle me-1"></i>使用说明
+            <i class="bi bi-question-circle me-1"></i>Instructions
         </button>
     </div>
     
     <div class="card-body">
         <div class="collapse mb-4" id="helpCollapse">
             <div class="alert alert-info">
-                <p class="mb-2"><strong>操作步骤</strong></p>
+                <p class="mb-2"><strong>Instructions</strong></p>
                 <ol class="mb-3">
-                    <li>选择"录制音频"开始录制您的口语录音 (或者选择"上传文件"上传您的口语录音)</li>
-                    <li>点击下方润色按钮</li>
+                    <li>Choose "Record Audio" to start recording your speaking audio (or choose "Upload File" to upload your speaking audio)</li>
+                    <li>Click the polish button below</li>
                 </ol>
-                <p class="mb-2"><strong>您将获得：</strong></p>
+                <p class="mb-2"><strong>You will receive:</strong></p>
                 <ul class="mb-0">
-                    <li>口语文件准确的文字转写</li>
-                    <li>为思培口语评分标准定制的语法和用词润色</li>
-                    <li>充实的口语内容扩展</li>
+                    <li>Accurate text transcription of your speaking audio</li>
+                    <li>Grammar and vocabulary polish tailored to Celpip speaking evaluation criteria</li>
+                    <li>Expanded speaking content enrichment</li>
                 </ul>
             </div>
         </div>
@@ -307,7 +307,7 @@
                     class="nav-link {activeTab === 'record' ? 'active' : ''}" 
                     onclick={() => activeTab = 'record'}
                     type="button">
-                    🎙️ 录制音频
+                    🎙️ Record Audio
                 </button>
             </li>
             <li class="nav-item" role="presentation">
@@ -316,7 +316,7 @@
                     onclick={() => activeTab = 'upload'}
                     type="button"
                     data-testid="upload-tab-button">
-                    📁 上传文件
+                    📁 Upload File
                 </button>
             </li>
         </ul>
@@ -325,7 +325,7 @@
             <!-- Record Tab -->
             {#if activeTab === 'record'}
             <div class="mb-3">
-                <div class="form-label">选择录制时长</div>
+                <div class="form-label">Select recording duration</div>
                 <div class="d-flex gap-4">
                     <div class="form-check">
                         <input 
@@ -335,7 +335,7 @@
                             bind:group={recordingDuration}
                             value="60">
                         <label class="form-check-label" for="duration60">
-                            60 秒 （第2，3，4，5，6，8题）
+                            60 seconds (Questions 2, 3, 4, 5, 6, 8)
                         </label>
                     </div>
                     <div class="form-check">
@@ -346,7 +346,7 @@
                             bind:group={recordingDuration}
                             value="90">
                         <label class="form-check-label" for="duration90">
-                            90 秒 （第1，7题）
+                            90 seconds (Questions 1, 7)
                         </label>
                     </div>
                 </div>
@@ -364,7 +364,7 @@
             <!-- Upload Tab -->
             {:else}
             <div class="mb-3">
-                <label for="audioFile" class="form-label">选择音频文件</label>
+                <label for="audioFile" class="form-label">Choose audio file</label>
                 <input 
                     class="form-control" 
                     type="file" 
@@ -373,7 +373,7 @@
                     onchange={handleFileChange}
                     disabled={isProcessing}>
                 <div class="form-text">
-                    最大文件大小：10MB。支持格式：MP3, MP4, M4A, WAV, WebM。
+                    Maximum file size: 10MB. Supported formats: MP3, MP4, M4A, WAV, WebM.
                 </div>
             </div>
             {/if}
@@ -381,7 +381,7 @@
 
             {#if audioUrl}
             <div class="mt-3">
-                <h5>音频预览</h5>
+                <h5>Audio Preview</h5>
                 <div class="card">
                     <div class="card-body">
                         <audio 
@@ -389,7 +389,7 @@
                             class="w-100" 
                             controls 
                             preload="metadata">
-                            您的浏览器不支持音频播放。
+                            Your browser does not support audio playback.
                         </audio>
                     </div>
                 </div>
@@ -405,9 +405,9 @@
                     disabled={isProcessing || (activeTab === 'upload' && !audioFile) || (credits?.total_available ?? 0) < 150}>
                     {#if isProcessing}
                     <span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
-                    处理中...
+                    Processing...
                     {:else}
-                    开始润色与扩写
+                    Start Polish and Enrich
                     {/if}
                 </button>
                 
@@ -415,20 +415,20 @@
                 <div class="mt-2 small">
                     {#if credits}
                         <span class="text-success">
-                            当前剩余积分: {credits.total_available}
+                            Current credits: {credits.total_available}
                         </span>
                             {#if credit_consumed > 0}
                             <span class="text-success">
-                                本次消耗积分: {credit_consumed}
+                                Credits consumed this time: {credit_consumed}
                             </span>
                             {/if}
                             {#if (credits.total_available ?? 0) < 150}
                             <span class="text-danger">
-                                为避免因点数不足导致功能异常，请先充值积分至100点以上。
+                                Please recharge your credits to at least 150 to avoid functionality issues.
                             </span>
                             {/if}
                     {:else}
-                    <span>正在加载积分信息...</span>
+                    <span>Loading credit information...</span>
                     {/if}
                 </div>
             </div>
@@ -443,19 +443,19 @@
         
             <div class='my-4' data-testid="transcription-text">
                 <MarkdownArea 
-                    title='1. 转文字' 
+                    title='1. Transcription' 
                     content={transcription}
                 /> 
             </div>
             <div class='my-4' data-testid="improved-text">
                 <MarkdownArea 
-                    title='2. 润色结果' 
+                    title='2. Improved Text' 
                     content={improvedText}
                 />
             </div>
             <div class='my-4' data-testid="suggestion-text">
                 <MarkdownArea 
-                    title='3. 具体建议' 
+                    title='3. Detailed Suggestions' 
                     content={`
 <style>
 table {

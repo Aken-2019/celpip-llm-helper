@@ -190,9 +190,6 @@ DATABASES = {
     ),
 }
 
-print(DATABASES)
-
-
 LOGGING = {
     "version": 1,
     "disable_existing_loggers": False,
@@ -214,6 +211,14 @@ LOGGING = {
     },
 }
 
+LANGUAGE_CODE = 'en'
+LANGUAGES = [
+    ('en', 'English'),
+    # ('zh_HAns?', '简体中文'),
+]
+LOCALE_PATHS = [
+    BASE_DIR / 'locale',
+]
 # HERE STARTS DYNACONF EXTENSION LOAD (Keep at the very bottom of settings.py)
 # Read more at https://www.dynaconf.com/django/
 import dynaconf  # noqa

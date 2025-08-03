@@ -1,0 +1,846 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2025-08-01 12:13+0000\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: pages/models.py:42
+msgid "Notification"
+msgstr ""
+
+#: pages/models.py:43
+msgid "Notifications"
+msgstr ""
+
+#: templates/account-en/email/email_change_message.html:7
+#: templates/account-en/email/email_change_message.html:11
+msgid "Email Address Changed"
+msgstr ""
+
+#: templates/account-en/email/email_change_message.html:13
+#, python-format
+msgid ""
+"\n"
+"        Your email address has been changed to <strong>%(new_email)s</"
+"strong> for your account on %(site_name)s.\n"
+"        "
+msgstr ""
+
+#: templates/account-en/email/email_change_message.html:17
+msgid ""
+"If you didn't request this change, please contact our support team "
+"immediately."
+msgstr ""
+
+#: templates/account-en/email/email_change_message.html:19
+#: templates/account-en/email/email_change_message.txt:8
+#: templates/account-en/email/email_confirmation_message.html:31
+#: templates/account-en/email/password_reset_key_message.html:32
+#: templates/account-en/email/password_reset_key_message.txt:12
+#, python-format
+msgid "Thank you for using %(site_name)s!"
+msgstr ""
+
+#: templates/account-en/email/email_change_message.html:23
+#: templates/account-en/email/email_confirmation_message.html:35
+#: templates/account-en/email/password_reset_key_message.html:36
+#, python-format
+msgid ""
+"\n"
+"            This is an automated message from %(site_name)s. Please do not "
+"reply to this email.\n"
+"            "
+msgstr ""
+
+#: templates/account-en/email/email_change_message.txt:4
+#, python-format
+msgid ""
+"You're receiving this e-mail because your e-mail address has been changed to "
+"%(new_email)s at %(site_domain)s.\n"
+"\n"
+"If you didn't request this change, please contact us immediately."
+msgstr ""
+
+#: templates/account-en/email/email_change_subject.txt:2
+#, python-format
+msgid "Email Changed on %(site_name)s"
+msgstr ""
+
+#: templates/account-en/email/email_confirmation_message.html:8
+#: templates/account-en/email/email_confirmation_message.html:12
+msgid "Confirm Your Email Address"
+msgstr ""
+
+#: templates/account-en/email/email_confirmation_message.html:16
+#, python-format
+msgid ""
+"\n"
+"        You're receiving this email because user <strong>%(user_display)s</"
+"strong> has given your email address to register an account on "
+"%(site_name)s.\n"
+"        "
+msgstr ""
+
+#: templates/account-en/email/email_confirmation_message.html:20
+msgid "To confirm this is correct, please click the button below:"
+msgstr ""
+
+#: templates/account-en/email/email_confirmation_message.html:24
+#: templates/account-en/email_confirm.html:6
+#: templates/account-en/email_confirm.html:14
+msgid "Confirm Email Address"
+msgstr ""
+
+#: templates/account-en/email/email_confirmation_message.html:28
+#: templates/account-en/email/password_reset_key_message.html:25
+msgid "Or copy and paste this link in your browser:"
+msgstr ""
+
+#: templates/account-en/email/email_confirmation_message.txt:7
+#, python-format
+msgid ""
+"You're receiving this e-mail because user %(user_display)s has given your e-"
+"mail address to register an account on %(site_domain)s.\n"
+"\n"
+"To confirm this is correct, go to %(activate_url)s\n"
+msgstr ""
+
+#: templates/account-en/email/email_confirmation_message.txt:12
+#, python-format
+msgid "Thank you from %(site_name)s!"
+msgstr ""
+
+#: templates/account-en/email/email_confirmation_subject.txt:3
+#, python-format
+msgid "Please Confirm Your E-mail Address - %(site_name)s"
+msgstr ""
+
+#: templates/account-en/email/password_reset_key_message.html:7
+#: templates/account-en/email/password_reset_key_message.html:11
+msgid "Password Reset Request"
+msgstr ""
+
+#: templates/account-en/email/password_reset_key_message.html:13
+#, python-format
+msgid ""
+"\n"
+"        You're receiving this email because you or someone else has "
+"requested a password reset for your user account at %(site_name)s.\n"
+"        "
+msgstr ""
+
+#: templates/account-en/email/password_reset_key_message.html:17
+msgid ""
+"If you didn't request this, you can safely ignore this email. Otherwise, "
+"click the button below to reset your password:"
+msgstr ""
+
+#: templates/account-en/email/password_reset_key_message.html:21
+msgid "Reset Password"
+msgstr ""
+
+#: templates/account-en/email/password_reset_key_message.html:29
+#, python-format
+msgid "Your username, in case you've forgotten: <strong>%(username)s</strong>"
+msgstr ""
+
+#: templates/account-en/email/password_reset_key_message.txt:4
+#, python-format
+msgid ""
+"You're receiving this e-mail because you or someone else has requested a "
+"password reset for your user account at %(site_domain)s.\n"
+"\n"
+"It can be safely ignored if you did not request a password reset. Click the "
+"link below to reset your password."
+msgstr ""
+
+#: templates/account-en/email/password_reset_key_message.txt:10
+#, python-format
+msgid "In case you forgot, your username is %(username)s."
+msgstr ""
+
+#: templates/account-en/email/password_reset_key_subject.txt:2
+#, python-format
+msgid "Password Reset on %(site_name)s"
+msgstr ""
+
+#: templates/account-en/email_confirm.html:21
+#, python-format
+msgid ""
+"\n"
+"                                Please confirm that <a href=\"mailto:"
+"%(email)s\">%(email)s</a> is an email address for user %(user_display)s.\n"
+"                            "
+msgstr ""
+
+#: templates/account-en/email_confirm.html:30
+msgid "Confirm"
+msgstr ""
+
+#: templates/account-en/email_confirm.html:38
+#, python-format
+msgid ""
+"\n"
+"                                    This email confirmation link expired or "
+"is invalid. Please \n"
+"                                    <a href=\"%(email_url)s\">issue a new "
+"email confirmation request</a>.\n"
+"                                "
+msgstr ""
+
+#: templates/account-en/email_verified.html:5
+#: templates/account-en/email_verified.html:13
+msgid "Email Verified"
+msgstr ""
+
+#: templates/account-en/email_verified.html:20
+msgid "Thank you for verifying your email address!"
+msgstr ""
+
+#: templates/account-en/email_verified.html:23
+msgid ""
+"\n"
+"                            Your email address has been successfully "
+"verified. You can now use all the features of our service.\n"
+"                        "
+msgstr ""
+
+#: templates/account-en/email_verified.html:30
+msgid "Continue to Login"
+msgstr ""
+
+#: templates/account-en/password_change.html:5
+#: templates/account-en/password_change.html:13
+#: templates/account-en/password_change.html:77
+#: templates/account-en/password_reset_from_key.html:4
+#: templates/account-en/password_reset_from_key.html:16
+#: templates/account-en/password_reset_from_key.html:83
+#: templates/account/password_change.html:77
+msgid "Change Password"
+msgstr ""
+
+#: templates/account-en/password_change.html:29
+msgid "Current Password"
+msgstr ""
+
+#: templates/account-en/password_change.html:45
+#: templates/account-en/password_reset_from_key.html:44
+#: templates/account-en/password_set.html:28
+msgid "New Password"
+msgstr ""
+
+#: templates/account-en/password_change.html:61
+#: templates/account-en/password_reset_from_key.html:66
+#: templates/account-en/password_set.html:50
+#: templates/account/password_change.html:61
+msgid "New Password (again)"
+msgstr ""
+
+#: templates/account-en/password_change.html:83
+#: templates/account/password_change.html:83
+msgid "Forgot Password?"
+msgstr ""
+
+#: templates/account-en/password_change_done.html:5
+#: templates/account-en/password_change_done.html:13
+msgid "Password Changed"
+msgstr ""
+
+#: templates/account-en/password_change_done.html:20
+#: templates/account-en/password_reset_from_key_done.html:21
+msgid "Password Changed Successfully!"
+msgstr ""
+
+#: templates/account-en/password_change_done.html:23
+msgid "Your password has been updated successfully."
+msgstr ""
+
+#: templates/account-en/password_change_done.html:28
+msgid "Back to Dashboard"
+msgstr ""
+
+#: templates/account-en/password_reset_done.html:5
+#: templates/account-en/password_reset_done.html:13
+msgid "Password Reset Email Sent"
+msgstr ""
+
+#: templates/account-en/password_reset_done.html:20
+msgid "Check Your Email"
+msgstr ""
+
+#: templates/account-en/password_reset_done.html:23
+msgid ""
+"\n"
+"                            We've sent you an email with instructions on how "
+"to reset your password. \n"
+"                            If you don't receive an email, please make sure "
+"you've entered the address you registered with, \n"
+"                            and check your spam folder.\n"
+"                        "
+msgstr ""
+
+#: templates/account-en/password_reset_done.html:32
+#, python-format
+msgid ""
+"\n"
+"                            The password reset link will expire in "
+"%(token_generator.get_timeout_display|default:\"24 hours\")s.\n"
+"                        "
+msgstr ""
+
+#: templates/account-en/password_reset_done.html:40
+#: templates/account-en/verification_sent.html:37
+msgid "Back to Login"
+msgstr ""
+
+#: templates/account-en/password_reset_done.html:46
+msgid "Didn't receive the email?"
+msgstr ""
+
+#: templates/account-en/password_reset_done.html:48
+msgid "Try again"
+msgstr ""
+
+#: templates/account-en/password_reset_from_key.html:14
+msgid "Bad Token"
+msgstr ""
+
+#: templates/account-en/password_reset_from_key.html:24
+#, python-format
+msgid ""
+"\n"
+"                                The password reset link was invalid, "
+"possibly because it has already been used.\n"
+"                                Please request a <a "
+"href=\"%(passwd_reset_url)s\">new password reset</a>.\n"
+"                            "
+msgstr ""
+
+#: templates/account-en/password_reset_from_key.html:50
+#: templates/account-en/password_set.html:34
+msgid "Enter your new password"
+msgstr ""
+
+#: templates/account-en/password_reset_from_key.html:72
+#: templates/account-en/password_set.html:56
+msgid "Repeat your new password"
+msgstr ""
+
+#: templates/account-en/password_reset_from_key.html:89
+msgid "Your password is now changed."
+msgstr ""
+
+#: templates/account-en/password_reset_from_key.html:98
+#: templates/account-en/password_set.html:75
+msgid "Back to login"
+msgstr ""
+
+#: templates/account-en/password_reset_from_key.html:121
+#: templates/account-en/password_set.html:95
+msgid "Passwords do not match"
+msgstr ""
+
+#: templates/account-en/password_reset_from_key_done.html:4
+#: templates/account-en/password_reset_from_key_done.html:12
+msgid "Password Reset Complete"
+msgstr ""
+
+#: templates/account-en/password_reset_from_key_done.html:23
+msgid ""
+"Your password has been set. You may go ahead and log in now with your new "
+"password."
+msgstr ""
+
+#: templates/account-en/password_reset_from_key_done.html:27
+msgid "Go to Login"
+msgstr ""
+
+#: templates/account-en/password_reset_from_key_done.html:33
+msgid "Having trouble?"
+msgstr ""
+
+#: templates/account-en/password_reset_from_key_done.html:35
+msgid "Contact support"
+msgstr ""
+
+#: templates/account-en/password_set.html:4
+#: templates/account-en/password_set.html:12
+#: templates/account-en/password_set.html:67
+msgid "Set Password"
+msgstr ""
+
+#: templates/account-en/verification_sent.html:5
+#: templates/account-en/verification_sent.html:13
+msgid "Verify Your Email Address"
+msgstr ""
+
+#: templates/account-en/verification_sent.html:21
+msgid ""
+"\n"
+"                            We have sent an email to you for verification. "
+"Follow the link provided to finalize the signup process. \n"
+"                            Please contact us if you do not receive it "
+"within a few minutes.\n"
+"                        "
+msgstr ""
+
+#: templates/account-en/verification_sent.html:29
+#, python-format
+msgid ""
+"\n"
+"                                <strong>Note:</strong> You can still <a "
+"href=\"%(email_url)s\">change your email address</a>.\n"
+"                            "
+msgstr ""
+
+#: templates/account/email/email_change_message.html:7
+#: templates/account/email/email_change_message.html:11
+msgid "邮箱地址已更改"
+msgstr ""
+
+#: templates/account/email/email_change_message.html:13
+#, python-format
+msgid ""
+"\n"
+"        您的%(site_name)s账户邮箱地址已更改为 <strong>%(new_email)s</"
+"strong>。\n"
+"        "
+msgstr ""
+
+#: templates/account/email/email_change_message.html:17
+msgid "如果您未进行此更改，请立即联系我们的支持团队。"
+msgstr ""
+
+#: templates/account/email/email_change_message.html:19
+#, python-format
+msgid "感谢您使用%(site_name)s！"
+msgstr ""
+
+#: templates/account/email/email_change_message.html:23
+#, python-format
+msgid ""
+"\n"
+"            您收到此邮件是因为您在%(site_name)s上的邮箱地址已被修改。\n"
+"            "
+msgstr ""
+
+#: templates/account/email/email_change_message.txt:4
+#, python-format
+msgid ""
+"您收到此邮件是因为您在 %(site_domain)s 的邮箱地址已更改为 %(new_email)s。\n"
+"\n"
+"如果您未进行此更改，请立即联系我们。"
+msgstr ""
+
+#: templates/account/email/email_change_message.txt:8
+#: templates/account/email/email_confirmation_message.html:31
+#: templates/account/email/email_confirmation_message.txt:13
+#: templates/account/email/password_reset_key_message.html:32
+#: templates/account/email/password_reset_key_message.txt:12
+#, python-format
+msgid "感谢您使用 %(site_name)s！"
+msgstr ""
+
+#: templates/account/email/email_change_subject.txt:2
+#, python-format
+msgid "%(site_name)s 邮箱地址已更改"
+msgstr ""
+
+#: templates/account/email/email_confirmation_message.html:8
+#: templates/account/email/email_confirmation_message.html:12
+msgid "确认您的电子邮箱地址"
+msgstr ""
+
+#: templates/account/email/email_confirmation_message.html:16
+#, python-format
+msgid ""
+"\n"
+"        您收到此邮件是因为用户 <strong>%(user_display)s</strong> 在 "
+"%(site_name)s 上使用此邮箱地址注册了账户。\n"
+"        "
+msgstr ""
+
+#: templates/account/email/email_confirmation_message.html:20
+msgid "请点击下方按钮确认此操作："
+msgstr ""
+
+#: templates/account/email/email_confirmation_message.html:24
+msgid "确认电子邮箱"
+msgstr ""
+
+#: templates/account/email/email_confirmation_message.html:28
+#: templates/account/email/password_reset_key_message.html:25
+msgid "或者将以下链接复制到浏览器中打开："
+msgstr ""
+
+#: templates/account/email/email_confirmation_message.html:35
+#: templates/account/email/password_reset_key_message.html:36
+#, python-format
+msgid ""
+"\n"
+"            这是来自 %(site_name)s 的自动通知邮件，请勿直接回复。\n"
+"            "
+msgstr ""
+
+#: templates/account/email/email_confirmation_message.txt:7
+#, python-format
+msgid ""
+"您收到此邮件是因为用户 %(user_display)s 在 %(site_domain)s 上使用您的电子邮箱"
+"地址注册了账户。\n"
+"\n"
+"请点击以下链接确认此操作：\n"
+"%(activate_url)s\n"
+msgstr ""
+
+#: templates/account/email/email_confirmation_subject.txt:3
+#, python-format
+msgid "请确认您的电子邮箱地址 - %(site_name)s"
+msgstr ""
+
+#: templates/account/email/password_reset_key_message.html:7
+#: templates/account/email/password_reset_key_message.html:11
+msgid "密码重置请求"
+msgstr ""
+
+#: templates/account/email/password_reset_key_message.html:13
+#, python-format
+msgid ""
+"\n"
+"        您收到此邮件是因为您或他人在 %(site_name)s 上请求重置您的账户密码。\n"
+"        "
+msgstr ""
+
+#: templates/account/email/password_reset_key_message.html:17
+msgid "如果您未请求重置密码，请忽略此邮件。否则，请点击下方按钮重置您的密码："
+msgstr ""
+
+#: templates/account/email/password_reset_key_message.html:21
+msgid "重置密码"
+msgstr ""
+
+#: templates/account/email/password_reset_key_message.html:29
+#, python-format
+msgid "您的用户名（如已忘记）：<strong>%(username)s</strong>"
+msgstr ""
+
+#: templates/account/email/password_reset_key_message.txt:4
+#, python-format
+msgid ""
+"您收到此邮件是因为您或他人在 %(site_domain)s 上请求重置您的账户密码。\n"
+"\n"
+"如果您未请求重置密码，请忽略此邮件。点击下方链接重置您的密码："
+msgstr ""
+
+#: templates/account/email/password_reset_key_message.txt:10
+#, python-format
+msgid "您的用户名（如已忘记）：%(username)s"
+msgstr ""
+
+#: templates/account/email/password_reset_key_subject.txt:2
+#, python-format
+msgid "%(site_name)s 密码重置"
+msgstr ""
+
+#: templates/account/email_confirm.html:6
+#: templates/account/email_confirm.html:14
+msgid "确认邮箱地址"
+msgstr ""
+
+#: templates/account/email_confirm.html:21
+#, python-format
+msgid ""
+"\n"
+"                                请确认 <a href=\"mailto:"
+"%(email)s\">%(email)s</a> 是用户 %(user_display)s 的邮箱地址。\n"
+"                            "
+msgstr ""
+
+#: templates/account/email_confirm.html:30
+msgid "确认"
+msgstr ""
+
+#: templates/account/email_confirm.html:38
+#, python-format
+msgid ""
+"\n"
+"                                    此邮箱确认链接已过期或无效。请\n"
+"                                    <a href=\"%(email_url)s\">重新发送确认邮"
+"件</a>。\n"
+"                                "
+msgstr ""
+
+#: templates/account/email_verified.html:5
+#: templates/account/email_verified.html:13
+msgid "邮箱验证成功"
+msgstr ""
+
+#: templates/account/email_verified.html:20
+msgid "感谢您验证邮箱地址！"
+msgstr ""
+
+#: templates/account/email_verified.html:23
+msgid ""
+"\n"
+"                            您的邮箱地址已成功验证。现在您可以使用我们服务的"
+"所有功能。\n"
+"                        "
+msgstr ""
+
+#: templates/account/email_verified.html:30
+#: templates/account/password_reset_from_key_done.html:27
+msgid "前往登录"
+msgstr ""
+
+#: templates/account/password_change.html:5
+#: templates/account/password_change.html:13
+msgid "修改密码"
+msgstr ""
+
+#: templates/account/password_change.html:29
+msgid "当前密码"
+msgstr ""
+
+#: templates/account/password_change.html:45
+#: templates/account/password_reset_from_key.html:44
+#: templates/account/password_set.html:28
+msgid "新密码"
+msgstr ""
+
+#: templates/account/password_change_done.html:5
+#: templates/account/password_change_done.html:13
+msgid "密码修改成功"
+msgstr ""
+
+#: templates/account/password_change_done.html:20
+#: templates/account/password_reset_from_key_done.html:21
+msgid "密码修改成功！"
+msgstr ""
+
+#: templates/account/password_change_done.html:23
+msgid "您的密码已成功更新。"
+msgstr ""
+
+#: templates/account/password_change_done.html:28
+msgid "返回控制面板"
+msgstr ""
+
+#: templates/account/password_reset.html:5
+#: templates/account/password_reset.html:12
+#: templates/account/password_reset_from_key.html:4
+#: templates/account/password_reset_from_key.html:16
+#: templates/account/password_reset_from_key.html:83
+msgid "重设密码"
+msgstr ""
+
+#: templates/account/password_reset.html:14
+msgid "忘记密码了？在下方输入您的邮箱地址，我们将发送一封邮件帮您重置密码。"
+msgstr ""
+
+#: templates/account/password_reset.html:19 templates/account/signup.html:16
+msgid "错误："
+msgstr ""
+
+#: templates/account/password_reset.html:19
+msgid "请更正以下错误。"
+msgstr ""
+
+#: templates/account/password_reset.html:28
+msgid "发送重置邮件"
+msgstr ""
+
+#: templates/account/password_reset.html:34
+msgid "想起密码了？"
+msgstr ""
+
+#: templates/account/password_reset.html:35 templates/account/signup.html:44
+msgid "立即登录"
+msgstr ""
+
+#: templates/account/password_reset_done.html:5
+#: templates/account/password_reset_done.html:13
+msgid "密码重置邮件已发送"
+msgstr ""
+
+#: templates/account/password_reset_done.html:20
+msgid "请检查您的邮箱"
+msgstr ""
+
+#: templates/account/password_reset_done.html:23
+msgid ""
+"\n"
+"                            我们已向您发送了一封包含重置密码说明的电子邮"
+"件。\n"
+"                            如果您没有收到邮件，请检查您输入的邮箱地址是否正"
+"确，\n"
+"                            并查看垃圾邮件文件夹。\n"
+"                        "
+msgstr ""
+
+#: templates/account/password_reset_done.html:32
+#, python-format
+msgid ""
+"\n"
+"                            密码重置链接将"
+"在%(token_generator.get_timeout_display|default:\"24小时\")s后过期。\n"
+"                        "
+msgstr ""
+
+#: templates/account/password_reset_done.html:40
+#: templates/account/password_reset_from_key.html:98
+#: templates/account/password_set.html:75
+#: templates/account/verification_sent.html:37
+msgid "返回登录"
+msgstr ""
+
+#: templates/account/password_reset_done.html:46
+msgid "没有收到邮件？"
+msgstr ""
+
+#: templates/account/password_reset_done.html:48
+msgid "重新发送"
+msgstr ""
+
+#: templates/account/password_reset_from_key.html:14
+msgid "无效的密码重置链接"
+msgstr ""
+
+#: templates/account/password_reset_from_key.html:24
+#, python-format
+msgid ""
+"\n"
+"                                密码重置链接无效，可能已经被使用过。\n"
+"                                请<a href=\"%(passwd_reset_url)s\">重新请求密"
+"码重置</a>。\n"
+"                            "
+msgstr ""
+
+#: templates/account/password_reset_from_key.html:50
+#: templates/account/password_set.html:34
+msgid "请输入您的新密码"
+msgstr ""
+
+#: templates/account/password_reset_from_key.html:66
+#: templates/account/password_set.html:50
+msgid "确认新密码"
+msgstr ""
+
+#: templates/account/password_reset_from_key.html:72
+#: templates/account/password_set.html:56
+msgid "请再次输入新密码"
+msgstr ""
+
+#: templates/account/password_reset_from_key.html:89
+msgid "您的密码已成功修改。"
+msgstr ""
+
+#: templates/account/password_reset_from_key.html:118
+#: templates/account/password_set.html:95
+msgid "两次输入的密码不匹配"
+msgstr ""
+
+#: templates/account/password_reset_from_key_done.html:4
+#: templates/account/password_reset_from_key_done.html:12
+msgid "密码重置完成"
+msgstr ""
+
+#: templates/account/password_reset_from_key_done.html:23
+msgid "您的密码已设置成功。您现在可以使用新密码登录。"
+msgstr ""
+
+#: templates/account/password_reset_from_key_done.html:33
+msgid "遇到问题？"
+msgstr ""
+
+#: templates/account/password_reset_from_key_done.html:35
+msgid "联系客服"
+msgstr ""
+
+#: templates/account/password_set.html:4 templates/account/password_set.html:12
+#: templates/account/password_set.html:67
+msgid "设置密码"
+msgstr ""
+
+#: templates/account/signup.html:5
+msgid "注册"
+msgstr ""
+
+#: templates/account/signup.html:12
+msgid "创建账户"
+msgstr ""
+
+#: templates/account/signup.html:16
+msgid "请更正以下错误"
+msgstr ""
+
+#: templates/account/signup.html:32
+msgid "我已阅读并同意"
+msgstr ""
+
+#: templates/account/signup.html:32
+msgid "服务条款"
+msgstr ""
+
+#: templates/account/signup.html:33
+msgid "和"
+msgstr ""
+
+#: templates/account/signup.html:33
+msgid "隐私政策"
+msgstr ""
+
+#: templates/account/signup.html:38
+msgid "注册账户"
+msgstr ""
+
+#: templates/account/signup.html:43
+msgid "已有账户？"
+msgstr ""
+
+#: templates/account/verification_sent.html:5
+#: templates/account/verification_sent.html:13
+msgid "验证您的电子邮箱"
+msgstr ""
+
+#: templates/account/verification_sent.html:21
+msgid ""
+"\n"
+"                            我们已向您的邮箱发送了一封验证邮件。请点击邮件中"
+"的链接完成注册流程。\n"
+"                            如果您在几分钟内没有收到邮件，请检查垃圾邮件箱或"
+"联系我们。\n"
+"                        "
+msgstr ""
+
+#: templates/account/verification_sent.html:29
+#, python-format
+msgid ""
+"\n"
+"                                <strong>注意：</strong> 您仍然可以<a "
+"href=\"%(email_url)s\">更改您的电子邮箱地址</a>。\n"
+"                            "
+msgstr ""
+
+#: users/forms.py:17
+msgid "Email"
+msgstr ""
+
+#: users/forms.py:21
+msgid "Your email address"
+msgstr ""
+
+#: users/forms.py:31
+msgid "Please enter a valid email address."
+msgstr ""

@@ -1,2 +1,2 @@
 {% load i18n %}
-{% blocktrans with site_name=current_site.name %}{{ site_name }} 邮箱地址已更改{% endblocktrans %}
+{% blocktrans with site_name=current_site.name %}Your {{ site_name }} email address has been changed{% endblocktrans %}
